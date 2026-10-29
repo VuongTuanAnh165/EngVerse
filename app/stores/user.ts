@@ -5,6 +5,8 @@ import {
   type UserProfile,
   type WorldTrack,
   type AuthInitResponse,
+  type BuyItemPayload,
+  type BuyItemResponse,
   createDefaultUserProfile,
 } from '~/types/user';
 
@@ -234,6 +236,64 @@ export const useUserStore = defineStore('user', () => {
   }
 
   /**
+   * Purchases shop items (freeze shields or energy refills) atomically
+   */
+  async function buyShopItem(itemType: 'freeze_shield' | 'refill_energy'): Promise<BuyItemResponse> {
+    if (isGuest.value) {
+      const cost = itemType === 'freeze_shield' ? 100 : 50;
+      if (user.value.gold < cost) {
+        throw new Error(`Bạn không đủ Vàng để mua vật phẩm (Cần ${cost} Vàng).`);
+      }
+      user.value.gold -= cost;
+      if (itemType === 'freeze_shield') {
+        const currentShields = user.value.streak?.freezeShields || 0;
+        if (currentShields >= 3) {
+          user.value.gold += cost; // refund
+          throw new Error('Bạn đã đạt giới hạn tối đa 3 Khiên Băng!');
+        }
+        user.value.streak.freezeShields = currentShields + 1;
+      } else {
+        user.value.energy.current = 5;
+        user.value.energy.lastRefillAt = Date.now();
+      }
+      user.value.updatedAt = Date.now();
+      saveGuestState();
+
+      return {
+        success: true,
+        gold: user.value.gold,
+        freezeShields: user.value.streak?.freezeShields,
+        energy: user.value.energy,
+        message: 'Mua vật phẩm thành công!',
+      };
+    }
+
+    // Authenticated user cloud transaction
+    const { getClientAuth } = useFirebase();
+    const currentUser = getClientAuth()?.currentUser;
+    const token = currentUser ? await currentUser.getIdToken() : '';
+
+    const res = await $fetch<BuyItemResponse>('/api/shop/buy-shield', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: { itemType },
+    });
+
+    if (res.success) {
+      user.value.gold = res.gold;
+      if (typeof res.freezeShields === 'number') {
+        user.value.streak.freezeShields = res.freezeShields;
+      }
+      if (res.energy) {
+        user.value.energy = res.energy;
+      }
+    }
+    return res;
+  }
+
+  /**
    * Seamlessly migrates Guest progress to Cloud Firestore via Firebase Google Auth
    */
   async function syncGuestWithGoogle(turnstileToken?: string): Promise<AuthInitResponse> {
@@ -324,6 +384,7 @@ export const useUserStore = defineStore('user', () => {
     addWrongItemsToSrsQueue,
     removeClearedFromSrsQueue,
     recordGuestStageWin,
+    buyShopItem,
     syncGuestWithGoogle,
     logout,
   };

@@ -14,9 +14,11 @@ import type {
   GameSessionPhase,
   AnswerLogEntry,
   StageResultSummary,
+  StageCompleteResponse,
 } from '~/types/game';
 import { useUserStore } from './user';
 import { useSoundEffects } from '~/composables/useSoundEffects';
+import { useFirebase } from '~/composables/useFirebase';
 
 export const useGameSessionStore = defineStore('gameSession', () => {
   // -------------------------------------------------------------------------
@@ -273,17 +275,65 @@ export const useGameSessionStore = defineStore('gameSession', () => {
     try {
       const summary = calculateStageResult();
 
-      // Apply locally to userStore and persist (including wrongItems & clearedSrsItems)
-      userStore.recordGuestStageWin(
-        summary.worldTrack,
-        summary.stageId,
-        summary.starsEarned,
-        summary.totalExpEarned,
-        summary.totalGoldEarned,
-        stageData.value.reward.guaranteedCardId,
-        summary.wrongItems,
-        summary.clearedSrsItems
-      );
+      // If user is logged in, submit to server-side anti-cheat grading API
+      if (userStore.isAuthenticated) {
+        try {
+          const { getClientAuth } = useFirebase();
+          const currentUser = getClientAuth()?.currentUser;
+          const token = currentUser ? await currentUser.getIdToken() : '';
+          const durationSeconds = Math.max(
+            5,
+            Math.round((Date.now() - sessionStartTime.value) / 1000)
+          );
+
+          const serverRes = await $fetch<StageCompleteResponse>('/api/game/complete', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: {
+              worldTrack: summary.worldTrack,
+              stageId: summary.stageId,
+              durationSeconds,
+              answersLog: summary.answersLog,
+              aiCompletionProof: summary.aiCompletionProof,
+              newWrongIds: summary.wrongItems,
+              clearedSrsIds: summary.clearedSrsItems,
+            },
+          });
+
+          if (serverRes.success && serverRes.user) {
+            userStore.user = serverRes.user;
+          }
+        } catch (apiErr) {
+          console.warn(
+            '[GameSession] Server completion API error, fell back to local store:',
+            apiErr
+          );
+          userStore.recordGuestStageWin(
+            summary.worldTrack,
+            summary.stageId,
+            summary.starsEarned,
+            summary.totalExpEarned,
+            summary.totalGoldEarned,
+            stageData.value.reward.guaranteedCardId,
+            summary.wrongItems,
+            summary.clearedSrsItems
+          );
+        }
+      } else {
+        // Guest mode local persistence
+        userStore.recordGuestStageWin(
+          summary.worldTrack,
+          summary.stageId,
+          summary.starsEarned,
+          summary.totalExpEarned,
+          summary.totalGoldEarned,
+          stageData.value.reward.guaranteedCardId,
+          summary.wrongItems,
+          summary.clearedSrsItems
+        );
+      }
 
       phase.value = 'victory';
       playSound('fanfare');

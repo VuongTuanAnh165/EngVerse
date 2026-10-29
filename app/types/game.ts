@@ -4,7 +4,7 @@
  * Reference: docs/ke_hoach.md - Section III.1, Sprint 2 & Sprint 3
  */
 
-import type { WorldTrack } from './user';
+import type { WorldTrack, UserProfile } from './user';
 
 export type CardRarity = 'common' | 'rare' | 'epic' | 'legendary';
 
@@ -335,5 +335,33 @@ export function getStageGrammars(stage: StageData): StageGrammarItem[] {
 
 export function getStageAiMission(stage: StageData): StageAiMission {
   return stage.aiRoleplayMission || stage.aiMission;
+}
+
+/**
+ * Payload sent to POST /api/game/complete upon finishing a stage
+ */
+export interface StageCompletePayload {
+  worldTrack: WorldTrack;
+  stageId: number;
+  durationSeconds: number;
+  answersLog: AnswerLogEntry[];
+  aiCompletionProof?: string | null;
+  newWrongIds?: string[];
+  clearedSrsIds?: string[];
+  idToken?: string;
+}
+
+/**
+ * Server verification and reward response for POST /api/game/complete
+ */
+export interface StageCompleteResponse {
+  success: boolean;
+  starsEarned: number;
+  totalExpEarned: number;
+  totalGoldEarned: number;
+  isReplay: boolean;
+  isSpeedHack?: boolean;
+  user: UserProfile;
+  message?: string;
 }
 

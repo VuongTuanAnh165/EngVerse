@@ -99,6 +99,16 @@ async function onLogout(): Promise<void> {
           <span class="stat-val">Xếp Hạng</span>
         </button>
 
+        <!-- Share Honor Card Link -->
+        <NuxtLink
+          :to="`/share/${userStore.user.uid || 'guest_user'}`"
+          class="stat-pill share-trigger-btn"
+          title="Xem & Chia Sẻ Thẻ Vinh Danh"
+        >
+          <span class="stat-icon" aria-hidden="true">🎖️</span>
+          <span class="stat-val">Vinh Danh</span>
+        </NuxtLink>
+
         <!-- Audio Toggle -->
         <AudioToggle />
 
@@ -297,13 +307,16 @@ async function onLogout(): Promise<void> {
   color: var(--text-primary);
 }
 
-.leaderboard-trigger-btn {
+.leaderboard-trigger-btn,
+.share-trigger-btn {
   cursor: pointer;
   background-color: var(--bg-surface);
+  text-decoration: none;
   transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.leaderboard-trigger-btn:hover {
+.leaderboard-trigger-btn:hover,
+.share-trigger-btn:hover {
   transform: translateY(-2px);
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-sm);

@@ -308,6 +308,9 @@ onMounted(() => {
         </div>
 
         <div class="victory-actions">
+          <NuxtLink :to="`/share/${userStore.user.uid || 'guest_user'}`" class="theme-btn-secondary share-victory-btn">
+            🎖️ Khoe Thẻ Vinh Danh
+          </NuxtLink>
           <button type="button" class="theme-btn-primary" @click="handleReturnHome">
             Tiếp Tục Bản Đồ Thế Giới →
           </button>
@@ -565,6 +568,15 @@ onMounted(() => {
 .victory-actions {
   display: flex;
   justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.share-victory-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
 }
 
 /* Boss Ambush SRS Banner */

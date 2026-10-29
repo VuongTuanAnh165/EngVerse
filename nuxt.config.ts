@@ -17,7 +17,20 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
     '@nuxt/fonts',
+    '@nuxtjs/seo',
   ],
+
+  // Site Configuration for SEO & Dynamic OG Images
+  site: {
+    url: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+    name: 'EngVerse',
+    description: 'Nền tảng Web Game học tiếng Anh đa vũ trụ',
+    defaultLocale: 'vi',
+  },
+
+  ogImage: {
+    enabled: true,
+  },
 
   // Font Optimization via @nuxt/fonts: Preconnect, Vietnamese subset & CLS = 0
   fonts: {
@@ -46,11 +59,11 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: 'vi',
       },
-      meta: [
-        { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      ],
     },
+  },
+
+  seo: {
+    redirectToCanonicalSiteUrl: false,
   },
 
   // Global Multi-Universe Styles
@@ -71,6 +84,10 @@ export default defineNuxtConfig({
     {
       path: '~/components/games',
       pathPrefix: false,
+    },
+    {
+      path: '~/components/OgImage',
+      prefix: 'OgImage',
     },
     {
       path: '~/components',

@@ -10,12 +10,16 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxtjs/seo": "^5.3.16",
     "@pinia/nuxt": "^1.0.3",
     "canvas-confetti": "^1.9.4",
     "firebase": "^13.1.0",
     "firebase-admin": "^14.5.0",
+    "harfbuzzjs": "^0.10.0",
     "nuxt": "^4.6.3",
+    "nuxt-og-image": "^6.10.4",
     "pinia": "^4.1.0",
+    "satori": "^0.63.2",
     "vue": "^3.5.44",
     "vue-router": "^5.4.0"
   },

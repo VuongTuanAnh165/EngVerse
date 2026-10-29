@@ -317,6 +317,7 @@ export interface StageResultSummary {
   totalExpEarned: number;
   totalGoldEarned: number;
   wrongItems: string[];
+  clearedSrsItems?: string[];
   aiCompletionProof: string | null;
   answersLog: AnswerLogEntry[];
 }

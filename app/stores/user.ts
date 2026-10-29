@@ -43,6 +43,33 @@ export const useUserStore = defineStore('user', () => {
   const gold = computed<number>(() => user.value.gold);
   const exp = computed<number>(() => user.value.exp);
   const level = computed<number>(() => user.value.level);
+  const srsBossQueue = computed<string[]>(() => user.value.srsBossQueue || []);
+
+  /**
+   * Appends newly failed item IDs into SRS Boss queue for spaced repetition review
+   */
+  function addWrongItemsToSrsQueue(itemIds: string[]): void {
+    if (!itemIds || itemIds.length === 0) return;
+    if (!user.value.srsBossQueue) {
+      user.value.srsBossQueue = [];
+    }
+
+    const set = new Set([...user.value.srsBossQueue, ...itemIds]);
+    user.value.srsBossQueue = Array.from(set);
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+  }
+
+  /**
+   * Removes successfully mastered items from SRS Boss queue when cleared in Boss fights
+   */
+  function removeClearedFromSrsQueue(itemIds: string[]): void {
+    if (!itemIds || itemIds.length === 0 || !user.value.srsBossQueue) return;
+    const toRemove = new Set(itemIds);
+    user.value.srsBossQueue = user.value.srsBossQueue.filter((id) => !toRemove.has(id));
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+  }
 
   /**
    * Persists guest progress to LocalStorage safely
@@ -157,7 +184,9 @@ export const useUserStore = defineStore('user', () => {
     stars: number,
     rewardExp: number,
     rewardGold: number,
-    cardId?: string
+    cardId?: string,
+    newWrongItems?: string[],
+    clearedSrsIds?: string[]
   ): void {
     if (!user.value.isGuest) {
       return;
@@ -190,6 +219,14 @@ export const useUserStore = defineStore('user', () => {
     // Collect card
     if (cardId && !user.value.collectedCards.includes(cardId)) {
       user.value.collectedCards.push(cardId);
+    }
+
+    // Sync SRS Boss Queue: append new mistakes & remove mastered items
+    if (newWrongItems && newWrongItems.length > 0) {
+      addWrongItemsToSrsQueue(newWrongItems);
+    }
+    if (clearedSrsIds && clearedSrsIds.length > 0) {
+      removeClearedFromSrsQueue(clearedSrsIds);
     }
 
     user.value.updatedAt = Date.now();
@@ -279,10 +316,13 @@ export const useUserStore = defineStore('user', () => {
     gold,
     exp,
     level,
+    srsBossQueue,
     initUserSession,
     saveGuestState,
     loadGuestState,
     switchWorldTrack,
+    addWrongItemsToSrsQueue,
+    removeClearedFromSrsQueue,
     recordGuestStageWin,
     syncGuestWithGoogle,
     logout,

@@ -73,8 +73,18 @@ function onVoiceCompleted(): void {
 }
 
 async function onSentenceCompleted(): Promise<void> {
-  // If stage has AI roleplay mission, in Sprint 4 this advances to 'ai_roleplay'
-  // For Sprint 3, complete the stage!
+  playSound('correct');
+  // If stage has AI roleplay mission, advance to Phase 4: AI Roleplay
+  if (stage.value?.aiRoleplayMission) {
+    sessionStore.advancePhase('ai_roleplay');
+  } else {
+    const summary = await sessionStore.completeStage();
+    stageResult.value = summary;
+  }
+}
+
+async function onAiRoleplayCompleted(): Promise<void> {
+  playSound('correct');
   const summary = await sessionStore.completeStage();
   stageResult.value = summary;
 }
@@ -146,7 +156,7 @@ onMounted(() => {
             class="step-pill"
             :class="{
               'step-active': sessionStore.phase === 'word_alchemy',
-              'step-done': sessionStore.phase === 'voice_runner' || sessionStore.phase === 'sentence_lock' || sessionStore.phase === 'victory'
+              'step-done': sessionStore.phase === 'voice_runner' || sessionStore.phase === 'sentence_lock' || sessionStore.phase === 'ai_roleplay' || sessionStore.phase === 'victory'
             }"
           >
             1. Ghép Thẻ
@@ -156,7 +166,7 @@ onMounted(() => {
             class="step-pill"
             :class="{
               'step-active': sessionStore.phase === 'voice_runner',
-              'step-done': sessionStore.phase === 'sentence_lock' || sessionStore.phase === 'victory'
+              'step-done': sessionStore.phase === 'sentence_lock' || sessionStore.phase === 'ai_roleplay' || sessionStore.phase === 'victory'
             }"
           >
             2. Giọng Nói
@@ -166,16 +176,42 @@ onMounted(() => {
             class="step-pill"
             :class="{
               'step-active': sessionStore.phase === 'sentence_lock',
-              'step-done': sessionStore.phase === 'victory'
+              'step-done': sessionStore.phase === 'ai_roleplay' || sessionStore.phase === 'victory'
             }"
           >
             3. Khóa Cổ Ngữ
           </span>
+          <template v-if="stage.aiRoleplayMission">
+            <span class="step-divider">→</span>
+            <span
+              class="step-pill"
+              :class="{
+                'step-active': sessionStore.phase === 'ai_roleplay',
+                'step-done': sessionStore.phase === 'victory'
+              }"
+            >
+              4. Nhập Vai AI
+            </span>
+          </template>
         </div>
 
         <!-- Session Score & HP -->
         <div class="session-right">
           <span class="score-display">⭐ {{ sessionStore.score }}</span>
+        </div>
+      </div>
+
+      <!-- Boss Stage Spaced Repetition SRS Ambush Banner -->
+      <div v-if="stage.isBossStage" class="boss-ambush-banner theme-card">
+        <div class="boss-badge-icon" aria-hidden="true">👑</div>
+        <div class="boss-ambush-info">
+          <h3 class="boss-ambush-title">MÀN ĐẤU BOSS CHƯƠNG: {{ stage.title }}</h3>
+          <p class="boss-ambush-desc">
+            Vượt qua các chướng ngại vật và đối thoại AI để hạ gục Boss!
+            <span v-if="userStore.srsBossQueue.length > 0" class="srs-count-pill">
+              Ôn tập {{ userStore.srsBossQueue.length }} từ vựng yếu
+            </span>
+          </p>
         </div>
       </div>
 
@@ -200,6 +236,14 @@ onMounted(() => {
         v-else-if="sessionStore.phase === 'sentence_lock'"
         :stage="stage"
         @completed="onSentenceCompleted"
+        @failed="onGameFailed"
+      />
+
+      <!-- Mini-Game 4: AI Roleplay -->
+      <GameAiRoleplay
+        v-else-if="sessionStore.phase === 'ai_roleplay'"
+        :stage="stage"
+        @completed="onAiRoleplayCompleted"
         @failed="onGameFailed"
       />
 
@@ -500,6 +544,63 @@ onMounted(() => {
 .victory-actions {
   display: flex;
   justify-content: center;
+}
+
+/* Boss Ambush SRS Banner */
+.boss-ambush-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid #ef4444;
+  background: linear-gradient(135deg, var(--bg-surface) 0%, rgba(239, 68, 68, 0.08) 100%);
+  animation: current-pulse 2s infinite ease-in-out;
+}
+
+.boss-badge-icon {
+  font-size: 2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: #ef4444;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.boss-ambush-info {
+  flex: 1;
+}
+
+.boss-ambush-title {
+  margin: 0 0 0.25rem 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ef4444;
+  letter-spacing: 0.02em;
+}
+
+.boss-ambush-desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.srs-count-pill {
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-pill);
 }
 
 /* GameOver Screen */

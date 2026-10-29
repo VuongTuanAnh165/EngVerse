@@ -40,6 +40,7 @@ export const useGameSessionStore = defineStore('gameSession', () => {
   const timeRemaining = ref<number>(60);
   const answersLog = ref<AnswerLogEntry[]>([]);
   const wrongItems = ref<string[]>([]);
+  const clearedSrsItems = ref<string[]>([]);
   const aiCompletionProof = ref<string | null>(null);
 
   // Processing Flags
@@ -89,6 +90,7 @@ export const useGameSessionStore = defineStore('gameSession', () => {
     timeRemaining.value = stage.config?.timeLimitSeconds ?? 75;
     answersLog.value = [];
     wrongItems.value = [];
+    clearedSrsItems.value = [];
     aiCompletionProof.value = null;
 
     isSubmitting.value = false;
@@ -186,6 +188,15 @@ export const useGameSessionStore = defineStore('gameSession', () => {
   }
 
   /**
+   * Records an SRS weak item as successfully cleared/mastered
+   */
+  function recordSrsItemCleared(itemId: string): void {
+    if (itemId && !clearedSrsItems.value.includes(itemId)) {
+      clearedSrsItems.value.push(itemId);
+    }
+  }
+
+  /**
    * Stores the HMAC token received from server/api/ai/roleplay.post.ts
    */
   function setAiCompletionProof(proof: string): void {
@@ -243,6 +254,7 @@ export const useGameSessionStore = defineStore('gameSession', () => {
       totalExpEarned,
       totalGoldEarned,
       wrongItems: [...wrongItems.value],
+      clearedSrsItems: [...clearedSrsItems.value],
       aiCompletionProof: aiCompletionProof.value,
       answersLog: [...answersLog.value],
     };
@@ -261,28 +273,17 @@ export const useGameSessionStore = defineStore('gameSession', () => {
     try {
       const summary = calculateStageResult();
 
-      // If user is guest, apply locally to userStore and persist
-      if (userStore.isGuest) {
-        userStore.recordGuestStageWin(
-          summary.worldTrack,
-          summary.stageId,
-          summary.starsEarned,
-          summary.totalExpEarned,
-          summary.totalGoldEarned,
-          stageData.value.reward.guaranteedCardId
-        );
-      } else {
-        // If logged in via Firebase Auth, in Sprint 5 this calls server/api/game/complete.post.ts
-        // For now, update user store optimistically
-        userStore.recordGuestStageWin(
-          summary.worldTrack,
-          summary.stageId,
-          summary.starsEarned,
-          summary.totalExpEarned,
-          summary.totalGoldEarned,
-          stageData.value.reward.guaranteedCardId
-        );
-      }
+      // Apply locally to userStore and persist (including wrongItems & clearedSrsItems)
+      userStore.recordGuestStageWin(
+        summary.worldTrack,
+        summary.stageId,
+        summary.starsEarned,
+        summary.totalExpEarned,
+        summary.totalGoldEarned,
+        stageData.value.reward.guaranteedCardId,
+        summary.wrongItems,
+        summary.clearedSrsItems
+      );
 
       phase.value = 'victory';
       playSound('fanfare');
@@ -328,6 +329,7 @@ export const useGameSessionStore = defineStore('gameSession', () => {
     timeRemaining,
     answersLog,
     wrongItems,
+    clearedSrsItems,
     aiCompletionProof,
     isSubmitting,
 
@@ -346,6 +348,7 @@ export const useGameSessionStore = defineStore('gameSession', () => {
     recordAnswer,
     takeDamage,
     heal,
+    recordSrsItemCleared,
     setAiCompletionProof,
     calculateStageResult,
     completeStage,

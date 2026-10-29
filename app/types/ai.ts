@@ -57,5 +57,6 @@ export interface AiRoleplayResponse {
   providerUsed?: AiProviderUsed;
   latencyMs?: number;
   errorMessage?: string;
+  message?: string;
 }
 

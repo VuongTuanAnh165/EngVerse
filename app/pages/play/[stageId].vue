@@ -5,6 +5,7 @@ import type { StageData, GameSessionPhase, StageResultSummary } from '~/types/ga
 import { useUserStore } from '~/stores/user';
 import { useGameSessionStore } from '~/stores/gameSession';
 import { useSoundEffects } from '~/composables/useSoundEffects';
+import { useAnalytics } from '~/composables/useAnalytics';
 
 // ---------------------------------------------------------------------------
 // Lazy-loaded 4 Mini-Game Engines (Sprint 5 - Mục 3 Lighthouse 98+ Optimization)
@@ -19,6 +20,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const sessionStore = useGameSessionStore();
 const { playSound, triggerVictoryConfetti } = useSoundEffects();
+const analytics = useAnalytics();
 
 const stageIdParam = computed(() => Number(route.params.stageId) || 1);
 const currentTrack = computed(() => userStore.currentTrack);
@@ -100,6 +102,17 @@ async function onAiRoleplayCompleted(): Promise<void> {
 function onGameFailed(): void {
   playSound('wrong');
   sessionStore.advancePhase('gameover');
+
+  if (stage.value) {
+    analytics.trackStageFail({
+      world_track: stage.value.worldTrack,
+      stage_id: stage.value.stageId,
+      failed_phase: sessionStore.phase,
+      accuracy: sessionStore.accuracy,
+      time_remaining: sessionStore.timeRemaining,
+      is_boss_stage: Boolean(stage.value.isBossStage),
+    });
+  }
 }
 
 function handleRetry(): void {

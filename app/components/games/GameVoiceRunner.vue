@@ -4,6 +4,7 @@ import type { StageData, StageVocabItem, RunnerObstacle } from '~/types/game';
 import { useGameSessionStore } from '~/stores/gameSession';
 import { useSoundEffects } from '~/composables/useSoundEffects';
 import { useSpeechEngine } from '~/composables/useSpeechEngine';
+import { useAnalytics } from '~/composables/useAnalytics';
 
 interface Props {
   stage: StageData;
@@ -19,6 +20,32 @@ const emit = defineEmits<{
 const sessionStore = useGameSessionStore();
 const { playSound, triggerScreenShake } = useSoundEffects();
 const speechEngine = useSpeechEngine();
+const analytics = useAnalytics();
+let hasTrackedFallback = false;
+
+function trackMicFallback(reason?: string): void {
+  if (hasTrackedFallback) return;
+  hasTrackedFallback = true;
+
+  const derivedReason = reason || (speechEngine.hasPermissionDenied.value
+    ? 'not-allowed'
+    : !speechEngine.isSttSupported.value
+    ? 'unsupported'
+    : 'manual_switch');
+
+  analytics.trackMicFallbackTriggered({
+    world_track: props.stage.worldTrack,
+    stage_id: props.stage.stageId,
+    error_reason: derivedReason,
+    target_word: currentVocab.value?.word,
+    user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
+  });
+}
+
+function handleSwitchToFallback(): void {
+  trackMicFallback('manual_switch');
+  speechEngine.switchToFallbackMode();
+}
 
 // -------------------------------------------------------------------------
 // Component State
@@ -97,11 +124,14 @@ function loadCurrentObstacle(): void {
 watch(
   () => speechEngine.isFallbackMode.value,
   (isFallback) => {
-    if (isFallback && currentVocab.value) {
-      speechEngine.initRhythmChallenge(
-        currentVocab.value.word,
-        currentVocab.value.rhythmSyllables
-      );
+    if (isFallback) {
+      trackMicFallback();
+      if (currentVocab.value) {
+        speechEngine.initRhythmChallenge(
+          currentVocab.value.word,
+          currentVocab.value.rhythmSyllables
+        );
+      }
     }
   }
 );
@@ -361,7 +391,7 @@ onScopeDispose(() => {
         <button
           type="button"
           class="switch-fallback-btn"
-          @click="speechEngine.switchToFallbackMode"
+          @click="handleSwitchToFallback"
         >
           Không dùng mic? Chuyển sang Chạm Nhịp Điệu 🎵
         </button>

@@ -19,6 +19,7 @@ import type {
 import { useUserStore } from './user';
 import { useSoundEffects } from '~/composables/useSoundEffects';
 import { useFirebase } from '~/composables/useFirebase';
+import { useAnalytics } from '~/composables/useAnalytics';
 
 export const useGameSessionStore = defineStore('gameSession', () => {
   // -------------------------------------------------------------------------
@@ -338,6 +339,35 @@ export const useGameSessionStore = defineStore('gameSession', () => {
       phase.value = 'victory';
       playSound('fanfare');
       triggerVictoryConfetti();
+
+      // Dispatch GA4 Analytics for Stage Victory & Onboarding Funnel
+      const analytics = useAnalytics();
+      const durationSeconds = Math.max(
+        1,
+        Math.round((Date.now() - sessionStartTime.value) / 1000)
+      );
+
+      analytics.trackStageWin({
+        world_track: summary.worldTrack,
+        stage_id: summary.stageId,
+        stars_earned: summary.starsEarned,
+        score: summary.score,
+        accuracy: summary.accuracy,
+        duration_seconds: durationSeconds,
+        is_boss_stage: Boolean(stageData.value.isBossStage),
+        is_perfect: summary.isPerfect,
+      });
+
+      // Funnel Metric: First time clearing Stage 1 marks onboarding complete
+      const isFirstStageClear = summary.stageId === 1 && (userStore.currentTrackProgress?.stageStars?.['1'] || 0) <= summary.starsEarned;
+      if (isFirstStageClear) {
+        analytics.trackOnboardingComplete({
+          world_track: summary.worldTrack,
+          auth_method: userStore.isAuthenticated ? 'google' : 'guest',
+          completed_stage_id: summary.stageId,
+          duration_seconds: durationSeconds,
+        });
+      }
 
       return summary;
     } finally {

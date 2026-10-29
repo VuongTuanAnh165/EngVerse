@@ -1,6 +1,7 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { useFirebase } from '~/composables/useFirebase';
+import { useAnalytics } from '~/composables/useAnalytics';
 import {
   type UserProfile,
   type WorldTrack,
@@ -150,6 +151,12 @@ export const useUserStore = defineStore('user', () => {
               isGuest: false,
             };
             localStorage.removeItem(STORAGE_KEY);
+            const analytics = useAnalytics();
+            analytics.setUserId(response.user.uid);
+            analytics.setUserProperties({
+              world_track: response.user.worldTrack,
+              level: response.user.level,
+            });
           }
         } catch (fetchErr) {
           console.error('[UserStore] Auto-sync with existing Firebase user failed:', fetchErr);
@@ -169,8 +176,18 @@ export const useUserStore = defineStore('user', () => {
       return;
     }
 
+    const previousTrack = user.value.worldTrack;
     user.value.worldTrack = newTrack;
     user.value.updatedAt = Date.now();
+
+    const analytics = useAnalytics();
+    analytics.trackUniverseSwitch({
+      from_track: previousTrack,
+      to_track: newTrack,
+    });
+    analytics.setUserProperties({
+      world_track: newTrack,
+    });
 
     if (user.value.isGuest) {
       saveGuestState();
@@ -259,6 +276,13 @@ export const useUserStore = defineStore('user', () => {
       user.value.updatedAt = Date.now();
       saveGuestState();
 
+      const analytics = useAnalytics();
+      analytics.trackShopPurchase({
+        item_type: itemType,
+        gold_spent: cost,
+        world_track: user.value.worldTrack,
+      });
+
       return {
         success: true,
         gold: user.value.gold,
@@ -289,6 +313,13 @@ export const useUserStore = defineStore('user', () => {
       if (res.energy) {
         user.value.energy = res.energy;
       }
+
+      const analytics = useAnalytics();
+      analytics.trackShopPurchase({
+        item_type: itemType,
+        gold_spent: itemType === 'freeze_shield' ? 100 : 50,
+        world_track: user.value.worldTrack,
+      });
     }
     return res;
   }
@@ -322,6 +353,18 @@ export const useUserStore = defineStore('user', () => {
         ...response.user,
         isGuest: false,
       };
+
+      // Telemetry: bind user ID and track onboarding complete via Google sign-in
+      const analytics = useAnalytics();
+      analytics.setUserId(response.user.uid);
+      analytics.setUserProperties({
+        world_track: response.user.worldTrack,
+        level: response.user.level,
+      });
+      analytics.trackOnboardingComplete({
+        world_track: response.user.worldTrack,
+        auth_method: 'google',
+      });
 
       // Clean up guest local storage
       if (import.meta.client) {

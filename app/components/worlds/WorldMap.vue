@@ -1,7 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, defineAsyncComponent } from 'vue';
 import { useUserStore } from '~/stores/user';
 import type { StageData } from '~/types/game';
+
+// ---------------------------------------------------------------------------
+// Lazy-loaded 3 Universe Thematic Interfaces (Sprint 5 - Mục 3 Lighthouse 98+)
+// ---------------------------------------------------------------------------
+const WorldKidsView = defineAsyncComponent(() => import('~/components/worlds/WorldKidsView.vue'));
+const WorldTeensView = defineAsyncComponent(() => import('~/components/worlds/WorldTeensView.vue'));
+const WorldAdultsView = defineAsyncComponent(() => import('~/components/worlds/WorldAdultsView.vue'));
 
 const userStore = useUserStore();
 const currentTrack = computed(() => userStore.currentTrack);
@@ -96,6 +103,13 @@ function getTrackTitle(track: string): string {
         <span>Sổ Tay Thẻ Bài 3D</span>
       </NuxtLink>
     </div>
+
+    <!-- Thematic Universe Hub Banner (Lazy-loaded per Track) -->
+    <ClientOnly>
+      <WorldKidsView v-if="currentTrack === 'kids'" />
+      <WorldTeensView v-else-if="currentTrack === 'teens'" />
+      <WorldAdultsView v-else-if="currentTrack === 'adults'" />
+    </ClientOnly>
 
     <!-- Loading State -->
     <div v-if="isLoading" class="map-loading-state">

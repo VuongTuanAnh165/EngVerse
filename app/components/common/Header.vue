@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import { useUserStore } from '~/stores/user';
 import type { WorldTrack } from '~/types/user';
 
+// Lazy-loaded Leaderboard Modal (only fetched when opened)
+const LeaderboardModal = defineAsyncComponent(() => import('~/components/common/LeaderboardModal.vue'));
+
 const userStore = useUserStore();
+const isLeaderboardOpen = ref<boolean>(false);
 
 const tracks: Array<{ id: WorldTrack; name: string; emoji: string }> = [
   { id: 'kids', name: 'Đảo Thần Thoại', emoji: '🏝️' },
@@ -84,6 +88,17 @@ async function onLogout(): Promise<void> {
           <span class="stat-val">Lv.{{ userLevel }}</span>
         </div>
 
+        <!-- Global Leaderboard Button -->
+        <button
+          type="button"
+          class="stat-pill leaderboard-trigger-btn"
+          title="Bảng Xếp Hạng Toàn Cầu (Top 30)"
+          @click="isLeaderboardOpen = true"
+        >
+          <span class="stat-icon" aria-hidden="true">🏆</span>
+          <span class="stat-val">Xếp Hạng</span>
+        </button>
+
         <!-- Audio Toggle -->
         <AudioToggle />
 
@@ -163,6 +178,9 @@ async function onLogout(): Promise<void> {
         </div>
       </div>
     </div>
+
+    <!-- Global Top 30 Leaderboard Modal -->
+    <LeaderboardModal v-model:open="isLeaderboardOpen" />
   </header>
 </template>
 
@@ -277,6 +295,18 @@ async function onLogout(): Promise<void> {
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text-primary);
+}
+
+.leaderboard-trigger-btn {
+  cursor: pointer;
+  background-color: var(--bg-surface);
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.leaderboard-trigger-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .gold-pill .stat-icon {

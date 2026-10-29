@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { StageData, GameSessionPhase, StageResultSummary } from '~/types/game';
 import { useUserStore } from '~/stores/user';
 import { useGameSessionStore } from '~/stores/gameSession';
 import { useSoundEffects } from '~/composables/useSoundEffects';
+
+// ---------------------------------------------------------------------------
+// Lazy-loaded 4 Mini-Game Engines (Sprint 5 - Mục 3 Lighthouse 98+ Optimization)
+// ---------------------------------------------------------------------------
+const GameWordAlchemy = defineAsyncComponent(() => import('~/components/games/GameWordAlchemy.vue'));
+const GameVoiceRunner = defineAsyncComponent(() => import('~/components/games/GameVoiceRunner.vue'));
+const GameSentenceLock = defineAsyncComponent(() => import('~/components/games/GameSentenceLock.vue'));
+const GameAiRoleplay = defineAsyncComponent(() => import('~/components/games/GameAiRoleplay.vue'));
 
 const route = useRoute();
 const router = useRouter();

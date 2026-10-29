@@ -16,17 +16,39 @@ export default defineNuxtConfig({
 
   modules: [
     '@pinia/nuxt',
+    '@nuxt/fonts',
   ],
+
+  // Font Optimization via @nuxt/fonts: Preconnect, Vietnamese subset & CLS = 0
+  fonts: {
+    defaults: {
+      weights: [400, 500, 600, 700, 800, 900],
+      subsets: ['vietnamese', 'latin'],
+    },
+    families: [
+      {
+        name: 'Be Vietnam Pro',
+        provider: 'google',
+        weights: [400, 500, 600, 700, 800, 900],
+        subsets: ['vietnamese', 'latin'],
+      },
+      {
+        name: 'Exo 2',
+        provider: 'google',
+        weights: [400, 500, 600, 700, 800],
+        subsets: ['vietnamese', 'latin'],
+      },
+    ],
+  },
 
   app: {
     head: {
-      link: [
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
-        {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Exo+2:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap',
-        },
+      htmlAttrs: {
+        lang: 'vi',
+      },
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       ],
     },
   },

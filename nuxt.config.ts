@@ -18,10 +18,32 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
+  app: {
+    head: {
+      link: [
+        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap',
+        },
+      ],
+    },
+  },
+
+  // Global Multi-Universe Styles
+  css: [
+    '~/assets/css/themes.css',
+  ],
+
   // Component auto-import configuration without mandatory directory prefixing
   components: [
     {
       path: '~/components/common',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components/worlds',
       pathPrefix: false,
     },
     {

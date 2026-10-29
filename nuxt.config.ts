@@ -14,6 +14,18 @@ export default defineNuxtConfig({
     strict: true,
   },
 
+  // Component auto-import configuration without mandatory directory prefixing
+  components: [
+    {
+      path: '~/components/common',
+      pathPrefix: false,
+    },
+    {
+      path: '~/components',
+      pathPrefix: false,
+    },
+  ],
+
   // Resource compression for high-performance delivery
   nitro: {
     compressPublicAssets: true,

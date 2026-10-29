@@ -39,6 +39,8 @@ export interface AiRawModelResponse {
   isMissionCompleted: boolean;
 }
 
+export type AiProviderUsed = 'gemini' | 'openrouter' | 'offline';
+
 /**
  * Clean response returned to client from POST /api/ai/roleplay
  */
@@ -52,6 +54,8 @@ export interface AiRoleplayResponse {
   completionProof?: string;
   remainingTurns: number;
   usedFallback?: boolean;
+  providerUsed?: AiProviderUsed;
+  latencyMs?: number;
   errorMessage?: string;
 }
 

@@ -230,7 +230,7 @@ onMounted(() => {
           </div>
 
           <div class="reward-card">
-            <span class="reward-icon" aria-hidden="true">🪙</span>
+            <span class="reward-icon" aria-hidden="true">💰</span>
             <span class="reward-amount">+{{ stageResult?.totalGoldEarned }} Vàng</span>
             <span class="reward-title">Tiền Thưởng</span>
           </div>

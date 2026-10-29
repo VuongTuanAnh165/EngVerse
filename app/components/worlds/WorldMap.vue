@@ -205,7 +205,7 @@ function getTrackTitle(track: string): string {
             </div>
 
             <div class="reward-item">
-              <span class="reward-icon" aria-hidden="true">🪙</span>
+              <span class="reward-icon" aria-hidden="true">💰</span>
               <div class="reward-details">
                 <span class="reward-val">+{{ selectedStage.reward.baseGold }} Vàng</span>
                 <span class="reward-label">Tiền thưởng</span>

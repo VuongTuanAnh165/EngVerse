@@ -1,32 +1,15 @@
 import { defineEventHandler, readBody, createError, getRequestHeader } from 'h3';
 import { adminAuth, adminDb } from '../../utils/firebaseAdmin';
 import { generateAiCompletionProof, getTodayDateString } from '../../utils/cryptoProof';
+import { callAiWithSmartFallback } from '../../utils/aiClient';
 import type {
   AiRoleplayPayload,
   AiRoleplayResponse,
-  AiRawModelResponse,
   AiChatMessage,
 } from '~/types/ai';
 
 // In-memory fallback rate limiter for guest users (IP/guestId -> { date, count })
 const guestQuotaMap = new Map<string, { date: string; count: number }>();
-
-/**
- * Strips markdown code blocks if the model wrapped output in ```json ... ```
- */
-function parseModelJsonResponse(text: string): AiRawModelResponse | null {
-  try {
-    let clean = text.trim();
-    if (clean.startsWith('```json')) {
-      clean = clean.replace(/^```json\s*/, '').replace(/\s*```$/, '');
-    } else if (clean.startsWith('```')) {
-      clean = clean.replace(/^```\s*/, '').replace(/\s*```$/, '');
-    }
-    return JSON.parse(clean) as AiRawModelResponse;
-  } catch {
-    return null;
-  }
-}
 
 /**
  * Builds the anti-prompt injection system instruction
@@ -50,181 +33,9 @@ Hãy trả về DUY NHẤT định dạng JSON sau (không dùng markdown):
 }
 
 /**
- * Rule-based offline fallback when both AI APIs are unavailable or unconfigured
- */
-function executeOfflineFallback(
-  payload: AiRoleplayPayload,
-  sanitizedInput: string
-): AiRawModelResponse {
-  const mission = payload.aiMission;
-  const keywords =
-    mission.targetKeywords ||
-    mission.recommendedWords ||
-    mission.offlineFallback?.requiredKeywords ||
-    [];
-
-  const lowerInput = sanitizedInput.toLowerCase();
-  const matchedKeywords = keywords.filter((k) => lowerInput.includes(k.toLowerCase()));
-
-  // If user used at least 1-2 keywords, consider progress
-  const hasMatched = matchedKeywords.length > 0 || lowerInput.split(' ').length >= 3;
-  const isComplete = matchedKeywords.length >= 2 || (hasMatched && payload.conversationHistory.length >= 3);
-
-  if (isComplete) {
-    return {
-      npcReply:
-        mission.offlineFallback?.successReply ||
-        `Impressive! You accomplished the mission: "${mission.goal}". Well done!`,
-      vietnameseHint: 'Bạn đã hoàn thành xuất sắc thử thách nhập vai!',
-      grammarCorrection: '',
-      scoreDelta: 50,
-      isMissionCompleted: true,
-    };
-  }
-
-  if (hasMatched) {
-    return {
-      npcReply: `I see what you mean. Now continue and tell me more about ${keywords[0] || 'your goal'}!`,
-      vietnameseHint: `Gợi ý: Thử dùng từ "${keywords[0] || 'please'}" để hoàn thành nhiệm vụ!`,
-      grammarCorrection: '',
-      scoreDelta: 25,
-      isMissionCompleted: false,
-    };
-  }
-
-  return {
-    npcReply:
-      mission.offlineFallback?.retryReply ||
-      `Can you say that in English? Tell me how you will achieve: ${mission.goal}`,
-    vietnameseHint: `Hãy cố gắng diễn đạt bằng tiếng Anh và sử dụng từ gợi ý: ${keywords.slice(0, 2).join(', ')}`,
-    grammarCorrection: '',
-    scoreDelta: 10,
-    isMissionCompleted: false,
-  };
-}
-
-/**
- * Calls Google Gemini Flash API with 6s AbortController timeout
- */
-async function callGeminiApi(
-  systemInstruction: string,
-  slidingWindow: AiChatMessage[],
-  playerInput: string,
-  apiKey: string,
-  modelName: string
-): Promise<AiRawModelResponse | null> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 6000);
-
-  try {
-    const contents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
-
-    // Add sliding window turns
-    for (const msg of slidingWindow) {
-      contents.push({
-        role: msg.role === 'model' ? 'model' : 'user',
-        parts: [{ text: msg.content }],
-      });
-    }
-
-    // Add current player input wrapped in guardrail tag
-    contents.push({
-      role: 'user',
-      parts: [{ text: `<player_input>${playerInput}</player_input>` }],
-    });
-
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
-
-    const res = await $fetch<{
-      candidates?: Array<{
-        content?: {
-          parts?: Array<{ text?: string }>;
-        };
-      }>;
-    }>(endpoint, {
-      method: 'POST',
-      signal: controller.signal,
-      body: {
-        systemInstruction: {
-          parts: [{ text: systemInstruction }],
-        },
-        contents,
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.7,
-          maxOutputTokens: 300,
-        },
-      },
-    });
-
-    const candidateText = res.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (candidateText) {
-      return parseModelJsonResponse(candidateText);
-    }
-    return null;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-/**
- * Smart Fallback: Calls OpenRouter API with same schema
- */
-async function callOpenRouterFallback(
-  systemInstruction: string,
-  slidingWindow: AiChatMessage[],
-  playerInput: string,
-  apiKey: string
-): Promise<AiRawModelResponse | null> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 6000);
-
-  try {
-    const messages = [
-      { role: 'system', content: systemInstruction },
-      ...slidingWindow.map((m) => ({
-        role: m.role === 'model' ? 'assistant' : 'user',
-        content: m.content,
-      })),
-      { role: 'user', content: `<player_input>${playerInput}</player_input>` },
-    ];
-
-    const res = await $fetch<{
-      choices?: Array<{
-        message?: {
-          content?: string;
-        };
-      }>;
-    }>('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      signal: controller.signal,
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: {
-        model: 'google/gemini-2.0-flash-001',
-        messages,
-        response_format: { type: 'json_object' },
-        max_tokens: 300,
-        temperature: 0.7,
-      },
-    });
-
-    const content = res.choices?.[0]?.message?.content;
-    if (content) {
-      return parseModelJsonResponse(content);
-    }
-    return null;
-  } finally {
-    clearTimeout(timeoutId);
-  }
-}
-
-/**
  * POST /api/ai/roleplay
  * Production-ready AI Roleplay endpoint with anti-prompt injection, sliding window,
- * 6s abort controller timeout, OpenRouter fallback, and HMAC completion signatures.
+ * 6s abort controller timeout, OpenRouter smart fallback, and HMAC completion signatures.
  */
 export default defineEventHandler(async (event): Promise<AiRoleplayResponse> => {
   const body = await readBody<AiRoleplayPayload>(event);
@@ -337,50 +148,25 @@ export default defineEventHandler(async (event): Promise<AiRoleplayResponse> => 
   const slidingWindow: AiChatMessage[] = (body.conversationHistory || []).slice(-4);
   const systemPrompt = buildSystemPrompt(body.aiMission, body.worldTrack || 'kids');
 
-  let rawModelResult: AiRawModelResponse | null = null;
-  let usedFallback = false;
-
   const geminiApiKey = config.geminiApiKey || process.env.GEMINI_API_KEY;
   const geminiModel = config.geminiModel || process.env.GEMINI_MODEL || 'gemini-2.5-flash';
   const openrouterApiKey = config.openrouterApiKey || process.env.OPENROUTER_API_KEY;
 
-  // 4. Try Primary AI: Google Gemini Flash
-  if (geminiApiKey) {
-    try {
-      rawModelResult = await callGeminiApi(
-        systemPrompt,
-        slidingWindow,
-        sanitizedInput,
-        geminiApiKey,
-        geminiModel
-      );
-    } catch (geminiErr) {
-      console.warn('[AiRoleplay] Gemini API encountered error, switching to OpenRouter:', geminiErr);
-    }
-  }
+  // 4. Execute AI with Smart Fallback (Gemini -> OpenRouter -> Offline Engine)
+  const aiResult = await callAiWithSmartFallback({
+    systemInstruction: systemPrompt,
+    slidingWindow,
+    playerInput: sanitizedInput,
+    geminiApiKey,
+    geminiModel,
+    openrouterApiKey,
+    payload: body,
+    timeoutMs: 6000,
+  });
 
-  // 5. Try Secondary AI: OpenRouter Smart Fallback
-  if (!rawModelResult && openrouterApiKey) {
-    try {
-      usedFallback = true;
-      rawModelResult = await callOpenRouterFallback(
-        systemPrompt,
-        slidingWindow,
-        sanitizedInput,
-        openrouterApiKey
-      );
-    } catch (openRouterErr) {
-      console.warn('[AiRoleplay] OpenRouter fallback failed:', openRouterErr);
-    }
-  }
+  const rawModelResult = aiResult.response;
 
-  // 6. Tertiary Fallback: Deterministic Rule-Based Offline Engine
-  if (!rawModelResult) {
-    usedFallback = true;
-    rawModelResult = executeOfflineFallback(body, sanitizedInput);
-  }
-
-  // 7. Update User AI Quota in Firestore for authenticated accounts
+  // 5. Update User AI Quota in Firestore for authenticated accounts
   if (!isGuest && uid) {
     try {
       const userRef = adminDb.collection('users').doc(uid);
@@ -394,7 +180,7 @@ export default defineEventHandler(async (event): Promise<AiRoleplayResponse> => 
     }
   }
 
-  // 8. Generate HMAC completion proof if mission completed
+  // 6. Generate HMAC completion proof if mission completed
   let completionProof: string | undefined;
   if (rawModelResult.isMissionCompleted) {
     const hmacSecret = config.hmacSecretKey || process.env.HMAC_SECRET_KEY || '';
@@ -418,7 +204,8 @@ export default defineEventHandler(async (event): Promise<AiRoleplayResponse> => 
     isMissionCompleted: rawModelResult.isMissionCompleted,
     completionProof,
     remainingTurns: Math.max(0, 20 - (usedTurns + 1)),
-    usedFallback,
+    usedFallback: aiResult.usedFallback,
+    providerUsed: aiResult.providerUsed,
+    latencyMs: aiResult.latencyMs,
   };
 });
-

@@ -74,7 +74,7 @@ async function onLogout(): Promise<void> {
 
         <!-- Gold Counter -->
         <div class="stat-pill gold-pill" title="Vàng: Dùng mua Khiên Băng và vật phẩm">
-          <span class="stat-icon" aria-hidden="true">🪙</span>
+          <span class="stat-icon" aria-hidden="true">💰</span>
           <span class="stat-val">{{ userGold }}</span>
         </div>
 

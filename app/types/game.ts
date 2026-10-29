@@ -223,6 +223,42 @@ export type MiniGameType =
   | 'ai_roleplay';
 
 /**
+ * Card item representation for Word Alchemy matching mini-game
+ */
+export interface AlchemyCard {
+  id: string;
+  vocabId: string;
+  type: 'word' | 'meaning';
+  text: string;
+  subtext?: string;
+  emoji?: string;
+  isMatched: boolean;
+  isSelected: boolean;
+  isWrong: boolean;
+}
+
+/**
+ * Runner obstacle definition for Voice Runner mini-game
+ */
+export interface RunnerObstacle {
+  id: string;
+  vocabItem: StageVocabItem;
+  isDefeated: boolean;
+  obstacleType: 'gate' | 'golem' | 'drone' | 'barrier';
+}
+
+/**
+ * Scrambled ancient rune stone for Sentence Lock grammar puzzle
+ */
+export interface RuneStone {
+  id: string;
+  word: string;
+  isDistractor: boolean;
+  isPlaced: boolean;
+  slotIndex: number | null;
+}
+
+/**
  * In-game session stages
  */
 export type GameSessionPhase =
@@ -233,6 +269,57 @@ export type GameSessionPhase =
   | 'ai_roleplay'
   | 'victory'
   | 'gameover';
+
+/**
+ * Sound effect types supported by Web Audio API sound synthesizer
+ */
+export type SoundEffectType =
+  | 'correct'
+  | 'wrong'
+  | 'combo_fever'
+  | 'fanfare'
+  | 'click'
+  | 'hit'
+  | 'rhythm_tap';
+
+/**
+ * Screen shake intensity options
+ */
+export type ScreenShakeIntensity = 'light' | 'medium' | 'heavy';
+
+/**
+ * Detailed log of each answered challenge within a gameplay session
+ */
+export interface AnswerLogEntry {
+  questionId: string;
+  itemType: 'vocab' | 'grammar' | 'voice' | 'roleplay';
+  isCorrect: boolean;
+  timeSpentMs: number;
+  userResponse: string;
+  expectedResponse: string;
+  scoreAwarded: number;
+  timestamp: number;
+}
+
+/**
+ * Comprehensive stage completion summary for server validation & rewards
+ */
+export interface StageResultSummary {
+  stageId: number;
+  worldTrack: WorldTrack;
+  score: number;
+  starsEarned: number;
+  isPerfect: boolean;
+  accuracy: number;
+  totalCorrect: number;
+  totalQuestions: number;
+  maxCombo: number;
+  totalExpEarned: number;
+  totalGoldEarned: number;
+  wrongItems: string[];
+  aiCompletionProof: string | null;
+  answersLog: AnswerLogEntry[];
+}
 
 /**
  * Universal helper functions to safely extract stage items regardless of alias

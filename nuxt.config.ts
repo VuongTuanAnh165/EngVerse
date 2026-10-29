@@ -47,6 +47,10 @@ export default defineNuxtConfig({
       pathPrefix: false,
     },
     {
+      path: '~/components/games',
+      pathPrefix: false,
+    },
+    {
       path: '~/components',
       pathPrefix: false,
     },

@@ -40,6 +40,9 @@ onMounted(() => {
 
     <NuxtRouteAnnouncer />
     <NuxtPage />
+
+    <!-- Mobile Persistent Bottom Navigation Bar (< 768px) -->
+    <BottomNav />
   </div>
 </template>
 
@@ -66,5 +69,12 @@ textarea {
   font-family: inherit;
   font-size: 100%;
   color: inherit;
+}
+
+/* Prevent mobile bottom navigation bar from overlapping content */
+@media (max-width: 768px) {
+  #engverse-app {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
 }
 </style>

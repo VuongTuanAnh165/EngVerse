@@ -4,8 +4,6 @@
    Google Fonts with 100% full Vietnamese diacritics support
    ========================================================================== */
 
-/* Google Fonts self-hosted and zero-CLS optimized via @nuxt/fonts */
-
 :root {
   --transition-speed: 0.25s;
   --transition-timing: cubic-bezier(0.16, 1, 0.3, 1);
@@ -13,23 +11,23 @@
 
 /* ==========================================================================
    1. UNIVERSE 1: ĐẢO THẦN THOẠI (kids - 5 đến 12 tuổi)
-   Tươi sáng, hoạt hình, bo góc lớn 24px, nút bấm nổi 3D
+   Tươi sáng, hoạt hình, bo góc lớn 24px, độ tương phản cao, êm mắt
    ========================================================================== */
 html[data-theme="kids"] {
   --color-scheme: light;
 
-  /* Backgrounds */
-  --bg-primary: #fefce8;
-  --bg-secondary: #fef08a;
+  /* Backgrounds: Warm ivory & soft honey ambience, not blinding yellow */
+  --bg-primary: #fffdf5;
+  --bg-secondary: #fef3c7;
   --bg-surface: #ffffff;
   --bg-surface-translucent: rgba(255, 255, 255, 0.9);
   --bg-card: #ffffff;
   --bg-card-hover: #fffbeb;
 
-  /* Typography */
-  --text-primary: #713f12;
-  --text-secondary: #854d0e;
-  --text-muted: #a16207;
+  /* Typography: Deep chocolate cocoa tones with WCAG AAA readability */
+  --text-primary: #3b1d07;
+  --text-secondary: #63330f;
+  --text-muted: #854d0e;
   --font-family: 'Be Vietnam Pro', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 
   /* Brand Accents */
@@ -37,33 +35,33 @@ html[data-theme="kids"] {
   --accent-primary-hover: #d97706;
   --accent-secondary: #10b981;
   --accent-tertiary: #ec4899;
-  --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #facc15 100%);
+  --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
   --accent-text: #ffffff;
 
   /* Borders & Radius */
-  --border-color: #fde047;
+  --border-color: #fde68a;
   --border-focus: #f59e0b;
   --radius-sm: 12px;
   --radius-md: 18px;
   --radius-lg: 24px;
   --radius-pill: 9999px;
 
-  /* Shadows & 3D Juice Effects */
-  --shadow-sm: 0 2px 4px rgba(245, 158, 11, 0.15);
-  --shadow-md: 0 4px 12px rgba(245, 158, 11, 0.2);
-  --shadow-lg: 0 8px 24px rgba(245, 158, 11, 0.25);
-  --btn-3d-shadow: 0 5px 0 #b45309;
-  --btn-3d-active: 0 2px 0 #b45309;
-  --glow-accent: 0 0 20px rgba(245, 158, 11, 0.4);
+  /* Shadows & 3D Game Juice Effects */
+  --shadow-sm: 0 2px 6px rgba(245, 158, 11, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px -2px rgba(245, 158, 11, 0.14), 0 2px 6px -1px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 16px 36px -4px rgba(245, 158, 11, 0.18), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+  --btn-3d-shadow: 0 4px 0 #b45309;
+  --btn-3d-active: 0 1px 0 #b45309;
+  --glow-accent: 0 0 20px rgba(245, 158, 11, 0.35);
 
   /* Header */
-  --header-bg: rgba(254, 252, 232, 0.95);
-  --header-border: #fde047;
+  --header-bg: rgba(255, 253, 245, 0.9);
+  --header-border: rgba(253, 230, 138, 0.8);
 }
 
 /* ==========================================================================
    2. UNIVERSE 2: THÀNH PHỐ ĐÊM CYBER (teens - 13 đến 22 tuổi)
-   Nền tối slate #0F172A, hiệu ứng phát sáng Neon Cyan/Purple, cá tính
+   Nền tối slate #0B0F19, hiệu ứng phát sáng Neon Cyan/Purple, cá tính
    ========================================================================== */
 html[data-theme="teens"] {
   --color-scheme: dark;
@@ -71,8 +69,8 @@ html[data-theme="teens"] {
   /* Backgrounds */
   --bg-primary: #0b0f19;
   --bg-secondary: #0f172a;
-  --bg-surface: #1e293b;
-  --bg-surface-translucent: rgba(30, 41, 59, 0.85);
+  --bg-surface: #141e33;
+  --bg-surface-translucent: rgba(20, 30, 51, 0.9);
   --bg-card: #131d31;
   --bg-card-hover: #1c2742;
 
@@ -99,15 +97,15 @@ html[data-theme="teens"] {
   --radius-pill: 9999px;
 
   /* Shadows & Neon Glow Effects */
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 4px 16px rgba(6, 182, 212, 0.15);
-  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.7);
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 18px rgba(6, 182, 212, 0.16);
+  --shadow-lg: 0 10px 32px rgba(0, 0, 0, 0.8);
   --btn-3d-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
   --btn-3d-active: 0 0 8px rgba(6, 182, 212, 0.7);
   --glow-accent: 0 0 24px rgba(6, 182, 212, 0.6);
 
   /* Header */
-  --header-bg: rgba(11, 15, 25, 0.9);
+  --header-bg: rgba(11, 15, 25, 0.92);
   --header-border: rgba(6, 182, 212, 0.25);
 }
 
@@ -120,7 +118,7 @@ html[data-theme="adults"] {
 
   /* Backgrounds */
   --bg-primary: #f8fafc;
-  --bg-secondary: #f1f5f9;
+  --bg-secondary: #eef2f6;
   --bg-surface: #ffffff;
   --bg-surface-translucent: rgba(255, 255, 255, 0.92);
   --bg-card: #ffffff;
@@ -150,14 +148,14 @@ html[data-theme="adults"] {
 
   /* Shadows & Refined Business Elevation */
   --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
   --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.1);
   --btn-3d-shadow: 0 2px 4px rgba(15, 23, 42, 0.12);
   --btn-3d-active: 0 1px 2px rgba(15, 23, 42, 0.16);
   --glow-accent: 0 0 16px rgba(15, 23, 42, 0.15);
 
   /* Header */
-  --header-bg: rgba(255, 255, 255, 0.95);
+  --header-bg: rgba(248, 250, 252, 0.92);
   --header-border: #e2e8f0;
 }
 
@@ -181,6 +179,7 @@ body {
   font-family: inherit;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  touch-action: manipulation;
 }
 
 /* Universal Form Controls Font Reset */
@@ -196,7 +195,7 @@ textarea {
 /* Reusable Theme Card Utility */
 .theme-card {
   background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   transition: transform var(--transition-speed) var(--transition-timing),
@@ -227,11 +226,31 @@ textarea {
   box-shadow: var(--btn-3d-shadow);
   transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
   user-select: none;
+  white-space: nowrap;
 }
 
 .theme-btn-primary:active {
   transform: translateY(2px);
   box-shadow: var(--btn-3d-active);
+}
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
 }
 
 /* ==========================================================================
@@ -274,5 +293,3 @@ textarea {
 .shake-heavy {
   animation: screen-shake-heavy 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
-
-

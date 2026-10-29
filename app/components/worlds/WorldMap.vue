@@ -98,7 +98,7 @@ function getTrackTitle(track: string): string {
         </p>
       </div>
 
-      <NuxtLink to="/codex" class="codex-shortcut-btn">
+      <NuxtLink to="/codex" class="codex-shortcut-btn" title="Mở bộ sưu tập Thẻ Bài 3D">
         <span class="shortcut-icon" aria-hidden="true">📖</span>
         <span>Sổ Tay Thẻ Bài 3D</span>
       </NuxtLink>
@@ -141,7 +141,7 @@ function getTrackTitle(track: string): string {
         <!-- Node Card Button -->
         <button
           type="button"
-          class="stage-node-btn"
+          class="stage-node-btn theme-card"
           :disabled="!isStageUnlocked(stage.stageId)"
           @click="handleStageClick(stage)"
         >
@@ -158,6 +158,7 @@ function getTrackTitle(track: string): string {
             <div class="stage-meta">
               <span v-if="stage.cefrLevel" class="cefr-badge">{{ stage.cefrLevel }}</span>
               <span v-if="stage.isBossStage" class="boss-badge">BOSS CHƯƠNG</span>
+              <span v-else-if="isCurrentActiveStage(stage.stageId)" class="current-badge">CHẶNG HIỆN TẠI</span>
               <span class="stage-ch-text">Chặng {{ stage.stageId }}</span>
             </div>
 
@@ -266,32 +267,38 @@ function getTrackTitle(track: string): string {
 
 <style scoped>
 .world-map-wrapper {
-  max-width: 860px;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 2rem 1.25rem 4rem;
+  padding: 1.5rem 1rem 3rem;
 }
 
 .map-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  margin-bottom: 2.5rem;
+  gap: 1rem;
+  margin-bottom: 2rem;
   flex-wrap: wrap;
 }
 
+.map-title-box {
+  flex: 1;
+  min-width: 260px;
+}
+
 .map-title {
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.4rem 0;
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 900;
   color: var(--text-primary);
   line-height: 1.3;
 }
 
 .map-subtitle {
   margin: 0;
-  font-size: 0.9375rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 .codex-shortcut-btn {
@@ -299,16 +306,17 @@ function getTrackTitle(track: string): string {
   align-items: center;
   gap: 0.5rem;
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-color);
+  border: 1.5px solid var(--border-color);
   color: var(--text-primary);
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.85rem;
   padding: 0.5rem 1rem;
   border-radius: var(--radius-pill);
   text-decoration: none;
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
   user-select: none;
+  white-space: nowrap;
 }
 
 .codex-shortcut-btn:hover {
@@ -338,12 +346,24 @@ function getTrackTitle(track: string): string {
   to { transform: rotate(360deg); }
 }
 
+.retry-btn {
+  margin-top: 1rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--accent-primary);
+  color: var(--accent-text);
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+}
+
 /* Roadmap Grid */
 .stage-roadmap {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   position: relative;
+  padding: 1rem 0;
 }
 
 .stage-node-container {
@@ -364,16 +384,17 @@ function getTrackTitle(track: string): string {
   align-items: center;
   gap: 1.25rem;
   width: 100%;
-  max-width: 460px;
+  max-width: 470px;
   background-color: var(--bg-surface);
   border: 2px solid var(--border-color);
   border-radius: var(--radius-lg);
-  padding: 1.25rem 1.5rem;
+  padding: 1.15rem 1.35rem;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   text-align: left;
   font-family: inherit;
+  position: relative;
 }
 
 .stage-node-btn:hover:not(:disabled) {
@@ -391,12 +412,13 @@ function getTrackTitle(track: string): string {
 .stage-node-container.boss-node .stage-node-btn {
   border: 2px solid #ef4444;
   background: linear-gradient(135deg, var(--bg-surface) 0%, rgba(239, 68, 68, 0.08) 100%);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2);
 }
 
 .stage-node-container.locked .stage-node-btn {
-  opacity: 0.6;
+  opacity: 0.65;
   cursor: not-allowed;
-  filter: grayscale(0.6);
+  filter: grayscale(0.5);
 }
 
 .stage-emblem {
@@ -415,18 +437,30 @@ function getTrackTitle(track: string): string {
 }
 
 .boss-icon {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+}
+
+.check-icon {
+  font-size: 1.4rem;
+  color: #ffffff;
+}
+
+.lock-icon {
+  font-size: 1.2rem;
+  opacity: 0.8;
 }
 
 .stage-info {
   flex: 1;
+  min-width: 0;
 }
 
 .stage-meta {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
   margin-bottom: 0.25rem;
+  flex-wrap: wrap;
 }
 
 .cefr-badge {
@@ -440,12 +474,22 @@ function getTrackTitle(track: string): string {
 
 .boss-badge {
   font-size: 0.6875rem;
-  font-weight: 800;
+  font-weight: 900;
   background: #ef4444;
   color: #ffffff;
-  padding: 0.1rem 0.45rem;
+  padding: 0.1rem 0.5rem;
   border-radius: 4px;
   letter-spacing: 0.04em;
+}
+
+.current-badge {
+  font-size: 0.6875rem;
+  font-weight: 900;
+  background: var(--accent-primary);
+  color: var(--accent-text);
+  padding: 0.1rem 0.5rem;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
 }
 
 .stage-ch-text {
@@ -456,17 +500,21 @@ function getTrackTitle(track: string): string {
 
 .stage-name {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--text-primary);
   font-family: inherit;
+  line-height: 1.35;
 }
 
 .stage-desc {
-  margin: 0.25rem 0 0.5rem 0;
+  margin: 0.2rem 0 0.4rem 0;
   font-size: 0.8125rem;
   color: var(--text-secondary);
   line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .stars-row {
@@ -476,7 +524,7 @@ function getTrackTitle(track: string): string {
 
 .star-icon {
   color: rgba(148, 163, 184, 0.3);
-  font-size: 1rem;
+  font-size: 1.05rem;
 }
 
 .star-filled {
@@ -489,7 +537,8 @@ function getTrackTitle(track: string): string {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   z-index: 2000;
   display: flex;
   align-items: center;
@@ -500,9 +549,14 @@ function getTrackTitle(track: string): string {
 .stage-modal-card {
   width: 100%;
   max-width: 520px;
-  padding: 2rem;
+  padding: 1.75rem;
   position: relative;
   background-color: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-header {
@@ -540,15 +594,15 @@ function getTrackTitle(track: string): string {
 }
 
 .modal-title {
-  margin: 0 0 0.75rem 0;
-  font-size: 1.5rem;
-  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.35rem;
+  font-weight: 900;
   color: var(--text-primary);
 }
 
 .modal-story {
   margin: 0 0 1.25rem 0;
-  font-size: 0.9375rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
   line-height: 1.5;
 }
@@ -556,22 +610,22 @@ function getTrackTitle(track: string): string {
 .modal-rewards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 0.75rem;
+  gap: 0.65rem;
   margin-bottom: 1.25rem;
 }
 
 .reward-item {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.5rem;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  padding: 0.625rem;
+  padding: 0.5rem 0.65rem;
   border-radius: var(--radius-md);
 }
 
 .reward-icon {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
 }
 
 .reward-details {
@@ -580,13 +634,13 @@ function getTrackTitle(track: string): string {
 }
 
 .reward-val {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 800;
   color: var(--text-primary);
 }
 
 .reward-label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--text-muted);
 }
 
@@ -599,7 +653,7 @@ function getTrackTitle(track: string): string {
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text-muted);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .vocab-chips {
@@ -611,7 +665,7 @@ function getTrackTitle(track: string): string {
 .vocab-chip {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  padding: 0.25rem 0.625rem;
+  padding: 0.25rem 0.6rem;
   border-radius: var(--radius-pill);
   font-size: 0.8125rem;
   font-weight: 600;
@@ -648,5 +702,48 @@ function getTrackTitle(track: string): string {
 .modal-fade-leave-to {
   opacity: 0;
 }
-</style>
 
+/* ==========================================================================
+   Responsive Map Rules
+   ========================================================================== */
+@media (max-width: 768px) {
+  .world-map-wrapper {
+    padding: 1rem 0.75rem 2.5rem;
+  }
+  .map-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .map-title {
+    font-size: 1.25rem;
+  }
+  .codex-shortcut-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.45rem 1rem;
+  }
+  /* On mobile, center all stage nodes for thumb-friendly tapping */
+  .node-left,
+  .node-right {
+    justify-content: center;
+  }
+  .stage-node-btn {
+    max-width: 100%;
+    padding: 0.85rem 1rem;
+    gap: 0.85rem;
+  }
+  .stage-emblem {
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
+  }
+  .stage-name {
+    font-size: 0.95rem;
+  }
+  .stage-desc {
+    white-space: normal;
+  }
+}
+</style>

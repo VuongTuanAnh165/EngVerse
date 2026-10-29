@@ -1,21 +1,39 @@
 <script setup lang="ts">
-import { ref, computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
 import { useUserStore } from '~/stores/user';
+import { useUiState } from '~/composables/useUiState';
 import type { WorldTrack } from '~/types/user';
 
-// Lazy-loaded Leaderboard Modal (only fetched when opened)
+// Lazy-loaded Leaderboard Modal & Mobile Menu Drawer
 const LeaderboardModal = defineAsyncComponent(() => import('~/components/common/LeaderboardModal.vue'));
+const MobileMenuDrawer = defineAsyncComponent(() => import('~/components/common/MobileMenuDrawer.vue'));
 
 const userStore = useUserStore();
-const isLeaderboardOpen = ref<boolean>(false);
+const { isLeaderboardOpen, openLeaderboard, openMobileMenu } = useUiState();
 
-const tracks: Array<{ id: WorldTrack; name: string; emoji: string }> = [
-  { id: 'kids', name: 'Đảo Thần Thoại', emoji: '🏝️' },
+interface TrackInfo {
+  id: WorldTrack;
+  name: string;
+  emoji: string;
+}
+
+const defaultTrack: TrackInfo = {
+  id: 'kids',
+  name: 'Đảo Thần Thoại',
+  emoji: '🏝️',
+};
+
+const tracks: TrackInfo[] = [
+  defaultTrack,
   { id: 'teens', name: 'Cyber City', emoji: '⚡' },
   { id: 'adults', name: 'SimLife Global', emoji: '🌐' },
 ];
 
-const currentTrack = computed(() => userStore.currentTrack);
+const currentTrack = computed(() => userStore.currentTrack || 'kids');
+const currentTrackObj = computed<TrackInfo>(() => {
+  return tracks.find((t) => t.id === currentTrack.value) ?? defaultTrack;
+});
+
 const userGold = computed(() => userStore.gold);
 const userLevel = computed(() => userStore.level);
 const userExp = computed(() => userStore.exp);
@@ -49,11 +67,10 @@ async function onLogout(): Promise<void> {
       <div class="header-left">
         <NuxtLink to="/" class="brand-logo" aria-label="EngVerse Trang Chủ">
           <span class="logo-text">EngVerse</span>
-          <span class="logo-verse-badge">{{ currentTrack.toUpperCase() }}</span>
         </NuxtLink>
 
-        <!-- 3-Universe Track Switcher -->
-        <nav class="universe-selector" aria-label="Chọn Vũ Trụ Học Tập">
+        <!-- Desktop 3-Universe Track Switcher (Visible on >= 1024px) -->
+        <nav class="universe-selector desktop-only" aria-label="Chọn Vũ Trụ Học Tập">
           <button
             v-for="item in tracks"
             :key="item.id"
@@ -66,15 +83,27 @@ async function onLogout(): Promise<void> {
             <span class="tab-label">{{ item.name }}</span>
           </button>
         </nav>
+
+        <!-- Mobile / Tablet Quick Universe Dropdown Pill (Visible on < 1024px) -->
+        <button
+          type="button"
+          class="mobile-universe-pill mobile-tablet-only"
+          title="Bấm để đổi vũ trụ học tập"
+          @click="openMobileMenu"
+        >
+          <span class="pill-emoji">{{ currentTrackObj.emoji }}</span>
+          <span class="pill-name">{{ currentTrackObj.name }}</span>
+          <span class="pill-arrow" aria-hidden="true">▾</span>
+        </button>
       </div>
 
       <!-- Right: Stats & Account -->
       <div class="header-right">
-        <!-- Energy -->
+        <!-- Energy Bar -->
         <EnergyBar />
 
-        <!-- Streak -->
-        <StreakBadge />
+        <!-- Streak Badge -->
+        <StreakBadge class="streak-header-item" />
 
         <!-- Gold Counter -->
         <div class="stat-pill gold-pill" title="Vàng: Dùng mua Khiên Băng và vật phẩm">
@@ -82,35 +111,35 @@ async function onLogout(): Promise<void> {
           <span class="stat-val">{{ userGold }}</span>
         </div>
 
-        <!-- Level & EXP -->
-        <div class="stat-pill level-pill" :title="`Cấp độ ${userLevel} - Tổng EXP: ${userExp}`">
+        <!-- Level & EXP (Hidden on Mobile < 768px) -->
+        <div class="stat-pill level-pill desktop-tablet-only" :title="`Cấp độ ${userLevel} - Tổng EXP: ${userExp}`">
           <span class="stat-icon" aria-hidden="true">⭐</span>
           <span class="stat-val">Lv.{{ userLevel }}</span>
         </div>
 
-        <!-- Global Leaderboard Button -->
+        <!-- Global Leaderboard Button (Hidden on Mobile < 768px, available in Bottom Nav) -->
         <button
           type="button"
-          class="stat-pill leaderboard-trigger-btn"
+          class="stat-pill leaderboard-trigger-btn desktop-tablet-only"
           title="Bảng Xếp Hạng Toàn Cầu (Top 30)"
-          @click="isLeaderboardOpen = true"
+          @click="openLeaderboard"
         >
           <span class="stat-icon" aria-hidden="true">🏆</span>
-          <span class="stat-val">Xếp Hạng</span>
+          <span class="stat-val text-label">Xếp Hạng</span>
         </button>
 
-        <!-- Share Honor Card Link -->
+        <!-- Share Honor Card Link (Visible on >= 992px) -->
         <NuxtLink
           :to="`/share/${userStore.user.uid || 'guest_user'}`"
-          class="stat-pill share-trigger-btn"
+          class="stat-pill share-trigger-btn large-screen-only"
           title="Xem & Chia Sẻ Thẻ Vinh Danh"
         >
           <span class="stat-icon" aria-hidden="true">🎖️</span>
-          <span class="stat-val">Vinh Danh</span>
+          <span class="stat-val text-label">Vinh Danh</span>
         </NuxtLink>
 
-        <!-- Audio Toggle -->
-        <AudioToggle />
+        <!-- Audio Toggle (Hidden on Mobile < 768px, available in Mobile Menu) -->
+        <AudioToggle class="desktop-tablet-only" />
 
         <!-- User Authentication & Profile -->
         <div class="auth-section">
@@ -120,6 +149,7 @@ async function onLogout(): Promise<void> {
             type="button"
             class="guest-save-btn"
             :disabled="isSyncing"
+            title="Lưu tiến trình học lên Google"
             @click="onGoogleSync"
           >
             <svg
@@ -128,6 +158,7 @@ async function onLogout(): Promise<void> {
               width="16"
               height="16"
               fill="currentColor"
+              class="google-icon"
             >
               <path
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -147,7 +178,9 @@ async function onLogout(): Promise<void> {
               />
             </svg>
             <span v-else class="spinner-small" />
-            <span>{{ isSyncing ? 'Đang lưu...' : 'Lưu tài khoản' }}</span>
+            <span class="guest-btn-text">
+              {{ isSyncing ? 'Đang lưu...' : 'Lưu tài khoản' }}
+            </span>
           </button>
 
           <!-- Authenticated User Profile -->
@@ -164,7 +197,7 @@ async function onLogout(): Promise<void> {
 
             <button
               type="button"
-              class="logout-btn"
+              class="logout-btn desktop-tablet-only"
               title="Đăng xuất"
               aria-label="Đăng xuất"
               @click="onLogout"
@@ -191,6 +224,9 @@ async function onLogout(): Promise<void> {
 
     <!-- Global Top 30 Leaderboard Modal -->
     <LeaderboardModal v-model:open="isLeaderboardOpen" />
+
+    <!-- Mobile Slide-Up Settings & Universe Drawer -->
+    <MobileMenuDrawer />
   </header>
 </template>
 
@@ -202,55 +238,49 @@ async function onLogout(): Promise<void> {
   right: 0;
   z-index: 1000;
   background-color: var(--header-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--header-border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
   transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .header-inner {
-  max-width: 1280px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 0.625rem 1.25rem;
+  padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .header-left {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+  flex-shrink: 0;
 }
 
 .brand-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   text-decoration: none;
   user-select: none;
+  flex-shrink: 0;
 }
 
 .logo-text {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   font-weight: 900;
   letter-spacing: -0.03em;
   background: var(--accent-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  line-height: 1;
 }
 
-.logo-verse-badge {
-  font-size: 0.625rem;
-  font-weight: 800;
-  padding: 0.15rem 0.4rem;
-  border-radius: var(--radius-sm);
-  background: var(--accent-primary);
-  color: var(--accent-text);
-  letter-spacing: 0.05em;
-}
-
+/* 3-Universe Selector (Desktop) */
 .universe-selector {
   display: flex;
   align-items: center;
@@ -259,6 +289,8 @@ async function onLogout(): Promise<void> {
   padding: 0.2rem;
   border-radius: var(--radius-pill);
   gap: 0.2rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .track-tab-btn {
@@ -271,10 +303,12 @@ async function onLogout(): Promise<void> {
   background: transparent;
   color: var(--text-secondary);
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .track-tab-btn:hover {
@@ -287,24 +321,90 @@ async function onLogout(): Promise<void> {
   box-shadow: var(--shadow-sm);
 }
 
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
+.tab-emoji {
+  font-size: 0.95rem;
+  line-height: 1;
 }
 
-.stat-pill {
+.tab-label {
+  white-space: nowrap;
+}
+
+/* Mobile & Tablet Universe Pill */
+.mobile-universe-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
   background-color: var(--bg-surface-translucent);
   border: 1px solid var(--border-color);
-  padding: 0.35rem 0.65rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.mobile-universe-pill:hover {
+  border-color: var(--border-focus);
+}
+
+.pill-emoji {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.pill-name {
+  max-width: 110px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pill-arrow {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Header Right */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: var(--bg-surface-translucent);
+  border: 1px solid var(--border-color);
+  padding: 0.35rem 0.6rem;
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-sm);
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.stat-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.stat-val {
+  white-space: nowrap;
 }
 
 .leaderboard-trigger-btn,
@@ -312,39 +412,34 @@ async function onLogout(): Promise<void> {
   cursor: pointer;
   background-color: var(--bg-surface);
   text-decoration: none;
+  font-family: inherit;
   transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .leaderboard-trigger-btn:hover,
 .share-trigger-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-1px);
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-sm);
-}
-
-.gold-pill .stat-icon {
-  font-size: 0.95rem;
-}
-
-.level-pill .stat-icon {
-  font-size: 0.95rem;
-  color: #eab308;
 }
 
 .guest-save-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
   font-size: 0.8125rem;
   font-weight: 700;
-  padding: 0.35rem 0.85rem;
+  padding: 0.35rem 0.75rem;
   border-radius: var(--radius-pill);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: all 0.2s ease;
+  font-family: inherit;
 }
 
 .guest-save-btn:hover {
@@ -352,15 +447,25 @@ async function onLogout(): Promise<void> {
   transform: translateY(-1px);
 }
 
+.guest-btn-text {
+  white-space: nowrap;
+}
+
+.google-icon {
+  flex-shrink: 0;
+}
+
 .user-profile-menu {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.35rem;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .user-avatar-badge {
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid var(--border-focus);
@@ -370,6 +475,7 @@ async function onLogout(): Promise<void> {
   background: var(--accent-primary);
   color: #ffffff;
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 .avatar-img {
@@ -379,7 +485,7 @@ async function onLogout(): Promise<void> {
 }
 
 .avatar-fallback {
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
 }
 
 .logout-btn {
@@ -387,12 +493,13 @@ async function onLogout(): Promise<void> {
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 0.35rem;
+  padding: 0.3rem;
   border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: color 0.2s;
+  flex-shrink: 0;
 }
 
 .logout-btn:hover {
@@ -406,6 +513,7 @@ async function onLogout(): Promise<void> {
   border-top-color: var(--accent-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
+  flex-shrink: 0;
 }
 
 @keyframes spin {
@@ -414,13 +522,84 @@ async function onLogout(): Promise<void> {
   }
 }
 
-@media (max-width: 900px) {
-  .tab-label {
-    display: none;
+/* Visibility classes */
+.mobile-tablet-only {
+  display: none;
+}
+
+.desktop-only {
+  display: flex;
+}
+
+.desktop-tablet-only {
+  display: inline-flex;
+}
+
+.large-screen-only {
+  display: inline-flex;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints: PC -> Laptop -> Tablet -> Mobile
+   ========================================================================== */
+
+/* Laptop (1024px - 1199px) */
+@media (max-width: 1199px) {
+  .large-screen-only {
+    display: none; /* Hide Vinh Danh button to keep laptop header clean */
   }
   .track-tab-btn {
+    padding: 0.35rem 0.55rem;
+    font-size: 0.78rem;
+  }
+}
+
+/* Tablet (768px - 1023px) */
+@media (max-width: 1023px) {
+  .desktop-only {
+    display: none; /* Hide 3 desktop tabs */
+  }
+  .mobile-tablet-only {
+    display: inline-flex; /* Show single compact universe pill */
+  }
+  .guest-btn-text {
+    display: none; /* Icon-only Google save button on tablet */
+  }
+  .guest-save-btn {
+    padding: 0.35rem 0.5rem;
+  }
+  .leaderboard-trigger-btn .text-label {
+    display: none; /* Icon-only leaderboard button on tablet */
+  }
+  .leaderboard-trigger-btn {
     padding: 0.35rem 0.5rem;
   }
 }
-</style>
 
+/* Mobile (< 768px) */
+@media (max-width: 767px) {
+  .header-inner {
+    padding: 0.4rem 0.75rem;
+    gap: 0.4rem;
+  }
+  .logo-text {
+    font-size: 1.15rem;
+  }
+  .pill-name {
+    display: none; /* Only show emoji on small mobile screens */
+  }
+  .mobile-universe-pill {
+    padding: 0.25rem 0.45rem;
+  }
+  .desktop-tablet-only {
+    display: none; /* Level, Leaderboard, Audio moved to Mobile Bottom Nav & Drawer */
+  }
+  .header-right {
+    gap: 0.35rem;
+  }
+  .gold-pill {
+    padding: 0.25rem 0.45rem;
+    font-size: 0.78rem;
+  }
+}
+</style>

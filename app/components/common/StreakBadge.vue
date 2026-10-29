@@ -18,8 +18,8 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
     <div class="streak-flame-box" aria-hidden="true">
       <svg
         viewBox="0 0 24 24"
-        width="18"
-        height="18"
+        width="16"
+        height="16"
         fill="currentColor"
         class="flame-svg"
       >
@@ -40,8 +40,8 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
     >
       <svg
         viewBox="0 0 24 24"
-        width="13"
-        height="13"
+        width="12"
+        height="12"
         fill="none"
         stroke="currentColor"
         stroke-width="2.5"
@@ -59,13 +59,15 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
 .streak-badge-container {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: 0.35rem;
   background-color: var(--bg-surface-translucent);
   border: 1px solid var(--border-color);
-  padding: 0.35rem 0.75rem;
+  padding: 0.35rem 0.65rem;
   border-radius: var(--radius-pill);
   box-shadow: var(--shadow-sm);
   user-select: none;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: all var(--transition-speed) var(--transition-timing);
 }
 
@@ -75,6 +77,7 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
   justify-content: center;
   color: #f97316;
   filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.6));
+  flex-shrink: 0;
 }
 
 .flame-svg {
@@ -85,6 +88,7 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
   font-size: 0.8125rem;
   font-weight: 800;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .freeze-shield-indicator {
@@ -94,11 +98,12 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
   background: rgba(56, 189, 248, 0.15);
   border: 1px solid rgba(56, 189, 248, 0.4);
   color: #38bdf8;
-  padding: 0.1rem 0.35rem;
+  padding: 0.1rem 0.3rem;
   border-radius: var(--radius-pill);
   font-size: 0.6875rem;
   font-weight: 700;
-  margin-left: 0.25rem;
+  margin-left: 0.2rem;
+  white-space: nowrap;
 }
 
 @keyframes flicker-flame {
@@ -109,5 +114,11 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
     transform: scale(1.08) rotate(3deg);
   }
 }
-</style>
 
+@media (max-width: 640px) {
+  .streak-badge-container {
+    padding: 0.25rem 0.5rem;
+    gap: 0.2rem;
+  }
+}
+</style>

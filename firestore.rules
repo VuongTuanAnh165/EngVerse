@@ -1,0 +1,22 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // User Profile Document (1-Doc-Per-User Architecture)
+    // - Only the authenticated user can read their own document (request.auth.uid == userId).
+    // - ZERO CLIENT WRITES: allow write is strictly false.
+    //   All balance changes, stage clears, and freeze shield purchases MUST execute
+    //   through Firebase Admin SDK via verified server endpoints.
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    // Explicitly lock down any other collections or nested paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

@@ -14,6 +14,10 @@ export default defineNuxtConfig({
     strict: true,
   },
 
+  modules: [
+    '@pinia/nuxt',
+  ],
+
   // Component auto-import configuration without mandatory directory prefixing
   components: [
     {

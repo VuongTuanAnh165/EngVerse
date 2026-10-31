@@ -54,146 +54,161 @@ async function verifyCloudflareTurnstile(
  * 1-Document-Per-User in Firestore (zero client writes).
  */
 export default defineEventHandler(async (event): Promise<AuthInitResponse> => {
-  const body = await readBody<AuthInitPayload>(event);
+  try {
+    const body = await readBody<AuthInitPayload>(event);
 
-  if (!body || !body.idToken) {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Bad Request',
-      message: 'Thiếu idToken xác thực từ Firebase.',
-    });
-  }
-
-  const config = useRuntimeConfig();
-
-  // 1. Verify Cloudflare Turnstile bot detection
-  if (body.turnstileToken) {
-    const remoteIp =
-      getRequestHeader(event, 'cf-connecting-ip') ||
-      getRequestHeader(event, 'x-forwarded-for')?.split(',')[0]?.trim();
-
-    const isHuman = await verifyCloudflareTurnstile(
-      body.turnstileToken,
-      config.turnstileSecretKey,
-      remoteIp
-    );
-
-    if (!isHuman) {
+    if (!body || !body.idToken) {
       throw createError({
-        statusCode: 403,
-        statusMessage: 'Forbidden',
-        message: 'Xác thực Cloudflare Turnstile không hợp lệ.',
+        statusCode: 400,
+        statusMessage: 'Bad Request',
+        message: 'Thiếu idToken xác thực từ Firebase.',
       });
     }
-  }
 
-  // 2. Verify Firebase ID Token securely using Firebase Admin SDK
-  let uid = '';
-  let email: string | null = null;
-  let displayName = 'Explorer';
-  let avatar = 'rookie_explorer';
+    const config = useRuntimeConfig();
 
-  try {
-    const decodedToken = await adminAuth.verifyIdToken(body.idToken);
-    uid = decodedToken.uid;
-    email = decodedToken.email || null;
-    if (decodedToken.name) displayName = decodedToken.name;
-    if (decodedToken.picture) avatar = decodedToken.picture;
-  } catch (authError) {
-    console.error('[AuthInit] Firebase token verification failed:', authError);
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Unauthorized',
-      message: 'ID Token không hợp lệ hoặc đã hết hạn.',
-    });
-  }
+    // 1. Verify Cloudflare Turnstile bot detection
+    if (body.turnstileToken) {
+      const remoteIp =
+        getRequestHeader(event, 'cf-connecting-ip') ||
+        getRequestHeader(event, 'x-forwarded-for')?.split(',')[0]?.trim();
 
-  const userRef = adminDb.collection('users').doc(uid);
-  const docSnap = await userRef.get();
-  const now = Date.now();
+      const isHuman = await verifyCloudflareTurnstile(
+        body.turnstileToken,
+        config.turnstileSecretKey,
+        remoteIp
+      );
 
-  // 3. Existing User Path
-  if (docSnap.exists) {
-    const existingData = docSnap.data() as UserProfile;
-
-    // Refresh timestamp
-    await userRef.update({
-      updatedAt: now,
-    });
-
-    existingData.updatedAt = now;
-    existingData.isGuest = false;
-
-    return {
-      success: true,
-      user: existingData,
-      isNewUser: false,
-      message: 'Chào mừng bạn quay trở lại EngVerse!',
-    };
-  }
-
-  // 4. New User Path (Sync Guest Progress into First Firestore Document)
-  const chosenTrack: WorldTrack =
-    body.guestProgress?.worldTrack === 'teens' ||
-    body.guestProgress?.worldTrack === 'adults' ||
-    body.guestProgress?.worldTrack === 'kids'
-      ? body.guestProgress.worldTrack
-      : 'kids';
-
-  const newProfile = createDefaultUserProfile(uid, displayName, avatar, chosenTrack);
-  newProfile.email = email;
-  newProfile.createdAt = now;
-  newProfile.updatedAt = now;
-  newProfile.isGuest = false;
-
-  // Merge validated guest progress from 30-second trial
-  if (body.guestProgress) {
-    const guest = body.guestProgress;
-
-    // Apply safety guards against tampered guest local data
-    if (typeof guest.gold === 'number' && guest.gold >= 0) {
-      newProfile.gold = Math.min(500, Math.max(100, Math.floor(guest.gold)));
-    }
-    if (typeof guest.exp === 'number' && guest.exp >= 0) {
-      newProfile.exp = Math.min(500, Math.floor(guest.exp));
-    }
-    if (Array.isArray(guest.collectedCards)) {
-      newProfile.collectedCards = guest.collectedCards.slice(0, 5);
+      if (!isHuman) {
+        throw createError({
+          statusCode: 403,
+          statusMessage: 'Forbidden',
+          message: 'Xác thực Cloudflare Turnstile không hợp lệ.',
+        });
+      }
     }
 
-    // Merge track progress (capped at initial tutorial stage)
-    if (guest.progress && guest.progress.tracks) {
-      const guestTracks = guest.progress.tracks;
-      for (const trackKey of ['kids', 'teens', 'adults'] as const) {
-        if (guestTracks[trackKey]) {
-          const guestTrack = guestTracks[trackKey];
-          if (typeof guestTrack.unlockedStage === 'number') {
-            newProfile.progress.tracks[trackKey].unlockedStage = Math.min(
-              2,
-              Math.max(1, guestTrack.unlockedStage)
-            );
-          }
-          if (guestTrack.stageStars && typeof guestTrack.stageStars === 'object') {
-            const stars: Record<string, number> = {};
-            for (const [sId, sCount] of Object.entries(guestTrack.stageStars)) {
-              if (sId === '1' && typeof sCount === 'number') {
-                stars['1'] = Math.min(3, Math.max(1, Math.floor(sCount)));
-              }
+    // 2. Verify Firebase ID Token securely using Firebase Admin SDK
+    let uid = '';
+    let email: string | null = null;
+    let displayName = 'Explorer';
+    let avatar = 'rookie_explorer';
+
+    try {
+      const decodedToken = await adminAuth.verifyIdToken(body.idToken);
+      uid = decodedToken.uid;
+      email = decodedToken.email || null;
+      if (decodedToken.name) displayName = decodedToken.name;
+      if (decodedToken.picture) avatar = decodedToken.picture;
+    } catch (authError: unknown) {
+      console.error('[AuthInit] Firebase token verification failed:', authError);
+      const authMsg = authError instanceof Error ? authError.message : String(authError);
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Unauthorized',
+        message: `ID Token không hợp lệ hoặc Firebase Admin chưa cấu hình: ${authMsg}`,
+      });
+    }
+
+    const userRef = adminDb.collection('users').doc(uid);
+    const docSnap = await userRef.get();
+    const now = Date.now();
+
+    // 3. Existing User Path
+    if (docSnap.exists) {
+      const existingData = docSnap.data() as UserProfile;
+
+      // Refresh timestamp
+      await userRef.update({
+        updatedAt: now,
+      });
+
+      existingData.updatedAt = now;
+      existingData.isGuest = false;
+
+      return {
+        success: true,
+        user: existingData,
+        isNewUser: false,
+        message: 'Chào mừng bạn quay trở lại EngVerse!',
+      };
+    }
+
+    // 4. New User Path (Sync Guest Progress into First Firestore Document)
+    const chosenTrack: WorldTrack =
+      body.guestProgress?.worldTrack === 'teens' ||
+      body.guestProgress?.worldTrack === 'adults' ||
+      body.guestProgress?.worldTrack === 'kids'
+        ? body.guestProgress.worldTrack
+        : 'kids';
+
+    const newProfile = createDefaultUserProfile(uid, displayName, avatar, chosenTrack);
+    newProfile.email = email;
+    newProfile.createdAt = now;
+    newProfile.updatedAt = now;
+    newProfile.isGuest = false;
+
+    // Merge validated guest progress from 30-second trial
+    if (body.guestProgress) {
+      const guest = body.guestProgress;
+
+      // Apply safety guards against tampered guest local data
+      if (typeof guest.gold === 'number' && guest.gold >= 0) {
+        newProfile.gold = Math.min(500, Math.max(100, Math.floor(guest.gold)));
+      }
+      if (typeof guest.exp === 'number' && guest.exp >= 0) {
+        newProfile.exp = Math.min(500, Math.floor(guest.exp));
+      }
+      if (Array.isArray(guest.collectedCards)) {
+        newProfile.collectedCards = guest.collectedCards.slice(0, 5);
+      }
+
+      // Merge track progress (capped at initial tutorial stage)
+      if (guest.progress && guest.progress.tracks) {
+        const guestTracks = guest.progress.tracks;
+        for (const trackKey of ['kids', 'teens', 'adults'] as const) {
+          if (guestTracks[trackKey]) {
+            const guestTrack = guestTracks[trackKey];
+            if (typeof guestTrack.unlockedStage === 'number') {
+              newProfile.progress.tracks[trackKey].unlockedStage = Math.min(
+                2,
+                Math.max(1, guestTrack.unlockedStage)
+              );
             }
-            newProfile.progress.tracks[trackKey].stageStars = stars;
+            if (guestTrack.stageStars && typeof guestTrack.stageStars === 'object') {
+              const stars: Record<string, number> = {};
+              for (const [sId, sCount] of Object.entries(guestTrack.stageStars)) {
+                if (sId === '1' && typeof sCount === 'number') {
+                  stars['1'] = Math.min(3, Math.max(1, Math.floor(sCount)));
+                }
+              }
+              newProfile.progress.tracks[trackKey].stageStars = stars;
+            }
           }
         }
       }
     }
+
+    // Atomically write new profile to Firestore (1 doc per user rule)
+    await userRef.set(newProfile);
+
+    return {
+      success: true,
+      user: newProfile,
+      isNewUser: true,
+      message: 'Tài khoản đã được khởi tạo và lưu tiến trình thành công!',
+    };
+  } catch (err: unknown) {
+    console.error('[AuthInit] Unhandled server error in /api/auth/init:', err);
+    // If it's already an H3Error with specific status (like 400 or 401), re-throw
+    if (err && typeof err === 'object' && 'statusCode' in err) {
+      throw err;
+    }
+    const message = err instanceof Error ? err.message : String(err);
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Internal Server Error',
+      message: `Lỗi máy chủ (/api/auth/init): ${message}`,
+    });
   }
-
-  // Atomically write new profile to Firestore (1 doc per user rule)
-  await userRef.set(newProfile);
-
-  return {
-    success: true,
-    user: newProfile,
-    isNewUser: true,
-    message: 'Tài khoản đã được khởi tạo và lưu tiến trình thành công!',
-  };
 });

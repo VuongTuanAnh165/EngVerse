@@ -42,8 +42,10 @@ export function getFirebaseAdminApp(): App {
     process.env.FIREBASE_PRIVATE_KEY ||
     '';
 
-  // Handle escaped newlines from environment variables
-  const privateKey = rawPrivateKey.replace(/\\n/g, '\n');
+  // Handle escaped newlines and strip surrounding quotes from environment variables
+  const privateKey = rawPrivateKey
+    .replace(/^["']|["']$/g, '')
+    .replace(/\\n/g, '\n');
 
   if (!clientEmail || !privateKey) {
     throw new Error(
@@ -78,7 +80,9 @@ export function getAdminAuth(): Auth {
  */
 export function getAdminDb(): Firestore {
   if (!_adminDb) {
-    _adminDb = getFirestore(getFirebaseAdminApp());
+    const db = getFirestore(getFirebaseAdminApp());
+    db.settings({ ignoreUndefinedProperties: true });
+    _adminDb = db;
   }
   return _adminDb;
 }

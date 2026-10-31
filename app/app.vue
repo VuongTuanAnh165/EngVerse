@@ -41,6 +41,9 @@ onMounted(() => {
     <NuxtRouteAnnouncer />
     <NuxtPage />
 
+    <!-- Global Multi-Universe Footer -->
+    <AppFooter />
+
     <!-- Mobile Persistent Bottom Navigation Bar (< 768px) -->
     <BottomNav />
   </div>
@@ -58,6 +61,12 @@ body {
 *::before,
 *::after {
   box-sizing: inherit;
+}
+
+#engverse-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Ensure buttons, inputs, textareas explicitly inherit font-family across all browsers */

@@ -73,6 +73,28 @@ function closeModal(): void {
   selectedStage.value = null;
 }
 
+
+const totalStagesCount = computed(() => stages.value.length || 0);
+const totalBossesCount = computed(() => stages.value.filter((s) => s.isBossStage).length || 0);
+const totalChaptersCount = computed(() => {
+  if (stages.value.length === 0) return 1;
+  return new Set(stages.value.map((s) => s.chapter || 1)).size;
+});
+
+function getChapterInfo(track: string, chapter: number): { title: string; subtitle: string; bossName: string } {
+  const chapterStages = stages.value.filter((s) => s.chapter === chapter);
+  const chapterBoss = chapterStages.find((s) => s.isBossStage);
+  const startStageId = chapterStages[0]?.stageId || 1;
+  const endStageId = chapterStages[chapterStages.length - 1]?.stageId || startStageId;
+  const bossName = chapterBoss?.title?.replace(/^BOSS:\s*/i, '') || `Trùm Cuối Chương ${chapter}`;
+
+  return {
+    title: `CHƯƠNG ${chapter} (Chặng ${startStageId} - ${endStageId})`,
+    subtitle: `${chapterStages.length} chặng thử thách tiếng Anh theo cốt truyện`,
+    bossName,
+  };
+}
+
 function getTrackTitle(track: string): string {
   switch (track) {
     case 'kids':
@@ -94,7 +116,7 @@ function getTrackTitle(track: string): string {
       <div class="map-title-box">
         <h2 class="map-title">{{ getTrackTitle(currentTrack) }}</h2>
         <p class="map-subtitle">
-          Chương 1: Vượt qua các chặng thử thách để mở khóa Boss ôn tập và nhận Thẻ Bài độc quyền!
+          {{ totalChaptersCount }} Chương Thử Thách ({{ totalStagesCount }} Chặng): Vượt qua các chặng để mở khóa {{ totalBossesCount }} Boss ôn tập và nhận Thẻ Bài độc quyền!
         </p>
       </div>
 
@@ -106,9 +128,9 @@ function getTrackTitle(track: string): string {
 
     <!-- Thematic Universe Hub Banner (Lazy-loaded per Track) -->
     <ClientOnly>
-      <WorldKidsView v-if="currentTrack === 'kids'" />
-      <WorldTeensView v-else-if="currentTrack === 'teens'" />
-      <WorldAdultsView v-else-if="currentTrack === 'adults'" />
+      <WorldKidsView v-if="currentTrack === 'kids'" :stages="stages" />
+      <WorldTeensView v-else-if="currentTrack === 'teens'" :stages="stages" />
+      <WorldAdultsView v-else-if="currentTrack === 'adults'" :stages="stages" />
     </ClientOnly>
 
     <!-- Loading State -->
@@ -355,6 +377,57 @@ function getTrackTitle(track: string): string {
   border: none;
   font-weight: 700;
   cursor: pointer;
+}
+
+
+/* Chapter Milestone Banner */
+.chapter-milestone-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  margin: 1.5rem 0 0.5rem 0;
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.chapter-milestone-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--accent-gradient);
+  color: var(--accent-text);
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.chapter-milestone-info {
+  flex: 1;
+}
+
+.chapter-milestone-title {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--text-primary);
+}
+
+.chapter-milestone-desc {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.chapter-boss-highlight {
+  color: #ef4444;
+  font-weight: 700;
 }
 
 /* Roadmap Grid */

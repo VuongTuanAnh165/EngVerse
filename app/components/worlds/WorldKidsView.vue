@@ -2,17 +2,26 @@
 /**
  * EngVerse - WorldKidsView Component
  * Dedicated World Interface for Universe 1: Đảo Thần Thoại (Kids 5-12).
- * Features:
- * - Floating fantasy magical islands & dragon egg incubator
- * - Whimsical cartoon cloud particles (60FPS GPU CSS)
- * - Chapter mission banner with interactive egg hatching milestone
+ *
+ * 100% Data-Driven Architecture:
+ * - Dynamically computes total stages, chapters, bosses and max stars from `stages` data.
+ * - Auto-adapts whenever stages.json is updated without UI code changes.
  *
  * Strict TypeScript (0 any), Vue 3.5+
- * Reference: docs/ke_hoach.md - Sprint 5, Task 3 & Sprint 2
+ * Reference: docs/ke_hoach.md & Rules.md
  */
 
 import { computed } from 'vue';
 import { useUserStore } from '~/stores/user';
+import type { StageData } from '~/types/game';
+
+interface Props {
+  stages?: StageData[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  stages: () => [],
+});
 
 const userStore = useUserStore();
 
@@ -23,8 +32,35 @@ const totalStars = computed(() => {
   return Object.values(starsMap).reduce((sum, s) => sum + s, 0);
 });
 
-// Incubation percentage based on stars collected (out of 15 max stars in Chapter 1)
-const eggHatchPercent = computed(() => Math.min(100, Math.round((totalStars.value / 15) * 100)));
+// Dynamic stage and star counts computed directly from data
+const totalStagesCount = computed(() => props.stages.length || 10);
+const maxPossibleStars = computed(() => totalStagesCount.value * 3);
+
+// Dynamic incubation percentage based on actual total stars available
+const eggHatchPercent = computed(() =>
+  maxPossibleStars.value > 0
+    ? Math.min(100, Math.round((totalStars.value / maxPossibleStars.value) * 100))
+    : 0
+);
+
+// Dynamic chapter detection from current stage data
+const currentStage = computed(() =>
+  props.stages.find((s) => s.stageId === unlockedStage.value) || props.stages[props.stages.length - 1]
+);
+const currentChapter = computed(() => currentStage.value?.chapter || 1);
+const totalChapters = computed(() => {
+  if (!props.stages || props.stages.length === 0) return 1;
+  return new Set(props.stages.map((s) => s.chapter || 1)).size;
+});
+
+const currentChapterTitle = computed(() => {
+  const chapterStages = props.stages.filter((s) => s.chapter === currentChapter.value);
+  const startId = chapterStages[0]?.stageId || 1;
+  const endId = chapterStages[chapterStages.length - 1]?.stageId || startId;
+  const chapterBoss = chapterStages.find((s) => s.isBossStage);
+  const bossText = chapterBoss ? ` • Boss: ${chapterBoss.title.replace(/^BOSS:\s*/i, '')}` : '';
+  return `CHƯƠNG ${currentChapter.value}/${totalChapters.value} (Chặng ${startId}-${endId})${bossText}`;
+});
 </script>
 
 <template>
@@ -41,16 +77,18 @@ const eggHatchPercent = computed(() => Math.min(100, Math.round((totalStars.valu
     <div class="kids-banner theme-card">
       <div class="dragon-egg-pod">
         <div class="egg-display" :class="{ 'egg-pulsing': eggHatchPercent > 0 }">
-          <span class="egg-icon" aria-hidden="true">🥚</span>
-          <div v-if="eggHatchPercent >= 100" class="hatch-badge">SẴN SÀNG NỞ! 🐣</div>
+          <span class="egg-icon" aria-hidden="true">{{ eggHatchPercent >= 100 ? '🐉' : eggHatchPercent >= 50 ? '🐣' : '🥚' }}</span>
+          <div v-if="eggHatchPercent >= 100" class="hatch-badge">RỒNG TỐI THƯỢNG! 🌌</div>
+          <div v-else-if="eggHatchPercent >= 50" class="hatch-badge">RỒNG CON ĐÃ NỞ! 🐣</div>
+          <div v-else-if="eggHatchPercent >= 20" class="hatch-badge">ẤM DẦN NỞ! 🔥</div>
         </div>
       </div>
 
       <div class="incubator-info">
-        <div class="chapter-badge">CHƯƠNG 1: HÀNH TRÌNH ẤP TRỨNG RỒNG</div>
-        <h3 class="incubator-title">Lò Ấp Trứng Rồng Thần Thoại</h3>
+        <div class="chapter-badge">{{ currentChapterTitle }}</div>
+        <h3 class="incubator-title">Lò Ấp & Huấn Luyện Rồng Thần Thoại</h3>
         <p class="incubator-desc">
-          Thu thập Ngôi Sao từ các chặng thử thách để truyền năng lượng cho Trứng Rồng nở thành thú cưng đồng hành!
+          Thu thập Ngôi Sao từ {{ totalStagesCount }} chặng thử thách để truyền năng lượng cho Trứng Rồng nở và tiến hóa thành Thần Thú!
         </p>
 
         <!-- Incubation Progress Bar -->
@@ -58,7 +96,7 @@ const eggHatchPercent = computed(() => Math.min(100, Math.round((totalStars.valu
           <div class="egg-progress-bar">
             <div class="egg-progress-fill" :style="{ width: `${eggHatchPercent}%` }" />
           </div>
-          <span class="egg-progress-text">{{ eggHatchPercent }}% Năng lượng ({{ totalStars }}/15 ⭐)</span>
+          <span class="egg-progress-text">{{ eggHatchPercent }}% Năng lượng ({{ totalStars }}/{{ maxPossibleStars }} ⭐)</span>
         </div>
       </div>
     </div>
@@ -256,4 +294,3 @@ const eggHatchPercent = computed(() => Math.min(100, Math.round((totalStars.valu
   }
 }
 </style>
-

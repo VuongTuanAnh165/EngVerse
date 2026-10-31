@@ -2,17 +2,27 @@
 /**
  * EngVerse - WorldAdultsView Component
  * Dedicated World Interface for Universe 3: SimLife Global (Adults 23+).
- * Features:
- * - International Executive Career Terminal & World Timezones
- * - Global Flight Path Progress Radar
- * - Refined prestige aesthetic with 60FPS CSS micro-animations
+ *
+ * 100% Data-Driven Architecture:
+ * - Dynamically computes total stages, chapters, bosses and max stars from `stages` data.
+ * - Dynamically builds international flight hubs from stage titles / locations.
+ * - Auto-adapts whenever stages.json is updated without UI code changes.
  *
  * Strict TypeScript (0 any), Vue 3.5+
- * Reference: docs/ke_hoach.md - Sprint 5, Task 3 & Sprint 2
+ * Reference: docs/ke_hoach.md & Rules.md
  */
 
 import { computed } from 'vue';
 import { useUserStore } from '~/stores/user';
+import type { StageData } from '~/types/game';
+
+interface Props {
+  stages?: StageData[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  stages: () => [],
+});
 
 const userStore = useUserStore();
 
@@ -23,17 +33,80 @@ const totalStars = computed(() => {
   return Object.values(starsMap).reduce((sum, s) => sum + s, 0);
 });
 
-// Career progress percentage based on stars collected (out of 15 max stars in Chapter 1)
-const careerPercent = computed(() => Math.min(100, Math.round((totalStars.value / 15) * 100)));
+// Dynamic stage and star counts from data
+const totalStagesCount = computed(() => props.stages.length || 10);
+const maxPossibleStars = computed(() => totalStagesCount.value * 3);
 
-// Global hubs
-const hubs = [
-  { city: 'Hà Nội', code: 'HAN', active: true },
-  { city: 'Singapore', code: 'SIN', active: unlockedStage.value >= 2 },
-  { city: 'Tokyo', code: 'TYO', active: unlockedStage.value >= 3 },
-  { city: 'London', code: 'LHR', active: unlockedStage.value >= 4 },
-  { city: 'New York', code: 'JFK', active: unlockedStage.value >= 5 },
-];
+// Career progress percentage based on stars collected
+const careerPercent = computed(() =>
+  maxPossibleStars.value > 0
+    ? Math.min(100, Math.round((totalStars.value / maxPossibleStars.value) * 100))
+    : 0
+);
+
+// Dynamic chapter detection from current stage data
+const currentStage = computed(() =>
+  props.stages.find((s) => s.stageId === unlockedStage.value) || props.stages[props.stages.length - 1]
+);
+const currentChapter = computed(() => currentStage.value?.chapter || 1);
+const totalChapters = computed(() => {
+  if (!props.stages || props.stages.length === 0) return 1;
+  return new Set(props.stages.map((s) => s.chapter || 1)).size;
+});
+
+const currentChapterBadge = computed(() => {
+  const chapterStages = props.stages.filter((s) => s.chapter === currentChapter.value);
+  const startId = chapterStages[0]?.stageId || 1;
+  const endId = chapterStages[chapterStages.length - 1]?.stageId || startId;
+  const chapterBoss = chapterStages.find((s) => s.isBossStage);
+  const bossText = chapterBoss ? ` // BOSS: ${chapterBoss.title.replace(/^BOSS:\s*/i, '').toUpperCase()}` : '';
+  return `SIMLIFE GLOBAL // CHƯƠNG ${currentChapter.value}/${totalChapters.value} (Chặng ${startId}-${endId})${bossText}`;
+});
+
+// Known airport codes for international cities that might appear in stage titles
+const CITY_AIRPORT_CODES: Record<string, string> = {
+  'Hà Nội': 'HAN',
+  'Singapore': 'SIN',
+  'Tokyo': 'TYO',
+  'London': 'LHR',
+  'New York': 'JFK',
+  'Paris': 'CDG',
+  'Berlin': 'BER',
+  'Silicon Valley': 'SFO',
+  'Dubai': 'DXB',
+  'Phố Wall': 'NYC',
+  'Bangkok': 'BKK',
+  'Seoul': 'ICN',
+  'Sydney': 'SYD',
+  'Frankfurt': 'FRA',
+  'Hong Kong': 'HKG',
+  'Toronto': 'YYZ',
+};
+
+// Global hubs dynamically derived from stages.json!
+const hubs = computed(() => {
+  if (!props.stages || props.stages.length === 0) return [];
+  return props.stages.map((stage) => {
+    let code = stage.isBossStage ? 'BOSS' : `S${stage.stageId}`;
+    let city = stage.title.replace(/^BOSS:\s*/i, '');
+
+    for (const [cityName, airportCode] of Object.entries(CITY_AIRPORT_CODES)) {
+      if (stage.title.includes(cityName)) {
+        code = airportCode;
+        city = cityName;
+        break;
+      }
+    }
+
+    return {
+      stageId: stage.stageId,
+      code,
+      city,
+      isBoss: stage.isBossStage,
+      active: unlockedStage.value >= stage.stageId,
+    };
+  });
+});
 </script>
 
 <template>
@@ -43,25 +116,25 @@ const hubs = [
       <div class="dashboard-left">
         <div class="globe-pod">
           <div class="globe-icon" aria-hidden="true">🌐</div>
-          <div class="tier-pill">CẤP ĐỘ {{ unlockedStage }} // SENIOR EXP</div>
+          <div class="tier-pill">CẤP ĐỘ {{ unlockedStage }}/{{ totalStagesCount }} // EXECUTIVE EXP</div>
         </div>
       </div>
 
       <div class="dashboard-info">
         <div class="corp-track-badge">
           <span class="active-dot" />
-          <span>SIMLIFE GLOBAL // CHINH PHỤC THỊ TRƯỜNG QUỐC TẾ</span>
+          <span>{{ currentChapterBadge }}</span>
         </div>
         <h3 class="dashboard-title">Hành Trình Sự Nghiệp Toàn Cầu</h3>
         <p class="dashboard-desc">
-          Làm chủ các tình huống giao thương, thuyết trình và phỏng vấn ngoại giao để mở rộng mạng lưới đối tác tại các trung tâm tài chính thế giới.
+          Làm chủ {{ totalStagesCount }} chặng thử thách qua các trung tâm tài chính thế giới: giao thương, thuyết trình ngoại giao, M&A và rung chuông IPO.
         </p>
 
-        <!-- Global Hubs Route Status -->
+        <!-- Global Hubs Route Status (Dynamically derived from stages.json) -->
         <div class="hubs-route-row">
           <div
             v-for="(hub, idx) in hubs"
-            :key="hub.code"
+            :key="hub.stageId"
             class="hub-item"
             :class="{ 'hub-active': hub.active }"
           >
@@ -76,7 +149,7 @@ const hubs = [
           <div class="career-bar">
             <div class="career-fill" :style="{ width: `${careerPercent}%` }" />
           </div>
-          <span class="career-percent-label">TIẾN ĐỘ THĂNG TIẾN: {{ careerPercent }}% ({{ totalStars }}/15 ⭐)</span>
+          <span class="career-percent-label">TIẾN ĐỘ THĂNG TIẾN: {{ careerPercent }}% ({{ totalStars }}/{{ maxPossibleStars }} ⭐)</span>
         </div>
       </div>
     </div>
@@ -271,4 +344,3 @@ const hubs = [
   }
 }
 </style>
-

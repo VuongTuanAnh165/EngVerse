@@ -42,8 +42,13 @@ const totalCollected = computed<number>(() => {
 });
 
 const totalCardsCount = computed<number>(() => {
-  return codexData.value?.cards?.length || 120;
+  return codexData.value?.cards?.length || 240;
 });
+
+function getTrackCardsCount(track: string): number {
+  if (!codexData.value?.cards) return 0;
+  return codexData.value.cards.filter((c) => c.worldTrack === track).length;
+}
 
 const progressPercent = computed<number>(() => {
   if (totalCardsCount.value === 0) return 0;
@@ -100,7 +105,7 @@ useHead({
 
         <h1 class="codex-title">Sổ Tay Thẻ Bài 3D (Codex)</h1>
         <p class="codex-desc">
-          Bộ sưu tập 120 thẻ bài từ vựng ma thuật. Mỗi thẻ bài hoàn thành sẽ mở khóa danh hiệu độc quyền
+          Bộ sưu tập {{ totalCardsCount }} thẻ bài từ vựng ma thuật. Mỗi thẻ bài hoàn thành sẽ mở khóa danh hiệu độc quyền
           và gia tăng sức mạnh ngôn ngữ của bạn.
         </p>
 
@@ -141,7 +146,7 @@ useHead({
               :class="{ 'pill-active': activeTrackFilter === 'kids' }"
               @click="activeTrackFilter = 'kids'"
             >
-              🏝️ Đảo Thần Thoại
+              🏝️ Đảo Thần Thoại ({{ getTrackCardsCount('kids') }})
             </button>
             <button
               type="button"
@@ -149,7 +154,7 @@ useHead({
               :class="{ 'pill-active': activeTrackFilter === 'teens' }"
               @click="activeTrackFilter = 'teens'"
             >
-              ⚡ Cyber City
+              ⚡ Cyber City ({{ getTrackCardsCount('teens') }})
             </button>
             <button
               type="button"
@@ -157,7 +162,7 @@ useHead({
               :class="{ 'pill-active': activeTrackFilter === 'adults' }"
               @click="activeTrackFilter = 'adults'"
             >
-              🌐 SimLife
+              🌐 SimLife ({{ getTrackCardsCount('adults') }})
             </button>
           </div>
         </div>

@@ -1,11 +1,47 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useUserStore } from '~/stores/user';
+import type { StageData, CodexData } from '~/types/game';
 
 const userStore = useUserStore();
 
 const currentTrack = computed(() => userStore.currentTrack);
 const collectedCardsCount = computed(() => userStore.user.collectedCards?.length || 0);
+
+// Dynamic overview counts synchronized with public/data
+const totalStagesCount = ref<number>(10);
+const totalBossesCount = ref<number>(2);
+const totalChaptersCount = ref<number>(2);
+const totalCodexCards = ref<number>(240);
+
+async function syncOverviewStats(): Promise<void> {
+  try {
+    const [stagesData, codexData] = await Promise.all([
+      $fetch<StageData[]>(`/data/${currentTrack.value}/stages.json`),
+      $fetch<CodexData>('/data/cards/codex.json'),
+    ]);
+
+    if (stagesData && Array.isArray(stagesData)) {
+      totalStagesCount.value = stagesData.length;
+      totalBossesCount.value = stagesData.filter((s) => s.isBossStage).length;
+      totalChaptersCount.value = new Set(stagesData.map((s) => s.chapter || 1)).size;
+    }
+
+    if (codexData && Array.isArray(codexData.cards)) {
+      totalCodexCards.value = codexData.cards.length;
+    }
+  } catch (err) {
+    console.warn('[IndexPage] Using fallback stats for overview banner:', err);
+  }
+}
+
+watch(currentTrack, () => {
+  void syncOverviewStats();
+});
+
+onMounted(() => {
+  void syncOverviewStats();
+});
 
 const trackDisplay = computed(() => {
   switch (currentTrack.value) {
@@ -46,15 +82,14 @@ useHead({
         </h1>
 
         <p class="hero-desc">
-          Mỗi từ vựng bạn làm chủ sẽ hóa thành Thẻ Bài 3D gia tăng sức mạnh. Vượt qua 5 chặng
-          để diện kiến Boss Ôn Tập và khẳng định vị thế trên Bảng Xếp Hạng toàn cầu!
+          Mỗi từ vựng bạn làm chủ sẽ hóa thành Thẻ Bài 3D gia tăng sức mạnh. Vượt qua {{ totalStagesCount }} chặng thử thách qua {{ totalChaptersCount }} Chương để diện kiến {{ totalBossesCount }} Boss Ôn Tập và khẳng định vị thế trên Bảng Xếp Hạng toàn cầu!
         </p>
 
         <div class="hero-quick-stats">
           <div class="quick-stat-box theme-card">
             <span class="quick-stat-icon" aria-hidden="true">🗺️</span>
             <div class="quick-stat-info">
-              <span class="quick-stat-val">5</span>
+              <span class="quick-stat-val">{{ totalStagesCount }}</span>
               <span class="quick-stat-label">Chặng Thử Thách</span>
             </div>
           </div>
@@ -62,7 +97,7 @@ useHead({
           <div class="quick-stat-box theme-card">
             <span class="quick-stat-icon" aria-hidden="true">🃏</span>
             <div class="quick-stat-info">
-              <span class="quick-stat-val">{{ collectedCardsCount }}/120</span>
+              <span class="quick-stat-val">{{ collectedCardsCount }}/{{ totalCodexCards }}</span>
               <span class="quick-stat-label">Thẻ Bài Đã Có</span>
             </div>
           </div>
@@ -70,7 +105,7 @@ useHead({
           <div class="quick-stat-box theme-card">
             <span class="quick-stat-icon" aria-hidden="true">👑</span>
             <div class="quick-stat-info">
-              <span class="quick-stat-val">1 Boss</span>
+              <span class="quick-stat-val">{{ totalBossesCount }} Boss</span>
               <span class="quick-stat-label">Thử Thách Cuối</span>
             </div>
           </div>

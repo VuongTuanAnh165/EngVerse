@@ -168,6 +168,7 @@ export default defineEventHandler(async (event): Promise<StageCompleteResponse> 
   if (updatedLevel >= 5) titlesSet.add('grammar_master');
   if (updatedExp >= 1000) titlesSet.add('vocab_alchemist');
   if (finalStars === 3 && body.stageId === 5) titlesSet.add('boss_slayer');
+  if (finalStars === 3 && body.stageId === 10) titlesSet.add('multiverse_champion');
   const updatedUnlockedTitles = Array.from(titlesSet);
 
   const now = Date.now();

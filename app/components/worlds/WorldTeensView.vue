@@ -2,17 +2,26 @@
 /**
  * EngVerse - WorldTeensView Component
  * Dedicated World Interface for Universe 2: Cyber City Neo-High (Teens 13-22).
- * Features:
- * - Cyberpunk holographic HUD & digital scanlines
- * - Detective investigative terminal status
- * - Radar sweep animation (60FPS GPU CSS)
+ *
+ * 100% Data-Driven Architecture:
+ * - Dynamically computes total stages, chapters, bosses and max stars from `stages` data.
+ * - Auto-adapts whenever stages.json is updated without UI code changes.
  *
  * Strict TypeScript (0 any), Vue 3.5+
- * Reference: docs/ke_hoach.md - Sprint 5, Task 3 & Sprint 2
+ * Reference: docs/ke_hoach.md & Rules.md
  */
 
 import { computed } from 'vue';
 import { useUserStore } from '~/stores/user';
+import type { StageData } from '~/types/game';
+
+interface Props {
+  stages?: StageData[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  stages: () => [],
+});
 
 const userStore = useUserStore();
 
@@ -23,8 +32,35 @@ const totalStars = computed(() => {
   return Object.values(starsMap).reduce((sum, s) => sum + s, 0);
 });
 
-// Decryption percentage based on stars collected (out of 15 max stars in Chapter 1)
-const decryptPercent = computed(() => Math.min(100, Math.round((totalStars.value / 15) * 100)));
+// Dynamic stage and star counts from data
+const totalStagesCount = computed(() => props.stages.length || 10);
+const maxPossibleStars = computed(() => totalStagesCount.value * 3);
+
+// Dynamic decryption percentage based on actual total stars available
+const decryptPercent = computed(() =>
+  maxPossibleStars.value > 0
+    ? Math.min(100, Math.round((totalStars.value / maxPossibleStars.value) * 100))
+    : 0
+);
+
+// Dynamic chapter detection from current stage data
+const currentStage = computed(() =>
+  props.stages.find((s) => s.stageId === unlockedStage.value) || props.stages[props.stages.length - 1]
+);
+const currentChapter = computed(() => currentStage.value?.chapter || 1);
+const totalChapters = computed(() => {
+  if (!props.stages || props.stages.length === 0) return 1;
+  return new Set(props.stages.map((s) => s.chapter || 1)).size;
+});
+
+const currentChapterBadge = computed(() => {
+  const chapterStages = props.stages.filter((s) => s.chapter === currentChapter.value);
+  const startId = chapterStages[0]?.stageId || 1;
+  const endId = chapterStages[chapterStages.length - 1]?.stageId || startId;
+  const chapterBoss = chapterStages.find((s) => s.isBossStage);
+  const bossText = chapterBoss ? ` // BOSS: ${chapterBoss.title.replace(/^BOSS:\s*/i, '').toUpperCase()}` : '';
+  return `NEO-HIGH MAINFRAME // CHƯƠNG ${currentChapter.value}/${totalChapters.value} (Chặng ${startId}-${endId})${bossText}`;
+});
 </script>
 
 <template>
@@ -42,17 +78,17 @@ const decryptPercent = computed(() => Math.min(100, Math.round((totalStars.value
           <span class="cyber-radar-icon" aria-hidden="true">📡</span>
           <div class="radar-ping" />
         </div>
-        <div class="clearance-tag">CẤP ĐỘ {{ unlockedStage }}/5</div>
+        <div class="clearance-tag">CẤP ĐỘ {{ unlockedStage }}/{{ totalStagesCount }}</div>
       </div>
 
       <div class="terminal-info">
         <div class="cyber-glitch-badge">
           <span class="blinking-led" />
-          <span>NEO-HIGH DETECTIVE MAINFRAME // VỤ ÁN CHƯƠNG 1</span>
+          <span>{{ currentChapterBadge }}</span>
         </div>
         <h3 class="terminal-title">Bản Đồ Giải Mã Dữ Liệu Cyber City</h3>
         <p class="terminal-desc">
-          Thu thập chứng cứ từ vựng và ngữ pháp để giải mã tệp tin tuyệt mật và lật mở danh tính Trùm Hacker Boss!
+          Thu thập chứng cứ từ {{ totalStagesCount }} chặng thử thách để giải mã tệp tin tuyệt mật và lật mở danh tính Trùm Hacker Boss!
         </p>
 
         <!-- Decryption Progress HUD -->
@@ -60,7 +96,7 @@ const decryptPercent = computed(() => Math.min(100, Math.round((totalStars.value
           <div class="decrypt-bar">
             <div class="decrypt-fill" :style="{ width: `${decryptPercent}%` }" />
           </div>
-          <span class="decrypt-label">TIẾN ĐỘ GIẢI MÃ: {{ decryptPercent }}% ({{ totalStars }}/15 ⭐)</span>
+          <span class="decrypt-label">TIẾN ĐỘ GIẢI MÃ: {{ decryptPercent }}% ({{ totalStars }}/{{ maxPossibleStars }} ⭐)</span>
         </div>
       </div>
     </div>
@@ -261,4 +297,3 @@ const decryptPercent = computed(() => Math.min(100, Math.round((totalStars.value
   }
 }
 </style>
-

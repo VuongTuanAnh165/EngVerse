@@ -52,6 +52,20 @@ async function onGoogleSync(): Promise<void> {
     await userStore.syncGuestWithGoogle();
   } catch (err) {
     console.error('[Header] Sign-in failed:', err);
+    const errorObj = err as { code?: string; message?: string };
+    const errCode = errorObj?.code || '';
+
+    if (errCode === 'auth/unauthorized-domain') {
+      alert('Tên miền chưa được cấp phép trong Firebase! Vui lòng truy cập qua http://localhost:3000 (không dùng 127.0.0.1) hoặc thêm domain vào Firebase Authentication -> Settings -> Authorized domains.');
+    } else if (errCode === 'auth/popup-closed-by-user') {
+      console.warn('[Header] Cửa sổ đăng nhập đã bị đóng trước khi hoàn tất.');
+    } else if (errCode === 'auth/popup-blocked') {
+      alert('Trình duyệt đã chặn cửa sổ Popup! Vui lòng cấp quyền cho phép Pop-up trên thanh địa chỉ trình duyệt để đăng nhập Google.');
+    } else if (errCode === 'auth/operation-not-allowed') {
+      alert('Chưa kích hoạt tính năng Google Sign-in trên Firebase Console! Vui lòng vào Firebase Console -> Authentication -> Sign-in method -> Bật Google và bấm Save.');
+    } else {
+      alert(`Đăng nhập Google chưa thành công (${errCode}): ${errorObj?.message || 'Vui lòng nhấn F12 mở tab Console để xem lỗi chi tiết.'}`);
+    }
   }
 }
 

@@ -200,15 +200,12 @@ export default defineEventHandler(async (event): Promise<AuthInitResponse> => {
     };
   } catch (err: unknown) {
     console.error('[AuthInit] Unhandled server error in /api/auth/init:', err);
-    // If it's already an H3Error with specific status (like 400 or 401), re-throw
-    if (err && typeof err === 'object' && 'statusCode' in err) {
-      throw err;
-    }
     const message = err instanceof Error ? err.message : String(err);
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'Internal Server Error',
+    return {
+      success: false,
+      user: null as unknown as UserProfile,
+      isNewUser: false,
       message: `Lỗi máy chủ (/api/auth/init): ${message}`,
-    });
+    };
   }
 });

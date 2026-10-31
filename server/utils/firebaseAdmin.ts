@@ -30,26 +30,33 @@ export function getFirebaseAdminApp(): App {
     (config.public.firebaseProjectId as string) ||
     process.env.NUXT_PUBLIC_FIREBASE_PROJECT_ID ||
     process.env.FIREBASE_PROJECT_ID ||
-    '';
+    'ai-hub-1f53a';
 
   const clientEmail =
     (config.firebaseClientEmail as string) ||
     process.env.FIREBASE_CLIENT_EMAIL ||
+    process.env.NUXT_FIREBASE_CLIENT_EMAIL ||
     '';
 
   const rawPrivateKey =
     (config.firebasePrivateKey as string) ||
     process.env.FIREBASE_PRIVATE_KEY ||
+    process.env.NUXT_FIREBASE_PRIVATE_KEY ||
     '';
 
-  // Handle escaped newlines and strip surrounding quotes from environment variables
-  const privateKey = rawPrivateKey
-    .replace(/^["']|["']$/g, '')
-    .replace(/\\n/g, '\n');
+  // Handle all PEM formats: trim, remove surrounding quotes from Vercel env, replace \n
+  let privateKey = rawPrivateKey.trim();
+  if (
+    (privateKey.startsWith('"') && privateKey.endsWith('"')) ||
+    (privateKey.startsWith("'") && privateKey.endsWith("'"))
+  ) {
+    privateKey = privateKey.slice(1, -1).trim();
+  }
+  privateKey = privateKey.replace(/\\n/g, '\n');
 
   if (!clientEmail || !privateKey) {
     throw new Error(
-      '[FirebaseAdmin] Missing FIREBASE_CLIENT_EMAIL or FIREBASE_PRIVATE_KEY in runtimeConfig'
+      `[FirebaseAdmin] Thiếu thông tin cấu hình (clientEmail: ${clientEmail ? 'OK' : 'MISSING'}, privateKey: ${privateKey ? 'OK' : 'MISSING'})`
     );
   }
 
@@ -81,7 +88,11 @@ export function getAdminAuth(): Auth {
 export function getAdminDb(): Firestore {
   if (!_adminDb) {
     const db = getFirestore(getFirebaseAdminApp());
-    db.settings({ ignoreUndefinedProperties: true });
+    try {
+      db.settings({ ignoreUndefinedProperties: true });
+    } catch {
+      // Ignore if Firestore settings were already applied
+    }
     _adminDb = db;
   }
   return _adminDb;

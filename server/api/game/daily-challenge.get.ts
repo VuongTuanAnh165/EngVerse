@@ -45,6 +45,15 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; cha
     }
   }
 
+  // Fallback for guest mode: allow passing srsVocabIds via query parameters
+  if (srsVocabIds.length === 0 && query.srsVocabIds) {
+    if (typeof query.srsVocabIds === 'string') {
+      srsVocabIds = query.srsVocabIds.split(',').map((s) => s.trim()).filter(Boolean);
+    } else if (Array.isArray(query.srsVocabIds)) {
+      srsVocabIds = query.srsVocabIds.map(String).filter(Boolean);
+    }
+  }
+
   const challenge = await generateDailyChallenge(dateStr, srsVocabIds);
 
   return {

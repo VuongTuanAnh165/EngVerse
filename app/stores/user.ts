@@ -10,6 +10,11 @@ import {
   type BuyItemResponse,
   createDefaultUserProfile,
 } from '~/types/user';
+import {
+  type UserDailyChallenge,
+  type DailyChallengeSubmitResponse,
+  getDailyDateString,
+} from '~/types/dailyChallenge';
 
 const STORAGE_KEY = 'engverse_guest_profile';
 
@@ -47,6 +52,16 @@ export const useUserStore = defineStore('user', () => {
   const exp = computed<number>(() => user.value.exp);
   const level = computed<number>(() => user.value.level);
   const srsBossQueue = computed<string[]>(() => user.value.srsBossQueue || []);
+  const srsQueueCount = computed<number>(() => srsBossQueue.value.length);
+  const hasPendingSrsReview = computed<boolean>(() => srsBossQueue.value.length > 0);
+
+  // Daily Challenge Getters
+  const dailyChallenge = computed<UserDailyChallenge | undefined>(() => user.value.dailyChallenge);
+  const dailyStreak = computed<number>(() => user.value.dailyChallenge?.currentStreak || 0);
+  const isDailyChallengeCompletedToday = computed<boolean>(() => {
+    const today = getDailyDateString();
+    return user.value.dailyChallenge?.lastCompletedDate === today;
+  });
 
   /**
    * Appends newly failed item IDs into SRS Boss queue for spaced repetition review
@@ -70,6 +85,79 @@ export const useUserStore = defineStore('user', () => {
     if (!itemIds || itemIds.length === 0 || !user.value.srsBossQueue) return;
     const toRemove = new Set(itemIds);
     user.value.srsBossQueue = user.value.srsBossQueue.filter((id) => !toRemove.has(id));
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+  }
+
+  /**
+   * Checks whether an item ID is present in the SRS Boss queue
+   */
+  function isItemInSrsQueue(itemId: string): boolean {
+    if (!itemId || !user.value.srsBossQueue) return false;
+    return user.value.srsBossQueue.includes(itemId);
+  }
+
+  /**
+   * Clears all items currently awaiting SRS review
+   */
+  function clearSrsQueue(): void {
+    user.value.srsBossQueue = [];
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+  }
+
+  /**
+   * Retrieves priority SRS items to be reviewed (e.g. for Daily Challenge Phase 1 or Boss fights)
+   */
+  function getSrsPriorityItems(limit: number = 3): string[] {
+    if (!user.value.srsBossQueue || user.value.srsBossQueue.length === 0) return [];
+    return user.value.srsBossQueue.slice(0, limit);
+  }
+
+  /**
+   * Directly updates user's daily challenge progress
+   */
+  function setDailyChallengeProgress(data: UserDailyChallenge): void {
+    user.value.dailyChallenge = { ...data };
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+  }
+
+  /**
+   * Records daily challenge completion results into user store
+   * Updates EXP, Gold, Level, Daily Challenge streak & history, and syncs SRS queue
+   */
+  function recordDailyChallengeCompletion(res: DailyChallengeSubmitResponse): void {
+    if (!res) return;
+    const today = getDailyDateString();
+
+    // Reward EXP & Gold
+    user.value.exp = (user.value.exp || 0) + (res.earnedExp || 0);
+    user.value.gold = (user.value.gold || 0) + (res.earnedGold || 0);
+    user.value.level = Math.floor(user.value.exp / 250) + 1;
+
+    // Daily Challenge streak progress
+    const currentHistory = user.value.dailyChallenge?.history
+      ? [...user.value.dailyChallenge.history]
+      : [];
+    const totalCompleted = (user.value.dailyChallenge?.totalCompleted || 0) + 1;
+
+    user.value.dailyChallenge = {
+      lastCompletedDate: today,
+      currentStreak: res.currentStreak,
+      longestStreak: res.longestStreak,
+      totalCompleted,
+      history: currentHistory,
+    };
+
+    // If server returned updated user profile (e.g. from authenticated POST response), merge it
+    if (res.user) {
+      user.value = {
+        ...user.value,
+        ...res.user,
+      };
+    }
+
     user.value.updatedAt = Date.now();
     saveGuestState();
   }
@@ -419,13 +507,26 @@ export const useUserStore = defineStore('user', () => {
     gold,
     exp,
     level,
+    // SRS Spaced Repetition Engine
     srsBossQueue,
+    srsQueueCount,
+    hasPendingSrsReview,
+    isItemInSrsQueue,
+    clearSrsQueue,
+    getSrsPriorityItems,
+    addWrongItemsToSrsQueue,
+    removeClearedFromSrsQueue,
+    // Daily Challenge
+    dailyChallenge,
+    dailyStreak,
+    isDailyChallengeCompletedToday,
+    setDailyChallengeProgress,
+    recordDailyChallengeCompletion,
+    // Operations
     initUserSession,
     saveGuestState,
     loadGuestState,
     switchWorldTrack,
-    addWrongItemsToSrsQueue,
-    removeClearedFromSrsQueue,
     recordGuestStageWin,
     buyShopItem,
     syncGuestWithGoogle,

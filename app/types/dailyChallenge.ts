@@ -8,6 +8,19 @@
 import type { UserProfile } from './user';
 
 /**
+ * Returns current date string formatted as YYYY-MM-DD in Vietnam Timezone (GMT+7)
+ */
+export function getDailyDateString(dateObj: Date = new Date()): string {
+  const vnTime = new Date(dateObj.getTime() + 7 * 60 * 60 * 1000);
+  return vnTime.toISOString().slice(0, 10);
+}
+
+/**
+ * Alias for getDailyDateString for consistency across server and client
+ */
+export const getVietnamDateString = getDailyDateString;
+
+/**
  * Phase 1: Vocab Sprint (6 words - 60 seconds)
  * 50% from user's SRS boss queue + 50% from daily theme / random stages
  */

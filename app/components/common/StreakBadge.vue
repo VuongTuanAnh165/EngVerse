@@ -4,15 +4,16 @@ import { useUserStore } from '~/stores/user';
 
 const userStore = useUserStore();
 
-const streakDays = computed(() => userStore.streak?.current ?? 0);
+const streakDays = computed(() => userStore.dailyStreak || userStore.streak?.current || 0);
 const freezeShields = computed(() => userStore.streak?.freezeShields ?? 0);
 const hasActiveShield = computed(() => freezeShields.value > 0);
 </script>
 
 <template>
-  <div
+  <NuxtLink
+    to="/play/daily-challenge"
     class="streak-badge-container"
-    :title="`Chuỗi học: ${streakDays} ngày liên tục. Khiên Băng: ${freezeShields} khiên bảo vệ.`"
+    :title="`Thử thách hàng ngày - Chuỗi học: ${streakDays} ngày liên tục. Bấm để vào thử thách!`"
   >
     <!-- Streak Flame -->
     <div class="streak-flame-box" aria-hidden="true">
@@ -52,7 +53,7 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
       </svg>
       <span class="shield-count">{{ freezeShields }}</span>
     </div>
-  </div>
+  </NuxtLink>
 </template>
 
 <style scoped>
@@ -68,7 +69,16 @@ const hasActiveShield = computed(() => freezeShields.value > 0);
   user-select: none;
   white-space: nowrap;
   flex-shrink: 0;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
   transition: all var(--transition-speed) var(--transition-timing);
+}
+
+.streak-badge-container:hover {
+  transform: translateY(-1px);
+  border-color: #f97316;
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.25);
 }
 
 .streak-flame-box {

@@ -7,6 +7,8 @@ const userStore = useUserStore();
 
 const currentTrack = computed(() => userStore.currentTrack);
 const collectedCardsCount = computed(() => userStore.user.collectedCards?.length || 0);
+const dailyStreak = computed(() => userStore.dailyStreak || 0);
+const isDailyCompleted = computed(() => userStore.isDailyChallengeCompletedToday);
 
 // Dynamic overview counts synchronized with public/data
 const totalStagesCount = ref<number>(10);
@@ -109,6 +111,34 @@ useHead({
               <span class="quick-stat-label">Thử Thách Cuối</span>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Daily Challenge Highlight Banner -->
+    <section class="daily-challenge-callout-section">
+      <div class="daily-callout-card theme-card">
+        <div class="daily-callout-left">
+          <div class="daily-icon-box">
+            <span class="daily-flame">🔥</span>
+          </div>
+          <div class="daily-info">
+            <div class="daily-title-row">
+              <span class="daily-tag">THỬ THÁCH HÀNG NGÀY</span>
+              <span v-if="isDailyCompleted" class="daily-status-completed">Đã hoàn thành hôm nay ✅</span>
+              <span v-else class="daily-status-pending">Chưa hoàn thành • Reset 00:00 (GMT+7)</span>
+            </div>
+            <h3 class="daily-heading">3 Phút Luyện Phản Xạ 4 Pha Hàng Ngày</h3>
+            <p class="daily-subtext">Vocab Sprint • Grammar Flash • Voice Challenge • Quick AI Roleplay. Chuỗi hiện tại: <strong>{{ dailyStreak }} ngày</strong>!</p>
+          </div>
+        </div>
+        <div class="daily-callout-right">
+          <NuxtLink
+            to="/play/daily-challenge"
+            class="theme-btn-primary daily-play-btn"
+          >
+            {{ isDailyCompleted ? 'Luyện Tập Lại' : 'Chinh Phục Ngay ⚡' }}
+          </NuxtLink>
         </div>
       </div>
     </section>
@@ -254,6 +284,125 @@ useHead({
   }
   .quick-stat-val {
     font-size: 1rem;
+  }
+}
+/* Daily Challenge Banner */
+.daily-challenge-callout-section {
+  max-width: 900px;
+  margin: -1rem auto 1.5rem;
+  padding: 0 1rem;
+}
+
+.daily-callout-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--border-color);
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-card-hover) 100%);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+.daily-callout-card:hover {
+  border-color: #f97316;
+  box-shadow: var(--shadow-md);
+}
+
+.daily-callout-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.daily-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffedd5, #fed7aa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.daily-flame {
+  font-size: 2rem;
+}
+
+.daily-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.daily-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #ea580c;
+  background: rgba(234, 88, 12, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+}
+
+.daily-status-completed {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.daily-status-pending {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.daily-heading {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin: 0 0 0.25rem;
+  color: var(--text-primary);
+}
+
+.daily-subtext {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.daily-play-btn {
+  white-space: nowrap;
+  padding: 0.75rem 1.35rem;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .daily-callout-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.25rem 1rem;
+  }
+  .daily-callout-left {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .daily-title-row {
+    justify-content: center;
+  }
+  .daily-heading {
+    font-size: 1.05rem;
+  }
+  .daily-play-btn {
+    width: 100%;
+    text-align: center;
   }
 }
 </style>

@@ -1,3 +1,4 @@
+import type { UserDailyChallenge } from './dailyChallenge';
 /**
  * EngVerse - Core User Profile & Progress Types
  * Strictly typed schema for 1-Document-Per-User architecture in Firestore

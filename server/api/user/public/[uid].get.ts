@@ -24,6 +24,7 @@ function createFallbackProfile(uid: string): PublicShareProfile {
     level: 1,
     exp: 100,
     equippedTitle: 'Tân Binh Đa Vũ Trụ',
+    avatarFrame: 'default',
     streak: {
       current: 1,
       freezeShields: 0,
@@ -87,6 +88,7 @@ export default defineEventHandler(async (event): Promise<PublicShareResponse> =>
       level: typeof data?.level === 'number' ? data.level : 1,
       exp: typeof data?.exp === 'number' ? data.exp : 0,
       equippedTitle: (data?.equippedTitle as string) || 'Tân Binh Đa Vũ Trụ',
+      avatarFrame: (data?.avatarFrame as string) || 'default',
       streak: {
         current: typeof data?.streak?.current === 'number' ? data.streak.current : 0,
         freezeShields: typeof data?.streak?.freezeShields === 'number' ? data.streak.freezeShields : 0,

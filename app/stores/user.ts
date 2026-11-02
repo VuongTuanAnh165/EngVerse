@@ -17,6 +17,8 @@ import {
   getYesterdayDateString,
 } from '~/types/dailyChallenge';
 
+import { getTitleDisplayName } from '~/types/rewards';
+
 const STORAGE_KEY = 'engverse_guest_profile';
 
 /**
@@ -758,6 +760,83 @@ export const useUserStore = defineStore('user', () => {
     saveGuestState();
   }
 
+  // ---------------------------------------------------------------------------
+  // Cosmetics & Rewards Customization (Task 3.5)
+  // ---------------------------------------------------------------------------
+  const equippedTitleDisplayName = computed<string>(() => {
+    return getTitleDisplayName(user.value.equippedTitle);
+  });
+
+  const unlockedAvatarFramesList = computed<string[]>(() => {
+    return user.value.unlockedAvatarFrames || ['default'];
+  });
+
+  const unlockedTitlesList = computed<string[]>(() => {
+    return user.value.unlockedTitles || ['rookie_explorer'];
+  });
+
+  async function equipTitle(titleId: string): Promise<boolean> {
+    const available = user.value.unlockedTitles || ['rookie_explorer'];
+    const isRookie = titleId === 'rookie_explorer' || titleId === 'Tân Binh';
+    if (!isRookie && !available.includes(titleId)) {
+      console.warn(`[UserStore] Title not unlocked: ${titleId}`);
+      return false;
+    }
+
+    user.value.equippedTitle = titleId;
+    user.value.updatedAt = Date.now();
+
+    if (user.value.isGuest) {
+      saveGuestState();
+      return true;
+    }
+
+    try {
+      const { getClientAuth } = useFirebase();
+      const auth = getClientAuth();
+      const idToken = auth?.currentUser ? await auth.currentUser.getIdToken() : undefined;
+
+      await $fetch('/api/user/profile', {
+        method: 'POST',
+        body: { idToken, equippedTitle: titleId },
+      });
+      return true;
+    } catch (err: unknown) {
+      console.error('[UserStore] Failed to sync equipped title:', err);
+      return false;
+    }
+  }
+
+  async function equipAvatarFrame(frameId: string): Promise<boolean> {
+    const available = user.value.unlockedAvatarFrames || ['default'];
+    if (frameId !== 'default' && !available.includes(frameId)) {
+      console.warn(`[UserStore] Frame not unlocked: ${frameId}`);
+      return false;
+    }
+
+    user.value.avatarFrame = frameId;
+    user.value.updatedAt = Date.now();
+
+    if (user.value.isGuest) {
+      saveGuestState();
+      return true;
+    }
+
+    try {
+      const { getClientAuth } = useFirebase();
+      const auth = getClientAuth();
+      const idToken = auth?.currentUser ? await auth.currentUser.getIdToken() : undefined;
+
+      await $fetch('/api/user/profile', {
+        method: 'POST',
+        body: { idToken, avatarFrame: frameId },
+      });
+      return true;
+    } catch (err: unknown) {
+      console.error('[UserStore] Failed to sync avatar frame:', err);
+      return false;
+    }
+  }
 
   return {
     user,
@@ -798,6 +877,12 @@ export const useUserStore = defineStore('user', () => {
     bossRush,
     isBossRushUnlocked,
     recordBossRushRun,
+    // Cosmetics & Rewards (Task 3.5)
+    equippedTitleDisplayName,
+    unlockedAvatarFramesList,
+    unlockedTitlesList,
+    equipTitle,
+    equipAvatarFrame,
     // Operations
     initUserSession,
     saveGuestState,

@@ -21,6 +21,8 @@ const GameWordAlchemy = defineAsyncComponent(() => import('~/components/games/Ga
 const GameVoiceRunner = defineAsyncComponent(() => import('~/components/games/GameVoiceRunner.vue'));
 const GameSentenceLock = defineAsyncComponent(() => import('~/components/games/GameSentenceLock.vue'));
 const GameAiRoleplay = defineAsyncComponent(() => import('~/components/games/GameAiRoleplay.vue'));
+const BossRushRewardModal = defineAsyncComponent(() => import('~/components/games/BossRushRewardModal.vue'));
+const RewardCustomizerModal = defineAsyncComponent(() => import('~/components/common/RewardCustomizerModal.vue'));
 
 const route = useRoute();
 const router = useRouter();
@@ -182,6 +184,21 @@ function switchLeaderboardTrack(track: WorldTrack): void {
 function closeLeaderboard(): void {
   showLeaderboardModal.value = false;
 }
+
+// ---------------------------------------------------------------------------
+// Reward System & Celebration Modals (Task 3.5)
+// ---------------------------------------------------------------------------
+const showRewardCelebrationModal = ref(false);
+const showCustomizerModal = ref(false);
+
+watch(
+  () => bossRushStore.sessionState,
+  (newState) => {
+    if (newState === 'victory') {
+      showRewardCelebrationModal.value = true;
+    }
+  }
+);
 
 // ---------------------------------------------------------------------------
 // Lifecycle
@@ -736,6 +753,9 @@ onUnmounted(() => {
           <button class="theme-btn-primary play-again-btn" type="button" @click="bossRushStore.startColosseumRun(currentTrack, false)">
             ⚔️ Khiêu Chiến Lại Lập Kỷ Lục Mới
           </button>
+          <button class="btn-celebration-action" type="button" @click="showRewardCelebrationModal = true">
+            👑 Nhận & Trang Bị Phần Thưởng
+          </button>
           <button class="btn-view-leaderboard-action" type="button" @click="openLeaderboard(currentTrack)">
             🏆 Bảng Xếp Hạng Top 10
           </button>
@@ -789,6 +809,19 @@ onUnmounted(() => {
         </div>
       </div>
     </section>
+
+    <!-- Boss Rush Victory Celebration Modal (Task 3.5) -->
+    <BossRushRewardModal
+      v-model:open="showRewardCelebrationModal"
+      :result="runResult"
+      :world-track="currentTrack"
+      @open-customizer="showCustomizerModal = true"
+    />
+
+    <!-- General Reward Customizer Modal (Task 3.5) -->
+    <RewardCustomizerModal
+      v-model:open="showCustomizerModal"
+    />
   </div>
 </template>
 
@@ -1810,6 +1843,23 @@ onUnmounted(() => {
 .btn-view-leaderboard-action:hover {
   filter: brightness(1.1);
   transform: translateY(-1px);
+}
+
+.btn-celebration-action {
+  padding: 0.8rem 1.5rem;
+  font-weight: 800;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+  color: #111827;
+  border: 1px solid #fbbf24;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+}
+
+.btn-celebration-action:hover {
+  filter: brightness(1.15);
+  transform: translateY(-2px);
 }
 
 .leaderboard-modal-card {

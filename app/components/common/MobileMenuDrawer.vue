@@ -4,13 +4,22 @@
  * Slide-up mobile modal for seamless universe switching, audio settings, and account management.
  */
 
-import { computed } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import { useUserStore } from '~/stores/user';
 import { useUiState } from '~/composables/useUiState';
 import type { WorldTrack } from '~/types/user';
 
+const RewardCustomizerModal = defineAsyncComponent(
+  () => import('~/components/common/RewardCustomizerModal.vue')
+);
+
 const userStore = useUserStore();
 const { isMobileMenuOpen, closeMobileMenu } = useUiState();
+const isRewardCustomizerOpen = ref(false);
+
+function openRewardCustomizer(): void {
+  isRewardCustomizerOpen.value = true;
+}
 
 const tracks: Array<{ id: WorldTrack; name: string; age: string; emoji: string; desc: string }> = [
   {
@@ -158,6 +167,16 @@ async function onLogout(): Promise<void> {
                     <span class="stat-num">{{ freezeShields }} Khiên</span>
                   </div>
                 </div>
+
+                <!-- Cosmetic Customizer Trigger Button -->
+                <button
+                  type="button"
+                  class="drawer-customizer-btn"
+                  @click="openRewardCustomizer"
+                >
+                  <span class="customizer-label">👑 Khung & Danh Hiệu: <strong>{{ userStore.equippedTitleDisplayName }}</strong></span>
+                  <span class="customizer-arrow" aria-hidden="true">→</span>
+                </button>
               </div>
             </section>
 
@@ -218,6 +237,9 @@ async function onLogout(): Promise<void> {
         </div>
       </div>
     </Transition>
+
+    <!-- Reward Customizer Modal for Mobile -->
+    <RewardCustomizerModal v-model:open="isRewardCustomizerOpen" />
   </Teleport>
 </template>
 
@@ -471,6 +493,34 @@ async function onLogout(): Promise<void> {
   font-size: 0.8125rem;
   font-weight: 700;
   color: var(--text-primary);
+}
+
+.drawer-customizer-btn {
+  margin-top: 0.75rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0.5rem;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  color: #fbbf24;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.drawer-customizer-btn:hover {
+  background: rgba(245, 158, 11, 0.25);
+}
+
+.customizer-label strong {
+  color: #ffffff;
+}
+
+.customizer-arrow {
+  font-size: 0.95rem;
 }
 
 .drawer-actions-list {

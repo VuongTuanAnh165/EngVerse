@@ -16,6 +16,7 @@
 import { ref, computed, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore } from '~/stores/user';
+import { getTitleDisplayName } from '~/types/rewards';
 import type { PublicShareResponse, PublicShareProfile } from '~/types/share';
 import type { WorldTrack } from '~/types/user';
 
@@ -53,6 +54,7 @@ const profile = computed<PublicShareProfile>(() => {
       level: 1,
       exp: 100,
       equippedTitle: 'Tân Binh Đa Vũ Trụ',
+      avatarFrame: 'default',
       streak: { current: 1, freezeShields: 0 },
       worldTrack: 'kids' as WorldTrack,
       collectedCardsCount: 1,
@@ -76,6 +78,12 @@ const profile = computed<PublicShareProfile>(() => {
     }
     if (userStore.streak.current > 1) {
       base.streak = { current: userStore.streak.current, freezeShields: userStore.streak.freezeShields };
+    }
+    if (userStore.activeAvatarFrame) {
+      base.avatarFrame = userStore.activeAvatarFrame;
+    }
+    if (userStore.user.equippedTitle) {
+      base.equippedTitle = userStore.user.equippedTitle;
     }
   }
 
@@ -225,7 +233,7 @@ onUnmounted(() => {
           <!-- Card Body -->
           <div class="card-hero-body">
             <div class="avatar-ring-container">
-              <div class="avatar-halo">
+              <div class="avatar-halo" :class="profile.avatarFrame || 'default'">
                 <span class="avatar-emoji">{{ getAvatarEmoji(profile.avatar) }}</span>
               </div>
               <span class="level-badge">Lv.{{ profile.level }}</span>
@@ -234,7 +242,7 @@ onUnmounted(() => {
             <div class="identity-info">
               <div class="equipped-title-badge">
                 <span class="crown-icon">👑</span>
-                <span>{{ profile.equippedTitle }}</span>
+                <span>{{ getTitleDisplayName(profile.equippedTitle) }}</span>
               </div>
               <h1 class="player-name">{{ profile.displayName }}</h1>
               <p class="honor-caption">
@@ -479,6 +487,21 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   transition: transform 0.3s ease;
+}
+
+.avatar-halo.gold-avatar-frame {
+  border: 4px solid #f59e0b;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.75), inset 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+.avatar-halo.cyber-avatar-frame {
+  border: 4px solid #8b5cf6;
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.75), inset 0 0 10px rgba(6, 182, 212, 0.5);
+}
+
+.avatar-halo.mythic-avatar-frame {
+  border: 4px solid #ec4899;
+  box-shadow: 0 0 24px rgba(236, 72, 153, 0.85), inset 0 0 12px rgba(168, 85, 247, 0.6);
 }
 
 .honor-holo-card:hover .avatar-halo {

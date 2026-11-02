@@ -1,15 +1,17 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import { useUserStore } from '~/stores/user';
 import { useUiState } from '~/composables/useUiState';
 import type { WorldTrack } from '~/types/user';
 
-// Lazy-loaded Leaderboard Modal & Mobile Menu Drawer
+// Lazy-loaded Modals & Mobile Menu Drawer
 const LeaderboardModal = defineAsyncComponent(() => import('~/components/common/LeaderboardModal.vue'));
 const MobileMenuDrawer = defineAsyncComponent(() => import('~/components/common/MobileMenuDrawer.vue'));
+const RewardCustomizerModal = defineAsyncComponent(() => import('~/components/common/RewardCustomizerModal.vue'));
 
 const userStore = useUserStore();
 const { isLeaderboardOpen, openLeaderboard, openMobileMenu } = useUiState();
+const isRewardCustomizerOpen = ref(false);
 
 interface TrackInfo {
   id: WorldTrack;
@@ -213,8 +215,16 @@ async function onLogout(): Promise<void> {
           <div v-else class="user-profile-menu">
             <div
               class="user-avatar-badge"
-              :class="{ 'gold-avatar-frame': activeAvatarFrame === 'avatar_frame_gold' }"
-              :title="`${displayName} (${equippedTitle})`"
+              :class="{
+                'gold-avatar-frame': activeAvatarFrame === 'avatar_frame_gold',
+                'cyber-avatar-frame': activeAvatarFrame === 'avatar_frame_cyber',
+                'mythic-avatar-frame': activeAvatarFrame === 'avatar_frame_mythic',
+              }"
+              :title="`${displayName} (${userStore.equippedTitleDisplayName}) - Bấm để tùy chỉnh Khung & Danh Hiệu`"
+              role="button"
+              tabindex="0"
+              @click="isRewardCustomizerOpen = true"
+              @keydown.enter="isRewardCustomizerOpen = true"
             >
               <img
                 v-if="avatar.startsWith('http')"
@@ -257,6 +267,9 @@ async function onLogout(): Promise<void> {
 
     <!-- Mobile Slide-Up Settings & Universe Drawer -->
     <MobileMenuDrawer />
+
+    <!-- Avatar Frames & Badges Reward Customizer Modal (Task 3.5) -->
+    <RewardCustomizerModal v-model:open="isRewardCustomizerOpen" />
   </header>
 </template>
 
@@ -506,13 +519,30 @@ async function onLogout(): Promise<void> {
   color: #ffffff;
   font-weight: bold;
   flex-shrink: 0;
+  cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.user-avatar-badge:hover {
+  transform: scale(1.08);
 }
 
 .user-avatar-badge.gold-avatar-frame {
   border: 2px solid #f59e0b;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6), inset 0 0 6px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.7), inset 0 0 6px rgba(245, 158, 11, 0.4);
   animation: gold-pulse 2.5s infinite alternate ease-in-out;
+}
+
+.user-avatar-badge.cyber-avatar-frame {
+  border: 2px solid #8b5cf6;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.7), inset 0 0 6px rgba(6, 182, 212, 0.4);
+  animation: cyber-pulse 2.2s infinite alternate ease-in-out;
+}
+
+.user-avatar-badge.mythic-avatar-frame {
+  border: 2px solid #ec4899;
+  box-shadow: 0 0 12px rgba(236, 72, 153, 0.8), inset 0 0 8px rgba(168, 85, 247, 0.5);
+  animation: mythic-pulse 2.5s infinite alternate ease-in-out;
 }
 
 .exp-boost-pill {
@@ -658,6 +688,24 @@ async function onLogout(): Promise<void> {
   .gold-pill {
     padding: 0.25rem 0.45rem;
     font-size: 0.78rem;
+  }
+}
+
+@keyframes cyber-pulse {
+  from {
+    box-shadow: 0 0 6px rgba(139, 92, 246, 0.5);
+  }
+  to {
+    box-shadow: 0 0 14px rgba(6, 182, 212, 0.8), inset 0 0 6px rgba(139, 92, 246, 0.5);
+  }
+}
+
+@keyframes mythic-pulse {
+  from {
+    box-shadow: 0 0 6px rgba(236, 72, 153, 0.5);
+  }
+  to {
+    box-shadow: 0 0 16px rgba(168, 85, 247, 0.85), inset 0 0 8px rgba(236, 72, 153, 0.6);
   }
 }
 </style>

@@ -17,6 +17,7 @@ export interface PublicShareProfile {
   level: number;
   exp: number;
   equippedTitle: string;
+  avatarFrame?: string;
   streak: {
     current: number;
     freezeShields?: number;
@@ -45,6 +46,7 @@ export interface OgImageHonorCardProps {
   level: number;
   streak: number;
   equippedTitle: string;
+  avatarFrame?: string;
   worldTrack: WorldTrack;
   exp?: number;
   cardsCount?: number;

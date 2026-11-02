@@ -317,6 +317,14 @@ export interface AlchemyCard {
   isMatched: boolean;
   isSelected: boolean;
   isWrong: boolean;
+  /**
+   * MỚI (Pha 1 - Task 1.11): Cụm từ cố định gợi ý hiển thị khi ghép cặp
+   */
+  collocations?: string[];
+  /**
+   * MỚI (Pha 1 - Task 1.11): Câu giao tiếp đời thực
+   */
+  realWorldPhrase?: string;
 }
 
 /**

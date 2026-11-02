@@ -42,7 +42,7 @@ const emit = defineEmits<{
 
 const sessionStore = useGameSessionStore();
 const userStore = useUserStore();
-const { playSound, triggerVictoryConfetti } = useSoundEffects();
+const { playSound, triggerVictoryConfetti, triggerScreenShake } = useSoundEffects();
 const {
   speak,
   stopSpeaking,
@@ -65,6 +65,34 @@ const errorMessage = ref<string | null>(null);
 const isMissionCleared = ref<boolean>(false);
 const remainingTurns = ref<number>(20);
 const chatScrollContainer = ref<HTMLElement | null>(null);
+
+// Extended maxTurns & Plot Twist State (Task 1.10)
+const maxTurns = computed<number>(() => mission.value.maxTurns || (props.stage.isBossStage ? 8 : 6));
+const playerTurnsCount = computed<number>(() => messages.value.filter((m) => m.role === 'user').length);
+const plotTwist = computed(() => mission.value.plotTwist);
+
+const isPlotTwistTriggered = ref<boolean>(false);
+const isPlotTwistBannerDismissed = ref<boolean>(false);
+
+// Combined recommended chips (original + plot twist bonus keywords if active)
+const displayedRecommendedWords = computed<Array<{ word: string; isTwistBonus: boolean }>>(() => {
+  const result: Array<{ word: string; isTwistBonus: boolean }> = [];
+  const baseWords = mission.value.recommendedWords || mission.value.targetKeywords || [];
+
+  for (const w of baseWords) {
+    result.push({ word: w, isTwistBonus: false });
+  }
+
+  if (isPlotTwistTriggered.value && plotTwist.value?.bonusKeywords) {
+    for (const bw of plotTwist.value.bonusKeywords) {
+      if (!result.some((r) => r.word.toLowerCase() === bw.toLowerCase())) {
+        result.push({ word: bw, isTwistBonus: true });
+      }
+    }
+  }
+
+  return result;
+});
 
 const charCount = computed<number>(() => inputText.value.length);
 const isInputValid = computed<boolean>(() => {
@@ -175,6 +203,28 @@ async function handleSendMessage(): Promise<void> {
   });
   void scrollToBottom();
 
+  // Check if Plot Twist should trigger at or after this turn (Task 1.10)
+  if (
+    plotTwist.value &&
+    !isPlotTwistTriggered.value &&
+    playerTurnsCount.value >= plotTwist.value.triggerAfterTurn
+  ) {
+    isPlotTwistTriggered.value = true;
+    playSound('combo_fever');
+    triggerScreenShake('light');
+
+    // System prompt event in chat feed
+    messages.value.push({
+      id: `msg_twist_${Date.now()}`,
+      role: 'model',
+      content: `⚡ BIẾN CỐ BẤT NGỜ (PLOT TWIST): ${plotTwist.value.twistLineVi}`,
+      vietnameseHint: `Tình huống thay đổi đột ngột! Hãy sử dụng các từ khóa ứng biến: ${plotTwist.value.bonusKeywords.join(', ')} để giải quyết!`,
+      scoreDelta: 0,
+      isMissionCompleted: false,
+    });
+    void scrollToBottom();
+  }
+
   isThinking.value = true;
   playSound('click');
 
@@ -238,8 +288,9 @@ async function handleSendMessage(): Promise<void> {
       scoreAwarded: response.scoreDelta || 25,
     });
 
-    // 7. Check Mission Clear
-    if (response.isMissionCompleted) {
+    // 7. Check Mission Clear (AI evaluation or Max Turns Anti-Frustration threshold)
+    const isMaxTurnsReached = playerTurnsCount.value >= maxTurns.value;
+    if (response.isMissionCompleted || isMaxTurnsReached) {
       isMissionCleared.value = true;
       playSound('fanfare');
       triggerVictoryConfetti();
@@ -281,6 +332,10 @@ function handleContinue(): void {
         <div class="npc-title-row">
           <h2 class="npc-name">{{ mission.npcName }}</h2>
           <span class="mission-tag">Nhiệm Vụ Nhập Vai</span>
+          <div class="turn-progress-badge" :class="{ 'turn-warning': playerTurnsCount >= maxTurns - 1 }">
+            <span class="turn-icon">⏱️</span>
+            <span class="turn-text">Lượt {{ playerTurnsCount }}/{{ maxTurns }}</span>
+          </div>
         </div>
         <p class="scenario-desc">{{ mission.scenario }}</p>
         <div class="goal-box">
@@ -290,19 +345,43 @@ function handleContinue(): void {
       </div>
     </div>
 
-    <!-- Recommended Words / Quick Chips -->
-    <div v-if="mission.recommendedWords?.length" class="recommended-chips-bar">
+    <!-- Plot Twist Alert Banner (Task 1.10) -->
+    <div
+      v-if="isPlotTwistTriggered && !isPlotTwistBannerDismissed && plotTwist"
+      class="plot-twist-banner"
+    >
+      <div class="twist-banner-left">
+        <span class="twist-badge-icon">⚡</span>
+        <div class="twist-text-group">
+          <strong class="twist-badge-title">BIẾN CỐ BẤT NGỜ!</strong>
+          <span class="twist-badge-desc">{{ plotTwist.twistLineVi }}</span>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="twist-dismiss-btn"
+        title="Thu nhỏ thông báo"
+        @click="isPlotTwistBannerDismissed = true"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Recommended Words & Twist Bonus Quick Chips (Task 1.10) -->
+    <div v-if="displayedRecommendedWords.length" class="recommended-chips-bar">
       <span class="chips-title">Từ khóa gợi ý:</span>
       <div class="chips-list">
         <button
-          v-for="word in mission.recommendedWords"
-          :key="word"
+          v-for="chip in displayedRecommendedWords"
+          :key="chip.word"
           type="button"
           class="word-chip-btn"
-          title="Bấm để đưa từ này vào câu nói"
-          @click="useChip(word)"
+          :class="{ 'chip-twist-bonus': chip.isTwistBonus }"
+          :title="chip.isTwistBonus ? 'Từ khóa ứng biến (+ Thưởng ⭐)' : 'Bấm để đưa từ này vào câu nói'"
+          @click="useChip(chip.word)"
         >
-          + {{ word }}
+          <span v-if="chip.isTwistBonus">⚡</span>
+          <span>+ {{ chip.word }}</span>
         </button>
       </div>
     </div>
@@ -533,6 +612,121 @@ function handleContinue(): void {
 .goal-text {
   font-weight: 700;
   color: var(--accent-primary);
+}
+
+/* Turn Progress Badge (Task 1.10) */
+.turn-progress-badge {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  letter-spacing: 0.02em;
+}
+
+.turn-progress-badge.turn-warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.4);
+  animation: pulse-turn-warning 1.8s infinite ease-in-out;
+}
+
+@keyframes pulse-turn-warning {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.04); }
+}
+
+/* Plot Twist Banner (Task 1.10) */
+.plot-twist-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.22), rgba(236, 72, 153, 0.15));
+  border-bottom: 1px solid rgba(168, 85, 247, 0.4);
+  animation: slide-twist-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slide-twist-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.twist-banner-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex: 1;
+}
+
+.twist-badge-icon {
+  font-size: 1.15rem;
+  animation: pulse-twist-icon 1.2s infinite ease-in-out alternate;
+}
+
+@keyframes pulse-twist-icon {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(1.2) rotate(10deg); }
+}
+
+.twist-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.twist-badge-title {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #c084fc;
+}
+
+.twist-badge-desc {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.twist-dismiss-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.twist-dismiss-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Twist Bonus Chip Style */
+.word-chip-btn.chip-twist-bonus {
+  background: rgba(168, 85, 247, 0.18);
+  border: 1px solid rgba(168, 85, 247, 0.5);
+  color: #d8b4fe;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
+  font-weight: 800;
+}
+
+.word-chip-btn.chip-twist-bonus:hover {
+  background: rgba(168, 85, 247, 0.3);
+  border-color: #c084fc;
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
 /* Quick Starter Chips */

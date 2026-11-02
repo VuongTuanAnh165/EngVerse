@@ -66,9 +66,12 @@ ${universeContext}
 YÊU CẦU NỘI DUNG:
 1. Trình độ mục tiêu: CEFR ${cefrLevel}.
 2. Từ vựng (vocabPool): Đúng chính xác ${vocabCount} từ vựng tiếng Anh thực tế xoay quanh chủ đề.
-   - Phiên âm IPA chuẩn xác quốc tế (ví dụ: /'æp.əl/).
+   - Phiên âm IPA chuẩn xác quốc tế (ví dụ: /ˈdræɡ.ən/).
    - 3 nghĩa gây nhiễu (distractorMeanings) phải cùng loại từ và gần gũi nhưng không đúng nghĩa, phục vụ làm câu hỏi trắc nghiệm mini-game.
    - Câu ví dụ có ngữ cảnh hay, dịch nghĩa tiếng Việt chuẩn xác.
+   - collocations: Đúng 3 cụm từ tiếng Anh cố định (situational chunks) hay đi kèm từ này (ví dụ: ["baby dragon", "dragon egg", "fire-breathing dragon"]).
+   - realWorldPhrase: 1 câu giao tiếp đời thực tự nhiên chứa từ vựng (ví dụ: "Look at the cute baby dragon sleeping inside the egg!").
+   - synonyms: 1-3 từ đồng nghĩa tiếng Anh phổ biến (nếu có).
    - 1 từ có cardRarity là "legendary" hoặc "epic", 2-3 từ "rare", các từ còn lại là "common".
    - Gán 1 emoji thích hợp cho mỗi từ.
 3. Ngữ pháp (grammarPool): Đúng 3 câu đố sắp xếp câu (Sentence Lock Puzzle).
@@ -76,6 +79,7 @@ YÊU CẦU NỘI DUNG:
    - correctSentence: Câu tiếng Anh chuẩn xác.
    - distractorWords: 3-5 từ gây nhiễu để xáo trộn cho người chơi chọn.
    - grammarTip: Mẹo giải thích cấu trúc ngắn gọn, dễ hiểu.
+   - functionalCategory: Phân loại chức năng giao tiếp thực tế, chọn 1 trong: "asking", "refusing", "apologizing", "persuading", "clarifying", "describing", "narrating", "negotiating", "complaining", "thanking".
 4. Kịch bản AI Nhập vai (aiRoleplayMission):
    - Một nhân vật NPC ảo phù hợp chủ đề (npcName, npcTitle, npcEmoji).
    - scenario: Mô tả bối cảnh tình huống hấp dẫn bằng tiếng Việt.
@@ -84,6 +88,14 @@ YÊU CẦU NỘI DUNG:
    - goal: Mục tiêu người chơi cần đạt được khi giao tiếp bằng tiếng Việt.
    - targetKeywords: 4-6 từ khóa tiếng Anh bắt buộc người chơi phải nói ra trong hội thoại.
    - starterChips: 3 câu gợi ý tiếng Anh cho người chơi bắt đầu.
+   - maxTurns: Số lượt hội thoại tối đa (6 cho màn thường, 8 cho màn Boss).
+   - plotTwist: Biến cố bất ngờ kịch tính kích hoạt sau lượt 2:
+     {
+       "triggerAfterTurn": 2,
+       "twistScenario": "Kịch bản biến cố tiếng Anh cho AI context",
+       "twistLineVi": "Lời thoại / tình huống biến cố tiếng Việt cho người học",
+       "bonusKeywords": ["từ_khóa_1", "từ_khóa_2"]
+     }
 
 QUY TẮC BẮT BUỘC:
 Trả về DUY NHẤT một chuỗi JSON hợp lệ, KHÔNG bọc trong markdown code fence, KHÔNG thêm bất kỳ lời dẫn nào ngoài JSON.`;

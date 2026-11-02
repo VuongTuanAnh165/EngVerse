@@ -449,8 +449,18 @@
         "successReply": "Yummy! Thank you so much! This fruit gives me magic power!",
         "retryReply": "Roar... I am still hungry! Can you give me a red apple or a yellow banana?"
       },
-      "maxTurns": 4,
-      "passScore": 60
+      "maxTurns": 6,
+      "passScore": 60,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "Ignis suddenly has a stomach ache from eating too fast! He whimpers and asks what he should do now.",
+        "twistLineVi": "Ignis bỗng nhiên bị đau bụng vì ăn quá nhanh! Bạn hãy khuyên chú rồng con uống nước (water), ăn táo (apple) và nghỉ ngơi nhé.",
+        "bonusKeywords": [
+          "water",
+          "apple",
+          "hungry"
+        ]
+      }
     }
   },
   {
@@ -905,8 +915,18 @@
         "successReply": "Wonderful answer! You know the forest animals well. You may cross the bridge!",
         "retryReply": "Hmm, tell me what an animal CAN do! For example: A rabbit can jump!"
       },
-      "maxTurns": 4,
-      "passScore": 65
+      "maxTurns": 6,
+      "passScore": 65,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "Felix spots a lost baby rabbit trapped behind a bush! He asks you to help guide the rabbit safely back.",
+        "twistLineVi": "Felix phát hiện một chú thỏ con bị lạc sau bụi cây! Bạn hãy chỉ đường cho thỏ bằng tiếng Anh (jump, forest, rabbit) nhé.",
+        "bonusKeywords": [
+          "rabbit",
+          "forest",
+          "jump"
+        ]
+      }
     }
   },
   {
@@ -1358,8 +1378,18 @@
         "successReply": "Aha! Smart choice! Your warm jacket and umbrella will protect you. The castle gate is open!",
         "retryReply": "Brrr! It is rainy and cold! Tell me: do you use an umbrella or a warm jacket?"
       },
-      "maxTurns": 4,
-      "passScore": 65
+      "maxTurns": 6,
+      "passScore": 65,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "A sudden freezing blizzard strikes the castle tower! Nimbus shivers and asks what warm clothes to wear.",
+        "twistLineVi": "Bão tuyết bất ngờ ập đến lâu đài! Nimbus hỏi bạn nên làm gì để giữ ấm và thời tiết bên ngoài như thế nào (cold, jacket, winter).",
+        "bonusKeywords": [
+          "cold",
+          "jacket",
+          "snow"
+        ]
+      }
     }
   },
   {
@@ -1821,8 +1851,18 @@
         "successReply": "Purr-fect! I found the key behind the mirror and the book on the bookshelf! Thank you, little detective!",
         "retryReply": "Meow? Where is it? Please use words like 'under the bed', 'behind the mirror', or 'on the bookshelf'!"
       },
-      "maxTurns": 4,
-      "passScore": 65
+      "maxTurns": 6,
+      "passScore": 65,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "Whiskers drops the golden key behind the large wooden table! He asks you where the key is located.",
+        "twistLineVi": "Whiskers vô tình đánh rơi chìa khóa vàng sau bàn! Bạn hãy miêu tả vị trí chiếc chìa khóa trong nhà (table, door, house) nhé.",
+        "bonusKeywords": [
+          "table",
+          "door",
+          "house"
+        ]
+      }
     }
   },
   {
@@ -2283,8 +2323,18 @@
         "successReply": "ROAR! Your bond with Ignis is truly strong and brave! Behold the Evolution Crystal! Ignis is evolving!",
         "retryReply": "Show me your courage! Tell me what your dragon friend can do or how you will protect the forest!"
       },
-      "maxTurns": 5,
-      "passScore": 70
+      "maxTurns": 8,
+      "passScore": 70,
+      "plotTwist": {
+        "triggerAfterTurn": 3,
+        "twistScenario": "Atlas pounds the stone ground with thunderous force! He demands that you prove the magic of elemental water and fire to pass.",
+        "twistLineVi": "Vệ Thần Atlas dậm chân làm rung chuyển mặt đất! Bạn hãy dùng sức mạnh của lửa và nước (fire, water, stone) để vượt qua thử thách.",
+        "bonusKeywords": [
+          "fire",
+          "water",
+          "stone"
+        ]
+      }
     }
   },
   {
@@ -2742,8 +2792,18 @@
         "successReply": "Splash! Your cheerful words made the shining pearl glow again! Thank you, kind ocean friend!",
         "retryReply": "Tell me how you feel (like 'I feel excited') and name a sea animal like a turtle, whale, or octopus!"
       },
-      "maxTurns": 4,
-      "passScore": 68
+      "maxTurns": 6,
+      "passScore": 68,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "A dark oil spill drifts near the coral reef! Marina urgently asks you to help the dolphins and sea creatures swim away.",
+        "twistLineVi": "Dòng nước đen bẩn đang trôi đến rạn san hô! Marina cầu cứu bạn hướng dẫn cá heo bơi nhanh đến nơi an toàn (dolphin, ocean, swim).",
+        "bonusKeywords": [
+          "dolphin",
+          "ocean",
+          "swim"
+        ]
+      }
     }
   },
   {
@@ -3200,8 +3260,18 @@
         "successReply": "Hoot-hoot! Splendid! You have your notebook and pencil ready, and you love learning. Welcome to our Academy!",
         "retryReply": "Check your backpack, young student! Tell me if you have a notebook or pencil, or mention science class and the library!"
       },
-      "maxTurns": 4,
-      "passScore": 68
+      "maxTurns": 6,
+      "passScore": 68,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "A magic potion bubble bursts, turning school textbooks into fluttering paper butterflies! Professor Oliver needs your spell to restore them.",
+        "twistLineVi": "Bình độc dược phát nổ biến sách vở thành bươm bướm! Giáo sư Oliver yêu cầu bạn gọi tên các đồ dùng học tập (book, pencil, school) để hóa giải.",
+        "bonusKeywords": [
+          "book",
+          "pencil",
+          "school"
+        ]
+      }
     }
   },
   {
@@ -3666,8 +3736,18 @@
         "successReply": "Bravo! Here is your delicious treat! Now grab your instrument and let's rock the festival stage!",
         "retryReply": "Tell me which treat you want (cupcake or lemonade) and whether you will play the guitar, play the piano, or dance!"
       },
-      "maxTurns": 4,
-      "passScore": 70
+      "maxTurns": 6,
+      "passScore": 70,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "The grand oven begins smoking with a giant fruit cake inside! Chef Bambino asks you to taste-test and adjust the milk and sugar.",
+        "twistLineVi": "Lò nướng bánh thần kỳ bốc khói dữ dội! Bếp trưởng Bambino cần bạn nếm thử và thêm sữa hoặc trái cây (milk, cake, sweet) để cứu mẻ bánh.",
+        "bonusKeywords": [
+          "milk",
+          "cake",
+          "sweet"
+        ]
+      }
     }
   },
   {
@@ -4128,8 +4208,18 @@
         "successReply": "Beep-boop! Coordinates locked! Put on your spacesuit, brave astronaut—our rocket is launching into the galaxy!",
         "retryReply": "Tell me our space plan! Use words like 'explore a planet', 'fly the rocket to the moon', or 'look at the galaxy'!"
       },
-      "maxTurns": 4,
-      "passScore": 72
+      "maxTurns": 6,
+      "passScore": 72,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "A space meteor shower damages the star navigation antenna! Astro-7 needs you to spot the bright stars and moon coordinates.",
+        "twistLineVi": "Mưa thiên thạch làm hỏng ăng-ten tàu không gian! Astro-7 nhờ bạn xác định vị trí mặt trăng và các vì sao (star, moon, rocket) để định vị.",
+        "bonusKeywords": [
+          "star",
+          "moon",
+          "rocket"
+        ]
+      }
     }
   },
   {
@@ -4601,8 +4691,18 @@
         "successReply": "IMPOSSIBLE! Your wisdom and friendship shine brighter than a thousand suns! The Eternal Star is yours—behold Cosmic Star Dragon Ignis!",
         "retryReply": "Your light is still weak! Tell me how you and Ignis will work together, use your wisdom, believe in yourselves, and shine in the universe!"
       },
-      "maxTurns": 5,
-      "passScore": 75
+      "maxTurns": 8,
+      "passScore": 75,
+      "plotTwist": {
+        "triggerAfterTurn": 3,
+        "twistScenario": "Nocturne breathes a shadowy mist that extinguishes the station lights! He roars that darkness will rule forever unless you summon sunlight.",
+        "twistLineVi": "Nocturne phun ra màn sương bóng tối bao phủ vũ trụ! Bạn hãy gọi tên ánh sáng mặt trời và tình bạn (light, sun, dragon) để đánh thức lòng nhân từ của rồng.",
+        "bonusKeywords": [
+          "light",
+          "sun",
+          "dragon"
+        ]
+      }
     }
   },
   {
@@ -5062,8 +5162,18 @@
         "successReply": "Amazing discovery! Those giant footprints near the volcano will lead us right to the Brachiosaurus nest! Thank you, young explorers!",
         "retryReply": "Tell me what you found or saw yesterday! Mention a dinosaur, a giant footprint, a fossil, or the volcano!"
       },
-      "maxTurns": 4,
-      "passScore": 70
+      "maxTurns": 6,
+      "passScore": 70,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "A baby T-Rex wanders into the herbivore paddock! Rex asks you to identify the baby dinosaur and feed it safely.",
+        "twistLineVi": "Một chú khủng long bạo chúa con đi lạc vào chuồng ăn cỏ! Rex nhờ bạn nói to tên khủng long và chọn đồ ăn thích hợp (dinosaur, big, eat).",
+        "bonusKeywords": [
+          "dinosaur",
+          "big",
+          "eat"
+        ]
+      }
     }
   },
   {
@@ -5526,8 +5636,18 @@
         "successReply": "Splendid choice! Here is your special Tiny Town badge and uniform. Thank you for helping our community!",
         "retryReply": "Tell me which job you choose! Mention a doctor at the hospital, a firefighter who rescues people, a pilot, or a chef at the bakery!"
       },
-      "maxTurns": 4,
-      "passScore": 70
+      "maxTurns": 6,
+      "passScore": 70,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "The town clock stops, causing traffic confusion! Mayor Barnaby needs a police officer and doctor to direct citizens.",
+        "twistLineVi": "Đồng hồ thị trấn ngừng chạy khiến giao thông hỗn loạn! Thị trưởng Barnaby cần bạn gọi cảnh sát và bác sĩ (police, doctor, help) để trợ giúp.",
+        "bonusKeywords": [
+          "police",
+          "doctor",
+          "help"
+        ]
+      }
     }
   },
   {
@@ -5992,8 +6112,18 @@
         "successReply": "Wonderful medical advice! Little Bear took the medicine to stop the fever, and Squirrel promised to eat healthy vegetables!",
         "retryReply": "Please give them advice! Tell me if they should take medicine, get some rest for the fever, or eat healthy vegetables!"
       },
-      "maxTurns": 4,
-      "passScore": 72
+      "maxTurns": 6,
+      "passScore": 72,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "A little bluebird arrives with a wounded wing after a heavy storm! Nurse Clara needs you to prepare medicine and clean water.",
+        "twistLineVi": "Một chú chim nhỏ bị thương ở cánh sau cơn bão lớn! Bác sĩ Clara cần bạn hướng dẫn sơ cứu và động viên chú chim nghỉ ngơi (medicine, rest, water).",
+        "bonusKeywords": [
+          "medicine",
+          "rest",
+          "water"
+        ]
+      }
     }
   },
   {
@@ -6456,8 +6586,18 @@
         "successReply": "Fantastic spirit! Running quickly, aiming carefully, and showing great teamwork make you true champions! Here is your Gold Medal!",
         "retryReply": "Tell me your sports secret! Did you run quickly in soccer, aim carefully in archery, or use teamwork to score and win the medal?"
       },
-      "maxTurns": 4,
-      "passScore": 72
+      "maxTurns": 6,
+      "passScore": 72,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "The opposing team scores two quick points in the final quarter! Coach Bolt calls a timeout and asks for a new passing strategy.",
+        "twistLineVi": "Đội bạn bất ngờ ghi điểm dẫn trước! Huấn luyện viên Bolt gọi hội ý và yêu cầu bạn đưa ra chiến thuật phối hợp chuyền bóng (run, fast, team).",
+        "bonusKeywords": [
+          "run",
+          "fast",
+          "team"
+        ]
+      }
     }
   },
   {
@@ -6926,8 +7066,18 @@
         "successReply": "MAGNIFICENT! Your heart burns as warm as my immortal flame! Receive this Golden Phoenix Feather—behold Chrono Armor Dragon Ignis!",
         "retryReply": "Speak with the heart of a time guardian! Mention my glowing feather, the ancient hourglass, your happy memory, or how your flame will heal the world!"
       },
-      "maxTurns": 5,
-      "passScore": 75
+      "maxTurns": 8,
+      "passScore": 75,
+      "plotTwist": {
+        "triggerAfterTurn": 3,
+        "twistScenario": "Solaris spins the giant hourglass backwards, causing seasons to shift wildly! He challenges you to name the days and seasons in harmony.",
+        "twistLineVi": "Phượng Hoàng Solaris làm cát thời gian chảy ngược khiến các mùa đảo lộn! Bạn phải kể tên các mùa và ngày trong tuần (summer, winter, time) để ổn định thời gian.",
+        "bonusKeywords": [
+          "summer",
+          "winter",
+          "time"
+        ]
+      }
     }
   },
   {
@@ -7392,8 +7542,18 @@
         "successReply": "Wonderful plan, Green Knight! By recycling plastic, cleaning up the beach, and planting trees, our crystal forest is shining again!",
         "retryReply": "Tell me how we can help the Earth! Use words like 'recycle plastic', 'plant trees', 'clean up', or 'protect the environment'!"
       },
-      "maxTurns": 4,
-      "passScore": 72
+      "maxTurns": 6,
+      "passScore": 72,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "Dry brush catches fire near the clean lake! Gaia summons the Forest Knights to extinguish the flames and plant new seedlings.",
+        "twistLineVi": "Gió khô làm bùng lên đám cháy nhỏ cạnh bờ hồ! Tinh linh Gaia kêu gọi bạn chỉ huy dập lửa và trồng lại cây xanh (tree, water, earth).",
+        "bonusKeywords": [
+          "tree",
+          "water",
+          "earth"
+        ]
+      }
     }
   },
   {
@@ -7863,8 +8023,18 @@
         "successReply": "BZZT-DING! It works! The metal robot powered by the solar battery just started when you pressed the green button! You are a genius inventor!",
         "retryReply": "Tell me more about the robot invention! Mention its metal body, solar battery, strong magnet, or pressing the green button!"
       },
-      "maxTurns": 4,
-      "passScore": 74
+      "maxTurns": 6,
+      "passScore": 74,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "The newly built helper robot confuses color codes and starts spinning in circles! Edison needs you to recite correct color commands.",
+        "twistLineVi": "Chú robot mới lắp ráp bị loạn mã màu và quay mòng mòng! Edison nhờ bạn đọc lệnh màu sắc chuẩn (robot, red, blue) để tái khởi động hệ thống.",
+        "bonusKeywords": [
+          "robot",
+          "red",
+          "blue"
+        ]
+      }
     }
   },
   {
@@ -8335,8 +8505,18 @@
         "successReply": "First-class traveler! With your compass pointing north and your passport stamped, our balloon is ready for the Golden Desert!",
         "retryReply": "Check your travel bag! Mention your passport, compass, camera, souvenir, or where our balloon is flying on this journey!"
       },
-      "maxTurns": 4,
-      "passScore": 74
+      "maxTurns": 6,
+      "passScore": 74,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "A gust of mountain crosswind pushes the hot-air balloon off course toward rocky peaks! Skye asks you to check wind direction and release ballast.",
+        "twistLineVi": "Cơn gió lốc bất ngờ đẩy khinh khí cầu chệch hướng về phía vách núi! Captain Skye nhờ bạn kiểm tra hướng gió và độ cao (wind, fly, sky) để bay an toàn.",
+        "bonusKeywords": [
+          "wind",
+          "fly",
+          "sky"
+        ]
+      }
     }
   },
   {
@@ -8801,8 +8981,18 @@
         "successReply": "WISE ANSWER! A camel crosses the desert to the oasis, and a bright torch lights the secret chamber! The Pyramid Gate is now open!",
         "retryReply": "Think carefully about my riddle! Name the desert animal (camel) that goes to the oasis, or the bright item (torch) you hold inside the pyramid!"
       },
-      "maxTurns": 4,
-      "passScore": 75
+      "maxTurns": 6,
+      "passScore": 75,
+      "plotTwist": {
+        "triggerAfterTurn": 2,
+        "twistScenario": "The golden chamber door begins sliding shut with a sand riddle on the wall! Sphinx demands you solve the final puzzle.",
+        "twistLineVi": "Cửa phòng kho báu cát vàng bắt đầu khép lại! Nhân Sư Sphinx yêu cầu bạn giải mã câu đố từ vựng cổ đại (gold, sand, secret) để mở cửa.",
+        "bonusKeywords": [
+          "gold",
+          "sand",
+          "secret"
+        ]
+      }
     }
   },
   {
@@ -9273,8 +9463,18 @@
         "successReply": "NOOO! Your crystal shield of courage and promise of eternal harmony are too bright! Chaos is fading... Behold the ultimate awakening: MULTIVERSE SOVEREIGN DRAGON IGNIS! You have saved all worlds!",
         "retryReply": "My storm is still strong! Raise your crystal shield and tell me about your courage, your promise as a guardian, and how you will bring eternal peace and harmony!"
       },
-      "maxTurns": 5,
-      "passScore": 78
+      "maxTurns": 8,
+      "passScore": 78,
+      "plotTwist": {
+        "triggerAfterTurn": 3,
+        "twistScenario": "Leviathan summons a vortex of chaos across dimensions! He laughs that all worlds will fade unless true friendship and light prevail.",
+        "twistLineVi": "Hoàng Đế Leviathan triệu hồi lốc xoáy hỗn mang! Bạn cùng các linh thú hãy đồng thanh niệm chú tình bạn và ánh sáng vĩnh cửu (magic, friend, forever) để cứu thế giới.",
+        "bonusKeywords": [
+          "magic",
+          "friend",
+          "forever"
+        ]
+      }
     }
   }
 ]

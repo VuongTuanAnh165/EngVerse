@@ -117,9 +117,29 @@ export function executeOfflineRuleBasedFallback(
   const lowerInput = sanitizedInput.toLowerCase();
   const matchedKeywords = keywords.filter((k) => lowerInput.includes(k.toLowerCase()));
 
+  const plotTwist = mission.plotTwist;
+  const userTurns = payload.conversationHistory.filter((m) => m.role === 'user').length + 1;
+  const isTwistActive = plotTwist && userTurns >= plotTwist.triggerAfterTurn;
+  const maxTurns = mission.maxTurns || 6;
+
+  // Check plot twist bonus keywords
+  if (isTwistActive && plotTwist && plotTwist.bonusKeywords.length > 0) {
+    const matchedTwist = plotTwist.bonusKeywords.filter((k) => lowerInput.includes(k.toLowerCase()));
+    if (matchedTwist.length > 0) {
+      const isComplete = userTurns >= maxTurns - 1 || matchedKeywords.length >= 2;
+      return {
+        npcReply: `Brilliant quick thinking! You handled the unexpected twist: "${plotTwist.twistScenario.slice(0, 40)}..." exceptionally well!`,
+        vietnameseHint: 'Tuyệt vời! Bạn đã ứng biến thành công biến cố bất ngờ!',
+        grammarCorrection: '',
+        scoreDelta: 45,
+        isMissionCompleted: isComplete,
+      };
+    }
+  }
+
   const hasMatched = matchedKeywords.length > 0 || lowerInput.split(' ').length >= 3;
   const isComplete =
-    matchedKeywords.length >= 2 || (hasMatched && payload.conversationHistory.length >= 3);
+    matchedKeywords.length >= 2 || (hasMatched && userTurns >= maxTurns - 1);
 
   if (isComplete) {
     return {

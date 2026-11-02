@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useAdmin } from '~/composables/useAdmin';
 import InteractiveMapPicker from '~/components/admin/InteractiveMapPicker.vue';
 import type { WorldTrack } from '~/types/user';
-import type { StageData, StageVocabItem, StageGrammarItem, CardRarity, PartOfSpeech } from '~/types/game';
+import type { StageData, StageVocabItem, StageGrammarItem, CardRarity, PartOfSpeech, FunctionalGrammarCategory, AiRoleplayPlotTwist } from '~/types/game';
 
 definePageMeta({
   layout: 'admin',
@@ -167,6 +167,40 @@ const distractorMeaningsText = ref<string[]>([]);
 const distractorWordsText = ref<string[]>([]);
 const targetKeywordsText = ref('');
 const starterChipsText = ref('');
+
+const functionalCategories: Array<{ value: FunctionalGrammarCategory; label: string }> = [
+  { value: 'asking', label: 'Hỏi thông tin (Asking)' },
+  { value: 'refusing', label: 'Từ chối lịch sự (Refusing)' },
+  { value: 'apologizing', label: 'Xin lỗi & Khắc phục (Apologizing)' },
+  { value: 'persuading', label: 'Thuyết phục (Persuading)' },
+  { value: 'clarifying', label: 'Làm rõ / Xác nhận (Clarifying)' },
+  { value: 'describing', label: 'Miêu tả chi tiết (Describing)' },
+  { value: 'narrating', label: 'Kể chuyện / Trình tự (Narrating)' },
+  { value: 'negotiating', label: 'Đàm phán / Thương lượng (Negotiating)' },
+  { value: 'complaining', label: 'Phàn nàn / Khiếu nại (Complaining)' },
+  { value: 'thanking', label: 'Cảm ơn & Tri ân (Thanking)' },
+];
+
+const hasPlotTwist = ref(false);
+const plotTwistBonusKeywordsText = ref('');
+
+function handlePlotTwistToggle() {
+  if (hasPlotTwist.value && !stageForm.aiRoleplayMission.plotTwist) {
+    stageForm.aiRoleplayMission.plotTwist = {
+      triggerAfterTurn: 2,
+      twistScenario: '',
+      twistLineVi: '',
+      bonusKeywords: [],
+    };
+  }
+}
+
+function setVocabCollocation(vocab: StageVocabItem, index: number, val: string) {
+  if (!Array.isArray(vocab.collocations)) {
+    vocab.collocations = ['', '', ''];
+  }
+  vocab.collocations[index] = val;
+}
 
 const rarityOptions: CardRarity[] = ['common', 'rare', 'epic', 'legendary'];
 const posOptions: PartOfSpeech[] = ['noun', 'verb', 'adjective', 'adverb', 'phrase', 'idiom'];
@@ -1532,6 +1566,70 @@ input:checked + .switch-slider:before {
   border-radius: 6px;
   padding: 0 10px;
   cursor: pointer;
+}
+
+.collocation-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.category-select {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #38bdf8;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  max-width: 200px;
+}
+
+.plot-twist-box {
+  background: rgba(147, 51, 234, 0.08);
+  border: 1px dashed rgba(168, 85, 247, 0.35);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+.plot-twist-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  color: #c084fc;
+}
+
+.toggle-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #a855f7;
+  cursor: pointer;
+}
+
+.hint-pill {
+  font-size: 11px;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.plot-twist-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(168, 85, 247, 0.2);
 }
 
 .distractor-inputs {

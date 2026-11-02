@@ -138,12 +138,36 @@ function getRarityLabel(rarity: string): string {
         </div>
 
         <div class="back-content">
+          <!-- Collocations -->
+          <div v-if="card.collocations && card.collocations.length > 0" class="back-section">
+            <span class="section-label">Cụm từ đi kèm (Collocations):</span>
+            <div class="collocations-tags">
+              <span v-for="(colloc, idx) in card.collocations" :key="idx" class="colloc-tag">
+                {{ colloc }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Real World Phrase -->
+          <div v-if="card.realWorldPhrase" class="back-section">
+            <span class="section-label">Thực tế đời sống:</span>
+            <p class="real-world-phrase">💬 {{ card.realWorldPhrase }}</p>
+          </div>
+
+          <!-- Synonyms -->
+          <div v-if="card.synonyms && card.synonyms.length > 0" class="back-section">
+            <span class="section-label">Từ đồng nghĩa:</span>
+            <p class="synonyms-text">{{ card.synonyms.join(', ') }}</p>
+          </div>
+
+          <!-- Example Context -->
           <div class="back-section">
             <span class="section-label">Ví dụ ngữ cảnh:</span>
             <p class="example-en">"{{ card.example }}"</p>
             <p class="example-vi">{{ card.exampleMeaning }}</p>
           </div>
 
+          <!-- Card Lore -->
           <div class="back-section">
             <span class="section-label">Cốt truyện thẻ bài:</span>
             <p class="card-lore">{{ card.lore }}</p>
@@ -400,8 +424,52 @@ function getRarityLabel(rarity: string): string {
 .back-content {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
   text-align: left;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 0.2rem;
+}
+
+.back-content::-webkit-scrollbar {
+  width: 3px;
+}
+
+.back-content::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.collocations-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.colloc-tag {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  background: rgba(59, 130, 246, 0.12);
+  padding: 0.1rem 0.35rem;
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  line-height: 1.2;
+}
+
+.real-world-phrase {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: #10b981;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.synonyms-text {
+  margin: 0;
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
 }
 
 .section-label {

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * EngVerse - Game, Stage & Codex Types
  * Strictly typed schema for Static Stage JSON, Mini-game Engine & Codex 3D Cards
  * Reference: docs/ke_hoach.md - Section III.1, Sprint 2 & Sprint 3
@@ -38,22 +38,22 @@ export interface StageVocabItem {
   cardRarity: CardRarity;
   cardId?: string;
   /**
-   * MỚI (Pha 1 - Task 1.1): 3 cụm từ cố định (collocations / situational chunks) đi kèm từ này
-   * Ví dụ: ["claim my luggage", "excess luggage fee", "damaged luggage claim"]
+   * Má»šI (Pha 1 - Task 1.1): 3 cá»¥m tá»« cá»‘ Ä‘á»‹nh (collocations / situational chunks) Ä‘i kÃ¨m tá»« nÃ y
+   * VÃ­ dá»¥: ["claim my luggage", "excess luggage fee", "damaged luggage claim"]
    */
   collocations?: [string, string, string] | string[];
   /**
-   * MỚI (Pha 1 - Task 1.1): 1 câu giao tiếp đời thực phản xạ chứa từ vựng
-   * Ví dụ: "Excuse me, where can I claim my luggage?"
+   * Má»šI (Pha 1 - Task 1.1): 1 cÃ¢u giao tiáº¿p Ä‘á»i thá»±c pháº£n xáº¡ chá»©a tá»« vá»±ng
+   * VÃ­ dá»¥: "Excuse me, where can I claim my luggage?"
    */
   realWorldPhrase?: string;
   /**
-   * MỚI (Pha 1 - Task 1.1): Danh sách các từ đồng nghĩa phổ biến
-   * Ví dụ: ["baggage", "suitcase"]
+   * Má»šI (Pha 1 - Task 1.1): Danh sÃ¡ch cÃ¡c tá»« Ä‘á»“ng nghÄ©a phá»• biáº¿n
+   * VÃ­ dá»¥: ["baggage", "suitcase"]
    */
   synonyms?: string[];
   /**
-   * MỚI (Pha 1 - Task 1.1): Danh sách các từ trái nghĩa phổ biến (nếu có)
+   * Má»šI (Pha 1 - Task 1.1): Danh sÃ¡ch cÃ¡c tá»« trÃ¡i nghÄ©a phá»• biáº¿n (náº¿u cÃ³)
    */
   antonyms?: string[];
 }
@@ -64,7 +64,7 @@ export interface StageVocabItem {
 export type VocabItem = StageVocabItem;
 
 /**
- * MỚI (Pha 1 - Task 1.2): Phân loại ngữ pháp theo chức năng giao tiếp đời thực
+ * Má»šI (Pha 1 - Task 1.2): PhÃ¢n loáº¡i ngá»¯ phÃ¡p theo chá»©c nÄƒng giao tiáº¿p Ä‘á»i thá»±c
  * Categorizes patterns by real-world communicative intent rather than purely structural rules.
  */
 export type FunctionalGrammarCategory =
@@ -91,8 +91,8 @@ export interface StageGrammarItem {
   distractorWords: string[];
   grammarTip: string;
   /**
-   * MỚI (Pha 1 - Task 1.2): Phân loại ngữ pháp theo chức năng giao tiếp đời thực
-   * Giúp hệ thống và AI lọc câu hỏi theo mục đích đàm thoại (hỏi, từ chối, làm rõ...)
+   * Má»šI (Pha 1 - Task 1.2): PhÃ¢n loáº¡i ngá»¯ phÃ¡p theo chá»©c nÄƒng giao tiáº¿p Ä‘á»i thá»±c
+   * GiÃºp há»‡ thá»‘ng vÃ  AI lá»c cÃ¢u há»i theo má»¥c Ä‘Ã­ch Ä‘Ã m thoáº¡i (há»i, tá»« chá»‘i, lÃ m rÃµ...)
    */
   functionalCategory?: FunctionalGrammarCategory;
 }
@@ -112,17 +112,17 @@ export interface OfflineFallbackConfig {
 }
 
 /**
- * MỚI (Pha 1 - Task 1.3): Biến số kịch bản bất ngờ trong AI Roleplay
- * Kích hoạt sau lượt 2 hoặc 3 để ép người chơi ứng biến tình huống ngoài dự tính.
+ * Má»šI (Pha 1 - Task 1.3): Biáº¿n sá»‘ ká»‹ch báº£n báº¥t ngá» trong AI Roleplay
+ * KÃ­ch hoáº¡t sau lÆ°á»£t 2 hoáº·c 3 Ä‘á»ƒ Ã©p ngÆ°á»i chÆ¡i á»©ng biáº¿n tÃ¬nh huá»‘ng ngoÃ i dá»± tÃ­nh.
  */
 export interface AiRoleplayPlotTwist {
-  /** Lượt kích hoạt biến cố (thường là lượt 2 hoặc 3 của hội thoại) */
+  /** LÆ°á»£t kÃ­ch hoáº¡t biáº¿n cá»‘ (thÆ°á»ng lÃ  lÆ°á»£t 2 hoáº·c 3 cá»§a há»™i thoáº¡i) */
   triggerAfterTurn: number;
-  /** Tình huống biến cố bằng tiếng Anh để đưa vào context của AI */
+  /** TÃ¬nh huá»‘ng biáº¿n cá»‘ báº±ng tiáº¿ng Anh Ä‘á»ƒ Ä‘Æ°a vÃ o context cá»§a AI */
   twistScenario: string;
-  /** Lời thoại / giải thích tình huống biến cố bằng tiếng Việt cho người học */
+  /** Lá»i thoáº¡i / giáº£i thÃ­ch tÃ¬nh huá»‘ng biáº¿n cá»‘ báº±ng tiáº¿ng Viá»‡t cho ngÆ°á»i há»c */
   twistLineVi: string;
-  /** Danh sách từ khóa bổ sung bắt buộc hoặc khuyến khích dùng khi xảy ra biến cố */
+  /** Danh sÃ¡ch tá»« khÃ³a bá»• sung báº¯t buá»™c hoáº·c khuyáº¿n khÃ­ch dÃ¹ng khi xáº£y ra biáº¿n cá»‘ */
   bonusKeywords: string[];
 }
 
@@ -143,14 +143,14 @@ export interface StageAiMission {
   starterChips?: string[];
   offlineFallback?: OfflineFallbackConfig;
   /**
-   * Số lượt thoại tối đa của người chơi trong màn này.
-   * Màn thường nâng từ 4 -> 6 lượt; Màn Boss nâng từ 5 -> 8 lượt.
-   * Mặc định fallback là 6 (hoặc 8 cho boss stage) nếu không được khai báo.
+   * Sá»‘ lÆ°á»£t thoáº¡i tá»‘i Ä‘a cá»§a ngÆ°á»i chÆ¡i trong mÃ n nÃ y.
+   * MÃ n thÆ°á»ng nÃ¢ng tá»« 4 -> 6 lÆ°á»£t; MÃ n Boss nÃ¢ng tá»« 5 -> 8 lÆ°á»£t.
+   * Máº·c Ä‘á»‹nh fallback lÃ  6 (hoáº·c 8 cho boss stage) náº¿u khÃ´ng Ä‘Æ°á»£c khai bÃ¡o.
    */
   maxTurns?: number;
   passScore?: number;
   /**
-   * MỚI (Pha 1 - Task 1.3): Tình huống bất ngờ sau lượt 2-3 ép người chơi ứng biến
+   * Má»šI (Pha 1 - Task 1.3): TÃ¬nh huá»‘ng báº¥t ngá» sau lÆ°á»£t 2-3 Ã©p ngÆ°á»i chÆ¡i á»©ng biáº¿n
    */
   plotTwist?: AiRoleplayPlotTwist;
 }
@@ -282,6 +282,7 @@ export interface CodexCard {
   lore: string;
   collocations?: string[];
   realWorldPhrase?: string;
+  synonyms?: string[];
 }
 
 /**
@@ -357,6 +358,7 @@ export type GameSessionPhase =
 export type SoundEffectType =
   | 'correct'
   | 'wrong'
+  | 'combo'
   | 'combo_fever'
   | 'fanfare'
   | 'click'

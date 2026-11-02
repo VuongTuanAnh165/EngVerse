@@ -263,6 +263,13 @@ export function syncStageWithCodex(stage: StageData, codex: CodexData): { synced
       lore: existingCardIndex >= 0 && codex.cards[existingCardIndex]?.lore
         ? codex.cards[existingCardIndex].lore
         : `Thẻ bài thu thập từ Màn ${stageId} (${stage.title}) trong vũ trụ ${track.toUpperCase()}.`,
+      collocations: Array.isArray(normalizedVocab.collocations) && normalizedVocab.collocations.length > 0
+        ? [...normalizedVocab.collocations]
+        : undefined,
+      realWorldPhrase: normalizedVocab.realWorldPhrase || undefined,
+      synonyms: Array.isArray(normalizedVocab.synonyms) && normalizedVocab.synonyms.length > 0
+        ? [...normalizedVocab.synonyms]
+        : undefined,
     };
 
     if (existingCardIndex >= 0) {
@@ -334,6 +341,26 @@ export function syncStageWithCodex(stage: StageData, codex: CodexData): { synced
 
   return { syncedCardsCount };
 }
+/**
+ * Synchronizes all stages across all tracks (kids, teens, adults) with Codex
+ */
+export async function syncAllStagesWithCodex(): Promise<{ totalSynced: number }> {
+  const codex = await readCodex();
+  const tracks: WorldTrack[] = ['kids', 'teens', 'adults'];
+  let totalSynced = 0;
+
+  for (const track of tracks) {
+    const stages = await readStages(track);
+    for (const stage of stages) {
+      const { syncedCardsCount } = syncStageWithCodex(stage, codex);
+      totalSynced += syncedCardsCount;
+    }
+  }
+
+  await writeCodex(codex);
+  return { totalSynced };
+}
+
 
 /**
  * Removes a stage and optionally cascades the deletion to linked cards and collections

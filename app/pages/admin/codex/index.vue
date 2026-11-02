@@ -1510,6 +1510,38 @@ async function handleSaveTitle() {
   color: #38bdf8;
 }
 
+.collocation-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+}
+
+.preview-colloc-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.preview-colloc-pill {
+  font-size: 10px;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.preview-real-phrase {
+  margin: 6px 0 0 0;
+  font-size: 11px;
+  color: #10b981;
+  font-style: italic;
+  line-height: 1.3;
+}
+
 .preview-lore {
   background: rgba(255, 255, 255, 0.04);
   border-radius: 8px;

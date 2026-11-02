@@ -295,6 +295,7 @@ export function useSoundEffects() {
       case 'wrong':
         playWrong();
         break;
+      case 'combo':
       case 'combo_fever':
         playComboFever();
         break;

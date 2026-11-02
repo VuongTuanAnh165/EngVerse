@@ -1,84 +1,48 @@
 import { defineEventHandler } from 'h3';
-import { getFirebaseAdminApp, getAdminAuth, getAdminDb } from '../../utils/firebaseAdmin';
 
 /**
- * Diagnostic Endpoint for Firebase Admin & Vercel Environment Variables
- * Safe for inspection: Never leaks private keys or credentials.
+ * Diagnostic Endpoint with Zero-Crash Architecture
+ * Uses dynamic import inside the handler so the module NEVER crashes at boot time.
  */
 export default defineEventHandler(async () => {
-  const config = useRuntimeConfig();
-
-  const projectId =
-    (config.public.firebaseProjectId as string) ||
-    process.env.NUXT_PUBLIC_FIREBASE_PROJECT_ID ||
-    process.env.FIREBASE_PROJECT_ID ||
-    '';
-
-  const clientEmail =
-    (config.firebaseClientEmail as string) ||
-    process.env.FIREBASE_CLIENT_EMAIL ||
-    process.env.NUXT_FIREBASE_CLIENT_EMAIL ||
-    '';
-
-  const rawPrivateKey =
-    (config.firebasePrivateKey as string) ||
-    process.env.FIREBASE_PRIVATE_KEY ||
-    process.env.NUXT_FIREBASE_PRIVATE_KEY ||
-    '';
-
-  const hasPrivateKey = !!rawPrivateKey && rawPrivateKey.length > 50;
-  const privateKeyTrimmed = rawPrivateKey.trim();
-  const startsWithQuote = privateKeyTrimmed.startsWith('"') || privateKeyTrimmed.startsWith("'");
-  const endsWithQuote = privateKeyTrimmed.endsWith('"') || privateKeyTrimmed.endsWith("'");
-  const hasBeginTag = rawPrivateKey.includes('-----BEGIN PRIVATE KEY-----');
-  const hasEndTag = rawPrivateKey.includes('-----END PRIVATE KEY-----');
-
-  let adminAppStatus = 'PENDING';
-  let adminAuthStatus = 'PENDING';
-  let firestoreStatus = 'PENDING';
-  let initError: string | null = null;
+  const diagnostics: Record<string, unknown> = {
+    timestamp: new Date().toISOString(),
+    nodeVersion: process.version,
+    platform: process.platform,
+    envKeysAvailable: Object.keys(process.env).filter(
+      (k) => k.includes('FIREBASE') || k.includes('NUXT')
+    ),
+  };
 
   try {
-    const app = getFirebaseAdminApp();
-    adminAppStatus = app ? 'SUCCESS' : 'NULL_APP';
+    const fbAdmin = await import('../../utils/firebaseAdmin');
+    diagnostics.moduleImport = 'SUCCESS';
 
-    const auth = getAdminAuth();
-    adminAuthStatus = auth ? 'SUCCESS' : 'NULL_AUTH';
+    try {
+      const app = fbAdmin.getFirebaseAdminApp();
+      diagnostics.adminApp = app ? 'SUCCESS' : 'NULL';
 
-    const db = getAdminDb();
-    const testDoc = await db.collection('users').limit(1).get();
-    firestoreStatus = `SUCCESS (Read ${testDoc.size} docs)`;
-  } catch (err: unknown) {
-    initError = err instanceof Error ? `${err.name}: ${err.message}` : String(err);
+      const auth = fbAdmin.getAdminAuth();
+      diagnostics.adminAuth = auth ? 'SUCCESS' : 'NULL';
+
+      const db = fbAdmin.getAdminDb();
+      const test = await db.collection('users').limit(1).get();
+      diagnostics.firestore = `SUCCESS (Found ${test.size} docs)`;
+    } catch (fbErr: unknown) {
+      diagnostics.firebaseExecutionError =
+        fbErr instanceof Error ? `${fbErr.name}: ${fbErr.message}` : String(fbErr);
+      if (fbErr instanceof Error && fbErr.stack) {
+        diagnostics.firebaseExecutionStack = fbErr.stack.split('\n').slice(0, 5);
+      }
+    }
+  } catch (importErr: unknown) {
+    diagnostics.moduleImport = 'FAILED';
+    diagnostics.moduleImportError =
+      importErr instanceof Error ? `${importErr.name}: ${importErr.message}` : String(importErr);
+    if (importErr instanceof Error && importErr.stack) {
+      diagnostics.moduleImportStack = importErr.stack.split('\n').slice(0, 5);
+    }
   }
 
-  return {
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'unknown',
-    diagnostics: {
-      projectId: {
-        value: projectId,
-        isConfigured: !!projectId,
-      },
-      clientEmail: {
-        value: clientEmail ? `${clientEmail.slice(0, 15)}...${clientEmail.slice(-15)}` : 'MISSING',
-        isConfigured: !!clientEmail,
-      },
-      privateKey: {
-        isConfigured: hasPrivateKey,
-        length: rawPrivateKey.length,
-        hasBeginTag,
-        hasEndTag,
-        startsWithQuote,
-        endsWithQuote,
-      },
-      services: {
-        adminApp: adminAppStatus,
-        adminAuth: adminAuthStatus,
-        firestore: firestoreStatus,
-      },
-      error: initError,
-    },
-  };
+  return { diagnostics };
 });
-

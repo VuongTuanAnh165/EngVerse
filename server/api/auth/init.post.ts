@@ -1,5 +1,5 @@
 import { defineEventHandler, readBody, createError, getRequestHeader } from 'h3';
-import { adminAuth, adminDb } from '../../utils/firebaseAdmin';
+import { getAdminAuth, getAdminDb } from '../../utils/firebaseAdmin';
 import {
   type AuthInitPayload,
   type AuthInitResponse,
@@ -95,6 +95,7 @@ export default defineEventHandler(async (event): Promise<AuthInitResponse> => {
     let avatar = 'rookie_explorer';
 
     try {
+      const adminAuth = getAdminAuth();
       const decodedToken = await adminAuth.verifyIdToken(body.idToken);
       uid = decodedToken.uid;
       email = decodedToken.email || null;
@@ -103,13 +104,15 @@ export default defineEventHandler(async (event): Promise<AuthInitResponse> => {
     } catch (authError: unknown) {
       console.error('[AuthInit] Firebase token verification failed:', authError);
       const authMsg = authError instanceof Error ? authError.message : String(authError);
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Unauthorized',
-        message: `ID Token không hợp lệ hoặc Firebase Admin chưa cấu hình: ${authMsg}`,
-      });
+      return {
+        success: false,
+        user: null as unknown as UserProfile,
+        isNewUser: false,
+        message: `Xác thực Firebase thất bại: ${authMsg}`,
+      };
     }
 
+    const adminDb = getAdminDb();
     const userRef = adminDb.collection('users').doc(uid);
     const docSnap = await userRef.get();
     const now = Date.now();

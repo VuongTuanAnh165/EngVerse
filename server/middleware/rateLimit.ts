@@ -57,8 +57,8 @@ function purgeExpiredEntries(now: number): void {
   }
 }
 
-// Background cleanup timer for persistent Node runtime
-if (typeof setInterval !== 'undefined') {
+// Background cleanup timer for persistent Node runtime (skipped on Vercel Serverless)
+if (typeof setInterval !== 'undefined' && !process.env.VERCEL) {
   const timer = setInterval(() => {
     purgeExpiredEntries(Date.now());
   }, CLEANUP_INTERVAL_MS);

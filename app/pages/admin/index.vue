@@ -52,12 +52,29 @@ onMounted(() => {
       </div>
       <div class="header-actions">
         <NuxtLink to="/admin/stages/new" class="btn btn-primary">
-          <span>✨</span>
+          <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14"/>
+            <path d="M12 5v14"/>
+          </svg>
           <span>Tạo Chặng Mới</span>
         </NuxtLink>
         <button class="btn btn-secondary" @click="loadDashboardData" :disabled="isLoading">
-          <span>🔄</span>
-          <span>Làm Mới</span>
+          <svg
+            class="btn-icon"
+            :class="{ 'icon-spinning': isLoading }"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+            <path d="M16 16h5v5"/>
+          </svg>
+          <span>{{ isLoading ? 'Đang tải...' : 'Làm Mới' }}</span>
         </button>
       </div>
     </div>

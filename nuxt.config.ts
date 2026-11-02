@@ -20,6 +20,10 @@ export default defineNuxtConfig({
     '@nuxtjs/seo',
   ],
 
+  build: {
+    transpile: ['jwks-rsa', 'jose'],
+  },
+
   // Site Configuration for SEO & Dynamic OG Images
   site: {
     url: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',

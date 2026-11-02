@@ -3,21 +3,16 @@
  * EngVerse - Boss Rush Colosseum Arena (/play/boss-rush/[track])
  * Continuous 4-Boss survival gauntlet with shared HP and Hardcore Modifiers.
  * Strictly typed (0 any), Vue 3.5 script setup, 1-Doc-Per-User architecture.
- * Reference: docs/roadmap_stage_depth_and_endgame.md - Section 6.3 & VII.
+ * Reference: docs/roadmap_stage_depth_and_endgame.md - Section 6.3, VII & Sprint 9 (Tasks 3.1 & 3.2).
  */
 
-import { ref, computed, onMounted, onUnmounted, defineAsyncComponent, watch } from 'vue';
+import { computed, onMounted, onUnmounted, defineAsyncComponent, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import type { StageData } from '~/types/game';
 import type { WorldTrack } from '~/types/user';
-import {
-  type BossRushBossItem,
-  type BossRushResult,
-  type BossRushSessionState,
-  BOSS_RUSH_HARDCORE_MODIFIERS,
-} from '~/types/bossRush';
+import { BOSS_RUSH_HARDCORE_MODIFIERS } from '~/types/bossRush';
 import { useUserStore } from '~/stores/user';
 import { useGameSessionStore } from '~/stores/gameSession';
+import { useBossRushStore, BOSS_META_MAP } from '~/stores/bossRush';
 import { useSoundEffects } from '~/composables/useSoundEffects';
 
 // Lazy-load Mini-game components
@@ -30,7 +25,8 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 const sessionStore = useGameSessionStore();
-const { playSound, triggerVictoryConfetti, triggerScreenShake } = useSoundEffects();
+const bossRushStore = useBossRushStore();
+const { playSound } = useSoundEffects();
 
 // ---------------------------------------------------------------------------
 // Route & Track Resolution
@@ -76,245 +72,41 @@ const trackThemeMeta = computed(() => {
 });
 
 // ---------------------------------------------------------------------------
-// Colosseum Session State
+// Store Bindings & Synchronizations
 // ---------------------------------------------------------------------------
-const sessionState = ref<BossRushSessionState>('portal_gate');
-const isLoadingStages = ref<boolean>(true);
-const loadErrorMessage = ref<string | null>(null);
+const sessionState = computed(() => bossRushStore.sessionState);
+const bossQueue = computed(() => bossRushStore.bossQueue);
+const currentBoss = computed(() => bossRushStore.currentBoss);
+const currentBossIndex = computed(() => bossRushStore.currentBossIndex);
+const sharedHp = computed(() => bossRushStore.sharedHp);
+const isPreviewMode = computed(() => bossRushStore.isPreviewMode);
+const activeModifiedStage = computed(() => bossRushStore.activeModifiedStage);
+const runResult = computed(() => bossRushStore.runResult);
+const introCountdownSeconds = computed(() => bossRushStore.introCountdownSeconds);
+const formattedElapsedTime = computed(() => bossRushStore.formattedElapsedTime);
+const isLoadingStages = computed(() => bossRushStore.isLoadingStages);
+const loadErrorMessage = computed(() => bossRushStore.loadErrorMessage);
+const isTrackUnlocked = computed(() => bossRushStore.isTrackUnlocked);
+const userTrackBestRecord = computed(() => bossRushStore.userTrackBestRecord);
 
-// 4 Bosses in queue
-const bossQueue = ref<BossRushBossItem[]>([]);
-const currentBossIndex = ref<number>(0);
-const sharedHp = ref<number>(BOSS_RUSH_HARDCORE_MODIFIERS.sharedMaxHp); // 3 ❤️
-const isPreviewMode = ref<boolean>(false);
-
-// Active Boss Stage Data with Hardcore Modifiers applied
-const activeModifiedStage = ref<StageData | null>(null);
-
-// Real-time Timer & Statistics
-const totalElapsedMs = ref<number>(0);
-let arenaTimerInterval: ReturnType<typeof setInterval> | null = null;
-let intermissionTimeout: ReturnType<typeof setTimeout> | null = null;
-let introCountdownInterval: ReturnType<typeof setInterval> | null = null;
-const introCountdownSeconds = ref<number>(3);
-
-// Cumulative tracking across all 4 Bosses
-const totalQuestionsAnswered = ref<number>(0);
-const totalCorrectAnswers = ref<number>(0);
-const runResult = ref<BossRushResult | null>(null);
-const showExitConfirmModal = ref<boolean>(false);
-
-// ---------------------------------------------------------------------------
-// Computed Unlock & Record Status
-// ---------------------------------------------------------------------------
-const isTrackUnlocked = computed<boolean>(() => {
-  return userStore.isBossRushUnlocked(currentTrack.value);
-});
-
-const userTrackBestRecord = computed(() => {
-  return userStore.bossRush?.tracks[currentTrack.value] || null;
-});
-
-const currentBoss = computed<BossRushBossItem | null>(() => {
-  return bossQueue.value[currentBossIndex.value] || null;
-});
-
-const formattedElapsedTime = computed<string>(() => {
-  const totalSeconds = Math.floor(totalElapsedMs.value / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-});
-
-// ---------------------------------------------------------------------------
-// Load & Prepare Boss Stages
-// ---------------------------------------------------------------------------
-const BOSS_STAGE_IDS = [5, 10, 15, 20] as const;
-
-const BOSS_META_MAP: Record<WorldTrack, Record<number, { npcName: string; emoji: string; introQuote: string }>> = {
-  kids: {
-    5: { npcName: 'Vệ Thần Đá Cổ Đại', emoji: '🗿', introQuote: 'Kẻ phàm trần nào dám đánh thức giấc ngủ ngàn năm của ta?' },
-    10: { npcName: 'Chúa Tể Rồng Bóng Đêm', emoji: '🐉', introQuote: 'Ngọn lửa hắc ám của ta sẽ thiêu rụi mọi ngữ pháp sai sót!' },
-    15: { npcName: 'Phượng Hoàng Lửa Thời Gian', emoji: '🦅', introQuote: 'Hãy chứng minh tốc độ tư duy của ngươi trước ngọn lửa vĩnh cửu!' },
-    20: { npcName: 'Hoàng Đế Hỗn Mang Leviathan', emoji: '👑', introQuote: 'Ta là điểm tận cùng của thế giới. Hãy thuần phục hoặc bị nuốt chửng!' },
-  },
-  teens: {
-    5: { npcName: 'Trùm Tin Tặc Phantom AI', emoji: '👾', introQuote: 'Hệ thống an ninh của ngươi đã bị xâm nhập. Đối thoại hoặc bị xóa sổ!' },
-    10: { npcName: 'Kiến Trúc Sư Nexus', emoji: '🤖', introQuote: 'Mọi thuật toán đều quy phục ta. Ngươi nghĩ mình có thể giải mã?' },
-    15: { npcName: 'Bóng Ma Mirage', emoji: '👤', introQuote: 'Trong biển dữ liệu ảo ảnh, một từ sai là rơi vào khoảng trống!' },
-    20: { npcName: 'Thực Thể Lượng Tử OMEGA', emoji: '🌐', introQuote: 'Ta nắm giữ mã nguồn vũ trụ. Khả năng ngôn ngữ của ngươi đã đạt ngưỡng tối cao chưa?' },
-  },
-  adults: {
-    5: { npcName: 'Hội Đồng Quản Trị Toàn Cầu', emoji: '💼', introQuote: 'Chào mừng đến phòng họp cổ đông. Hãy bảo vệ dự án của bạn bằng lập luận sắc bén!' },
-    10: { npcName: 'Rung Chuông IPO Phố Wall', emoji: '📈', introQuote: 'Thị trường không khoan nhượng cho bất kỳ sự ấp úng nào!' },
-    15: { npcName: 'Đập Tan Thâu Tóm Thù Địch', emoji: '⚖️', introQuote: 'Đối thủ đang nắm giữ 49% cổ phần. Bạn có xoay chuyển được bàn cờ?' },
-    20: { npcName: 'Diễn Đàn Kinh Tế Davos', emoji: '🏛️', introQuote: 'Cả thế giới đang lắng nghe bài phát biểu then chốt của bạn!' },
-  },
-};
-
-async function loadBossStages(): Promise<void> {
-  isLoadingStages.value = true;
-  loadErrorMessage.value = null;
-
-  try {
-    const stages = await $fetch<StageData[]>(`/data/${currentTrack.value}/stages.json`);
-    const bossesFound: BossRushBossItem[] = [];
-
-    for (let i = 0; i < BOSS_STAGE_IDS.length; i++) {
-      const stageId = BOSS_STAGE_IDS[i];
-      if (typeof stageId !== 'number') continue;
-      const stageData = stages.find((s) => s.stageId === stageId);
-
-      if (stageData) {
-        const meta = BOSS_META_MAP[currentTrack.value]?.[stageId] || {
-          npcName: stageData.aiRoleplayMission?.npcName || `Trùm Ải ${stageId}`,
-          emoji: '👑',
-          introQuote: 'Hãy chứng minh bản lĩnh của ngươi!',
-        };
-
-        bossesFound.push({
-          bossIndex: i,
-          stageId,
-          title: stageData.title,
-          chapter: String(stageData.chapter || `Ải Boss ${stageId}`),
-          npcName: meta.npcName,
-          npcAvatarEmoji: meta.emoji,
-          introQuote: meta.introQuote,
-          stageData,
-          isDefeated: false,
-        });
-      }
-    }
-
-    if (bossesFound.length < 4) {
-      throw new Error(`Chỉ tìm thấy ${bossesFound.length}/4 Bosses cho vũ trụ ${currentTrack.value}.`);
-    }
-
-    bossQueue.value = bossesFound;
-  } catch (err: unknown) {
-    console.error('[BossRush] Failed to load stages:', err);
-    loadErrorMessage.value =
-      err instanceof Error ? err.message : 'Không thể tải danh sách Boss Đấu Trường.';
-  } finally {
-    isLoadingStages.value = false;
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Apply Hardcore Modifiers to Boss Stage Data
-// ---------------------------------------------------------------------------
-function buildStageWithModifiers(baseStage: StageData): StageData {
-  const cloned: StageData = JSON.parse(JSON.stringify(baseStage));
-
-  // 1. Time limit -30%
-  const originalTime = cloned.config?.timeLimitSeconds ?? 60;
-  const reducedTime = Math.max(25, Math.round(originalTime * BOSS_RUSH_HARDCORE_MODIFIERS.timeMultiplier));
-
-  // 2. Voice pass threshold +0.05
-  const originalThreshold = cloned.config?.voicePassThreshold ?? 0.75;
-  const stricterThreshold = Math.min(0.95, originalThreshold + BOSS_RUSH_HARDCORE_MODIFIERS.voicePassThresholdOffset);
-
-  // 3. Extra vocab picks (+2)
-  const originalVocabPick = cloned.config?.vocabPickCount ?? 4;
-  const poolLength = cloned.vocabPool?.length || cloned.vocabList?.length || 8;
-  const boostedVocabPick = Math.min(poolLength, originalVocabPick + BOSS_RUSH_HARDCORE_MODIFIERS.extraVocabPickCount);
-
-  cloned.config = {
-    ...cloned.config,
-    timeLimitSeconds: reducedTime,
-    voicePassThreshold: stricterThreshold,
-    vocabPickCount: boostedVocabPick,
-  };
-
-  return cloned;
-}
-
-// ---------------------------------------------------------------------------
-// Game Loop & Phase Transitions
-// ---------------------------------------------------------------------------
-function startColosseumRun(isForcedPreview = false): void {
-  if (!isTrackUnlocked.value && !isForcedPreview) {
-    return;
-  }
-
-  isPreviewMode.value = isForcedPreview;
-  currentBossIndex.value = 0;
-  sharedHp.value = BOSS_RUSH_HARDCORE_MODIFIERS.sharedMaxHp; // 3 ❤️
-  totalElapsedMs.value = 0;
-  totalQuestionsAnswered.value = 0;
-  totalCorrectAnswers.value = 0;
-  runResult.value = null;
-
-  // Reset boss defeat states
-  bossQueue.value.forEach((b) => {
-    b.isDefeated = false;
-  });
-
-  // Start Real-time Total Elapsed Stopwatch
-  if (arenaTimerInterval) clearInterval(arenaTimerInterval);
-  const startTimestamp = Date.now();
-  arenaTimerInterval = setInterval(() => {
-    totalElapsedMs.value = Date.now() - startTimestamp;
-  }, 200);
-
-  // Transition to Boss 1 Intro
-  prepareCurrentBossIntro();
-}
-
-function prepareCurrentBossIntro(): void {
-  sessionState.value = 'boss_intro';
-  introCountdownSeconds.value = 3;
-  playSound('hit');
-
-  if (introCountdownInterval) clearInterval(introCountdownInterval);
-  introCountdownInterval = setInterval(() => {
-    introCountdownSeconds.value--;
-    if (introCountdownSeconds.value <= 0) {
-      if (introCountdownInterval) clearInterval(introCountdownInterval);
-      launchBossBattle();
-    }
-  }, 1000);
-}
-
-function launchBossBattle(): void {
-  if (introCountdownInterval) clearInterval(introCountdownInterval);
-  const boss = currentBoss.value;
-  if (!boss) return;
-
-  const modifiedStage = buildStageWithModifiers(boss.stageData);
-  activeModifiedStage.value = modifiedStage;
-
-  // Initialize Game Session with retained shared HP
-  sessionStore.initSession(modifiedStage);
-  sessionStore.health = sharedHp.value;
-  sessionStore.maxHealth = BOSS_RUSH_HARDCORE_MODIFIERS.sharedMaxHp;
-  sessionStore.startSession();
-
-  sessionState.value = 'in_battle';
-}
-
-// Watch sessionStore.health: synchronize shared HP immediately across mini-games
+// Synchronize mini-game damage back into shared HP
 watch(
   () => sessionStore.health,
   (newHealth) => {
-    if (sessionState.value === 'in_battle') {
-      sharedHp.value = newHealth;
-      if (newHealth <= 0) {
-        handleRunDefeat();
-      }
+    if (bossRushStore.sessionState === 'in_battle' && newHealth < bossRushStore.sharedHp) {
+      bossRushStore.takeSharedDamage(bossRushStore.sharedHp - newHealth);
     }
   }
 );
 
-// Watch answer logs for overall accuracy calculation
+// Synchronize answers log into cumulative accuracy & score tracker
 watch(
   () => sessionStore.answersLog.length,
   (newLen, oldLen) => {
     if (newLen > oldLen) {
       const latest = sessionStore.answersLog[newLen - 1];
-      totalQuestionsAnswered.value++;
-      if (latest && latest.isCorrect) {
-        totalCorrectAnswers.value++;
+      if (latest) {
+        bossRushStore.recordAnswerAttempt(latest.isCorrect, latest.scoreAwarded || 100);
       }
     }
   }
@@ -333,151 +125,35 @@ function onVoiceStepCompleted(): void {
 
 function onSentenceStepCompleted(): void {
   playSound('correct');
-  if (activeModifiedStage.value?.aiRoleplayMission) {
+  if (bossRushStore.activeModifiedStage?.aiRoleplayMission) {
     sessionStore.advancePhase('ai_roleplay');
   } else {
-    handleCurrentBossDefeated();
+    bossRushStore.handleCurrentBossDefeated();
   }
 }
 
 function onAiRoleplayStepCompleted(): void {
   playSound('correct');
-  handleCurrentBossDefeated();
+  bossRushStore.handleCurrentBossDefeated();
 }
 
 function onMiniGameFailed(): void {
-  // If mini-game failed (e.g. time ran out), take damage
-  sessionStore.takeDamage(1);
-  if (sessionStore.health <= 0) {
-    handleRunDefeat();
-  }
+  bossRushStore.takeSharedDamage(1);
 }
 
 // ---------------------------------------------------------------------------
-// Boss Defeat & Victory Calculation
-// ---------------------------------------------------------------------------
-function handleCurrentBossDefeated(): void {
-  const boss = currentBoss.value;
-  if (!boss) return;
-
-  boss.isDefeated = true;
-  playSound('fanfare');
-  triggerVictoryConfetti();
-
-  const nextIndex = currentBossIndex.value + 1;
-
-  if (nextIndex >= bossQueue.value.length) {
-    // Defeated all 4 Bosses -> Champion Victory!
-    handleRunVictory();
-  } else {
-    // Intermission cutscene before next Boss
-    sessionState.value = 'boss_cleared';
-    currentBossIndex.value = nextIndex;
-
-    // Auto-advance after 4 seconds if player doesn't click
-    if (intermissionTimeout) clearTimeout(intermissionTimeout);
-    intermissionTimeout = setTimeout(() => {
-      prepareCurrentBossIntro();
-    }, 4000);
-  }
-}
-
-function handleRunVictory(): void {
-  if (arenaTimerInterval) clearInterval(arenaTimerInterval);
-  sessionState.value = 'victory';
-  playSound('fanfare');
-  triggerVictoryConfetti();
-
-  const bossesDefeated = 4;
-  const accuracyPercent =
-    totalQuestionsAnswered.value > 0
-      ? Math.round((totalCorrectAnswers.value / totalQuestionsAnswered.value) * 100)
-      : 100;
-  const remainingHP = Math.max(0, sharedHp.value);
-
-  // Time Bonus: Max 1,500 points scaling down if run takes > 4 minutes (240s)
-  const totalSeconds = Math.floor(totalElapsedMs.value / 1000);
-  const timeBonus = Math.max(0, Math.floor((360 - totalSeconds) * 8));
-
-  // Scoring formula: (bossesDefeated * 1000) + (accuracyPercent * 10) + (remainingHP * 500) + timeBonus
-  const finalScore =
-    bossesDefeated * 1000 + accuracyPercent * 10 + remainingHP * 500 + timeBonus;
-
-  const isPerfect = remainingHP === 3;
-
-  const result: BossRushResult = {
-    worldTrack: currentTrack.value,
-    bossesDefeated,
-    totalTimeMs: totalElapsedMs.value,
-    accuracyPercent,
-    remainingHP,
-    timeBonus,
-    finalScore,
-    isCleared: true,
-    isPerfect,
-    completedAt: Date.now(),
-    rewardsUnlocked: {
-      titleId: 'title_boss_slayer',
-      avatarFrame: 'avatar_frame_gold',
-      cardId: isPerfect ? `card_mythic_${currentTrack.value}` : undefined,
-    },
-  };
-
-  runResult.value = result;
-
-  // Persist result into user profile (1-Doc-Per-User)
-  userStore.recordBossRushRun(result);
-}
-
-function handleRunDefeat(): void {
-  if (arenaTimerInterval) clearInterval(arenaTimerInterval);
-  sessionState.value = 'defeat';
-  playSound('wrong');
-  triggerScreenShake('heavy');
-
-  const bossesDefeated = bossQueue.value.filter((b) => b.isDefeated).length;
-  const accuracyPercent =
-    totalQuestionsAnswered.value > 0
-      ? Math.round((totalCorrectAnswers.value / totalQuestionsAnswered.value) * 100)
-      : 0;
-
-  const finalScore = bossesDefeated * 1000 + accuracyPercent * 10;
-
-  const result: BossRushResult = {
-    worldTrack: currentTrack.value,
-    bossesDefeated,
-    totalTimeMs: totalElapsedMs.value,
-    accuracyPercent,
-    remainingHP: 0,
-    timeBonus: 0,
-    finalScore,
-    isCleared: false,
-    isPerfect: false,
-    completedAt: Date.now(),
-    rewardsUnlocked: {},
-  };
-
-  runResult.value = result;
-  userStore.recordBossRushRun(result);
-}
-
-// ---------------------------------------------------------------------------
-// Navigation & Exit Controls
+// Exit & Navigation Controls
 // ---------------------------------------------------------------------------
 function confirmExit(): void {
-  showExitConfirmModal.value = true;
+  bossRushStore.showExitConfirmModal = true;
 }
 
 function cancelExit(): void {
-  showExitConfirmModal.value = false;
+  bossRushStore.showExitConfirmModal = false;
 }
 
 function proceedExit(): void {
-  showExitConfirmModal.value = false;
-  if (arenaTimerInterval) clearInterval(arenaTimerInterval);
-  if (intermissionTimeout) clearTimeout(intermissionTimeout);
-  if (introCountdownInterval) clearInterval(introCountdownInterval);
-  sessionState.value = 'portal_gate';
+  bossRushStore.abortRunToPortal();
 }
 
 function returnToMap(): void {
@@ -485,23 +161,25 @@ function returnToMap(): void {
 }
 
 // ---------------------------------------------------------------------------
-// Lifecycle Cleanup
+// Lifecycle
 // ---------------------------------------------------------------------------
 onMounted(() => {
-  void loadBossStages();
+  void bossRushStore.loadBossStages(currentTrack.value);
+});
+
+watch(currentTrack, (newTrack) => {
+  void bossRushStore.loadBossStages(newTrack);
 });
 
 onUnmounted(() => {
-  if (arenaTimerInterval) clearInterval(arenaTimerInterval);
-  if (intermissionTimeout) clearTimeout(intermissionTimeout);
-  if (introCountdownInterval) clearInterval(introCountdownInterval);
+  bossRushStore.clearAllTimers();
 });
 </script>
 
 <template>
   <div class="boss-rush-page" :class="trackThemeMeta.themeClass">
     <!-- Exit Confirmation Modal -->
-    <div v-if="showExitConfirmModal" class="modal-backdrop">
+    <div v-if="bossRushStore.showExitConfirmModal" class="modal-backdrop">
       <div class="modal-card theme-card">
         <h3 class="modal-title">Rút Lui Khỏi Đấu Trường?</h3>
         <p class="modal-desc">
@@ -662,7 +340,7 @@ onUnmounted(() => {
             class="theme-btn-primary enter-arena-btn"
             type="button"
             :disabled="isLoadingStages"
-            @click="startColosseumRun(false)"
+            @click="bossRushStore.startColosseumRun(currentTrack, false)"
           >
             ⚔️ TIẾN VÀO ĐẤU TRƯỜNG NGAY
           </button>
@@ -671,7 +349,7 @@ onUnmounted(() => {
             class="preview-arena-btn"
             type="button"
             :disabled="isLoadingStages"
-            @click="startColosseumRun(true)"
+            @click="bossRushStore.startColosseumRun(currentTrack, true)"
           >
             ⚡ Chơi Thử Nghiệm (Preview Mode)
           </button>
@@ -703,7 +381,7 @@ onUnmounted(() => {
           <span class="countdown-text">Vào trận sau {{ introCountdownSeconds }}s...</span>
         </div>
 
-        <button class="theme-btn-primary fight-now-btn" type="button" @click="launchBossBattle">
+        <button class="theme-btn-primary fight-now-btn" type="button" @click="bossRushStore.launchBossBattle">
           CHIẾN ĐẤU NGAY ⚔️
         </button>
       </div>
@@ -871,7 +549,7 @@ onUnmounted(() => {
         </div>
 
         <div class="intermission-actions">
-          <button class="theme-btn-primary continue-btn" type="button" @click="prepareCurrentBossIntro">
+          <button class="theme-btn-primary continue-btn" type="button" @click="bossRushStore.prepareCurrentBossIntro">
             TIẾN VÀO BOSS {{ currentBossIndex + 1 }}/4 ({{ currentBoss.npcName }}) ⚔️
           </button>
         </div>
@@ -940,7 +618,7 @@ onUnmounted(() => {
 
         <!-- Navigation Buttons -->
         <div class="victory-actions">
-          <button class="theme-btn-primary play-again-btn" type="button" @click="startColosseumRun(false)">
+          <button class="theme-btn-primary play-again-btn" type="button" @click="bossRushStore.startColosseumRun(currentTrack, false)">
             ⚔️ Khiêu Chiến Lại Lập Kỷ Lục Mới
           </button>
           <button class="btn-return-portal" type="button" @click="proceedExit">
@@ -981,7 +659,7 @@ onUnmounted(() => {
         </div>
 
         <div class="defeat-actions">
-          <button class="theme-btn-primary retry-btn" type="button" @click="startColosseumRun(isPreviewMode)">
+          <button class="theme-btn-primary retry-btn" type="button" @click="bossRushStore.startColosseumRun(currentTrack, isPreviewMode)">
             ⚔️ Tái Đấu Ngay Lập Tức
           </button>
           <button class="btn-return-portal" type="button" @click="proceedExit">

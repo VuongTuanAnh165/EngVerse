@@ -31,9 +31,15 @@ interface RoleplayMessage {
   isMissionCompleted?: boolean;
 }
 
-const props = defineProps<{
-  stage: StageData;
-}>();
+const props = withDefaults(
+  defineProps<{
+    stage: StageData;
+    hideStarterChips?: boolean;
+  }>(),
+  {
+    hideStarterChips: false,
+  }
+);
 
 const emit = defineEmits<{
   (e: 'completed'): void;
@@ -368,7 +374,7 @@ function handleContinue(): void {
     </div>
 
     <!-- Recommended Words & Twist Bonus Quick Chips (Task 1.10) -->
-    <div v-if="displayedRecommendedWords.length" class="recommended-chips-bar">
+    <div v-if="!hideStarterChips && displayedRecommendedWords.length" class="recommended-chips-bar">
       <span class="chips-title">Từ khóa gợi ý:</span>
       <div class="chips-list">
         <button

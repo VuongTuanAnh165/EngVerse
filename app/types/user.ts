@@ -1,4 +1,5 @@
 import type { UserDailyChallenge } from './dailyChallenge';
+import type { UserBossRushProgress } from './bossRush';
 /**
  * EngVerse - Core User Profile & Progress Types
  * Strictly typed schema for 1-Document-Per-User architecture in Firestore
@@ -93,6 +94,7 @@ export interface UserProfile {
   createdAt?: number; // Unix timestamp in milliseconds
   email?: string | null;
   dailyChallenge?: UserDailyChallenge;
+  bossRush?: UserBossRushProgress;
   isGuest?: boolean; // Client-side state indicator for guest mode
   expBoostUntil?: number; // Unix timestamp for active x2 EXP buff (Milestone 7)
   avatarFrame?: string; // Equipped avatar frame e.g. 'avatar_frame_gold' (Milestone 60)
@@ -226,6 +228,14 @@ export function createDefaultUserProfile(
       longestStreak: 0,
       totalCompleted: 0,
       history: [],
+    },
+    bossRush: {
+      tracks: {
+        kids: { bestScore: 0, bestTimeMs: 0, bossesDefeated: 0, isCleared: false, isPerfect: false },
+        teens: { bestScore: 0, bestTimeMs: 0, bossesDefeated: 0, isCleared: false, isPerfect: false },
+        adults: { bestScore: 0, bestTimeMs: 0, bossesDefeated: 0, isCleared: false, isPerfect: false },
+      },
+      totalClears: 0,
     },
     claimedMilestones: [],
     unlockedAvatarFrames: ['default'],

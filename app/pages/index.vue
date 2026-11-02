@@ -146,6 +146,40 @@ useHead({
       </div>
     </section>
 
+    <!-- Boss Rush Colosseum Endgame Callout Banner -->
+    <section class="colosseum-callout-section">
+      <div class="colosseum-callout-card theme-card">
+        <div class="colosseum-callout-left">
+          <div class="colosseum-icon-box">
+            <span class="colosseum-skull">⚔️</span>
+          </div>
+          <div class="colosseum-info">
+            <div class="colosseum-title-row">
+              <span class="colosseum-tag">ENDGAME COLOSSEUM</span>
+              <span v-if="userStore.isBossRushUnlocked(currentTrack)" class="colosseum-status-unlocked">
+                Đã mở khóa 🔓
+              </span>
+              <span v-else class="colosseum-status-locked">
+                Cần 20 chặng (Hiện có: {{ Math.min(20, userStore.currentTrackProgress?.unlockedStage || 1) }}/20) 🔒
+              </span>
+            </div>
+            <h3 class="colosseum-heading">Đấu Trường Sinh Tử: Chuỗi 4 Đại Boss Liên Hoàn</h3>
+            <p class="colosseum-subtext">
+              Thử thách Shared 3 ❤️ cực hạn • Thời gian -30% • Chuẩn âm +5% • Tranh đoạt Huy hiệu "Vua Đấu Trường" & Khung Avatar Vàng!
+            </p>
+          </div>
+        </div>
+        <div class="colosseum-callout-right">
+          <NuxtLink
+            :to="`/play/boss-rush/${currentTrack}`"
+            class="theme-btn-primary colosseum-play-btn"
+          >
+            Vào Đấu Trường ⚔️
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
     <!-- Interactive Stage Map -->
     <WorldMap />
   </main>
@@ -408,4 +442,112 @@ useHead({
     text-align: center;
   }
 }
+
+/* Colosseum Callout Banner */
+.colosseum-callout-section {
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1rem;
+}
+
+.colosseum-callout-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 2px solid rgba(239, 68, 68, 0.4);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(15, 23, 42, 0.95) 100%);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
+  transition: all 0.2s ease;
+}
+
+.colosseum-callout-card:hover {
+  border-color: #ef4444;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+}
+
+.colosseum-callout-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.colosseum-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fee2e2, #fca5a5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.colosseum-skull {
+  font-size: 1.8rem;
+}
+
+.colosseum-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.colosseum-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+}
+
+.colosseum-status-unlocked {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+.colosseum-status-locked {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #f87171;
+}
+
+.colosseum-heading {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0 0 0.25rem;
+  color: var(--color-text-primary, #f8fafc);
+}
+
+.colosseum-subtext {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary, #94a3b8);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.colosseum-play-btn {
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  color: #ffffff;
+  display: inline-block;
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
+}
+
+.colosseum-play-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(239, 68, 68, 0.5);
+}
+
 </style>

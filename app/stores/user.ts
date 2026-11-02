@@ -675,6 +675,90 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  // Boss Rush Colosseum Getters & Actions
+  const bossRush = computed(() => user.value.bossRush);
+
+  function isBossRushUnlocked(track: WorldTrack): boolean {
+    const trackProgress = user.value.progress.tracks[track];
+    if (!trackProgress) return false;
+    return (
+      trackProgress.unlockedStage > 20 ||
+      (trackProgress.stageStars && (trackProgress.stageStars['20'] || 0) > 0)
+    );
+  }
+
+  function recordBossRushRun(result: BossRushResult): void {
+    if (!user.value.bossRush) {
+      user.value.bossRush = {
+        tracks: {
+          kids: { bestScore: 0, bestTimeMs: 0, bossesDefeated: 0, isCleared: false, isPerfect: false },
+          teens: { bestScore: 0, bestTimeMs: 0, bossesDefeated: 0, isCleared: false, isPerfect: false },
+          adults: { bestScore: 0, bestTimeMs: 0, bossesDefeated: 0, isCleared: false, isPerfect: false },
+        },
+        totalClears: 0,
+      };
+    }
+
+    const currentTrackRecord = user.value.bossRush.tracks[result.worldTrack] || {
+      bestScore: 0,
+      bestTimeMs: 0,
+      bossesDefeated: 0,
+      isCleared: false,
+      isPerfect: false,
+    };
+
+    const isNewBestTime =
+      currentTrackRecord.bestTimeMs === 0 ||
+      (result.totalTimeMs < currentTrackRecord.bestTimeMs &&
+        result.bossesDefeated >= currentTrackRecord.bossesDefeated);
+
+    user.value.bossRush.tracks[result.worldTrack] = {
+      bestScore: Math.max(currentTrackRecord.bestScore, result.finalScore),
+      bestTimeMs: isNewBestTime ? result.totalTimeMs : currentTrackRecord.bestTimeMs,
+      bossesDefeated: Math.max(currentTrackRecord.bossesDefeated, result.bossesDefeated),
+      isCleared: currentTrackRecord.isCleared || result.isCleared,
+      isPerfect: currentTrackRecord.isPerfect || result.isPerfect,
+      clearedAt: result.isCleared ? Date.now() : currentTrackRecord.clearedAt,
+    };
+
+    if (result.isCleared) {
+      user.value.bossRush.totalClears = (user.value.bossRush.totalClears || 0) + 1;
+
+      if (
+        result.rewardsUnlocked.titleId &&
+        !user.value.unlockedTitles.includes(result.rewardsUnlocked.titleId)
+      ) {
+        user.value.unlockedTitles.push(result.rewardsUnlocked.titleId);
+      }
+      if (result.rewardsUnlocked.avatarFrame) {
+        if (!user.value.unlockedAvatarFrames) {
+          user.value.unlockedAvatarFrames = ['default'];
+        }
+        if (!user.value.unlockedAvatarFrames.includes(result.rewardsUnlocked.avatarFrame)) {
+          user.value.unlockedAvatarFrames.push(result.rewardsUnlocked.avatarFrame);
+        }
+      }
+      if (
+        result.rewardsUnlocked.cardId &&
+        !user.value.collectedCards.includes(result.rewardsUnlocked.cardId)
+      ) {
+        user.value.collectedCards.push(result.rewardsUnlocked.cardId);
+      }
+
+      const allCleared = (['kids', 'teens', 'adults'] as WorldTrack[]).every(
+        (t) => user.value.bossRush?.tracks[t]?.isCleared
+      );
+      if (allCleared && !user.value.unlockedTitles.includes('title_multiverse_champion')) {
+        user.value.unlockedTitles.push('title_multiverse_champion');
+      }
+    }
+
+    user.value.bossRush.lastPlayedDate = getDailyDateString();
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+  }
+
+
   return {
     user,
     isLoading,
@@ -710,6 +794,10 @@ export const useUserStore = defineStore('user', () => {
     consumeFreezeShield,
     repairBrokenStreak,
     claimStreakMilestone,
+    // Boss Rush Colosseum
+    bossRush,
+    isBossRushUnlocked,
+    recordBossRushRun,
     // Operations
     initUserSession,
     saveGuestState,

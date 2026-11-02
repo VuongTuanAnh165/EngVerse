@@ -17,6 +17,7 @@ import type {
   CardRarity,
   PartOfSpeech,
   FunctionalGrammarCategory,
+  AiRoleplayPlotTwist,
 } from '~/types/game';
 import type { AdminAiGeneratePayload } from '~/types/admin';
 
@@ -347,6 +348,17 @@ export function normalizeGeneratedStage(
     ? rawAi.starterChips.map(String)
     : ['Hello!', 'I want to ask a question.', 'Thank you so much!'];
 
+  let plotTwist: AiRoleplayPlotTwist | undefined;
+  if (rawAi.plotTwist && typeof rawAi.plotTwist === 'object') {
+    const pt = rawAi.plotTwist as Record<string, unknown>;
+    plotTwist = {
+      triggerAfterTurn: typeof pt.triggerAfterTurn === 'number' ? pt.triggerAfterTurn : 2,
+      twistScenario: String(pt.twistScenario || ''),
+      twistLineVi: String(pt.twistLineVi || ''),
+      bonusKeywords: Array.isArray(pt.bonusKeywords) ? pt.bonusKeywords.map(String) : [],
+    };
+  }
+
   const aiRoleplayMission = {
     npcName: String(rawAi.npcName || 'NPC Guide'),
     npcTitle: String(rawAi.npcTitle || 'Người Hướng Dẫn'),
@@ -358,6 +370,9 @@ export function normalizeGeneratedStage(
     targetKeywords,
     recommendedWords: targetKeywords,
     starterChips,
+    maxTurns: typeof rawAi.maxTurns === 'number' ? rawAi.maxTurns : (options.isBossStage ? 8 : 6),
+    passScore: typeof rawAi.passScore === 'number' ? rawAi.passScore : (options.isBossStage ? 75 : 65),
+    plotTwist,
   };
 
   // 4. Guaranteed Card ID

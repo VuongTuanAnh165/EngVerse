@@ -112,6 +112,21 @@ export interface OfflineFallbackConfig {
 }
 
 /**
+ * MỚI (Pha 1 - Task 1.3): Biến số kịch bản bất ngờ trong AI Roleplay
+ * Kích hoạt sau lượt 2 hoặc 3 để ép người chơi ứng biến tình huống ngoài dự tính.
+ */
+export interface AiRoleplayPlotTwist {
+  /** Lượt kích hoạt biến cố (thường là lượt 2 hoặc 3 của hội thoại) */
+  triggerAfterTurn: number;
+  /** Tình huống biến cố bằng tiếng Anh để đưa vào context của AI */
+  twistScenario: string;
+  /** Lời thoại / giải thích tình huống biến cố bằng tiếng Việt cho người học */
+  twistLineVi: string;
+  /** Danh sách từ khóa bổ sung bắt buộc hoặc khuyến khích dùng khi xảy ra biến cố */
+  bonusKeywords: string[];
+}
+
+/**
  * AI Roleplay scenario and mission configuration
  */
 export interface StageAiMission {
@@ -127,9 +142,23 @@ export interface StageAiMission {
   targetKeywords?: string[]; // Alias for recommendedWords
   starterChips?: string[];
   offlineFallback?: OfflineFallbackConfig;
+  /**
+   * Số lượt thoại tối đa của người chơi trong màn này.
+   * Màn thường nâng từ 4 -> 6 lượt; Màn Boss nâng từ 5 -> 8 lượt.
+   * Mặc định fallback là 6 (hoặc 8 cho boss stage) nếu không được khai báo.
+   */
   maxTurns?: number;
   passScore?: number;
+  /**
+   * MỚI (Pha 1 - Task 1.3): Tình huống bất ngờ sau lượt 2-3 ép người chơi ứng biến
+   */
+  plotTwist?: AiRoleplayPlotTwist;
 }
+
+/**
+ * Convenient alias for StageAiMission matching roadmap documentation
+ */
+export type AiRoleplayMission = StageAiMission;
 
 /**
  * Map coordinates for 2D/3D interactive stage map

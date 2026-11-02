@@ -57,6 +57,7 @@ export interface AdminAiGeneratePayload {
   chapter?: number;
   cefrLevel?: string;
   vocabCount?: number;
+  isBossStage?: boolean;
 }
 
 export interface AdminAiGenerateResponse {

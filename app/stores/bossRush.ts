@@ -4,7 +4,7 @@
  * real-time total elapsed timer, hardcore modifier calculations, and results recording.
  *
  * Strict TypeScript (0 any), memory-leak free, Vue 3.5+ script setup.
- * Reference: docs/roadmap_stage_depth_and_endgame.md - Sprint 9, Task 3.2, 3.3 & Rules.md
+ * Reference: docs/roadmap_stage_depth_and_endgame.md - Sprint 9, Task 3.2, 3.3, 3.4 & Rules.md
  */
 
 import { defineStore } from 'pinia';
@@ -15,12 +15,17 @@ import {
   type BossRushBossItem,
   type BossRushResult,
   type BossRushSessionState,
+  type BossRushLeaderboardEntry,
+  type BossRushLeaderboardResponse,
+  type BossRushSubmitPayload,
+  type BossRushSubmitResponse,
   BOSS_RUSH_HARDCORE_MODIFIERS,
 } from '~/types/bossRush';
 import { useUserStore } from './user';
 import { useGameSessionStore } from './gameSession';
 import { useBossRushModifier } from '~/composables/useBossRushModifier';
 import { useSoundEffects } from '~/composables/useSoundEffects';
+import { useFirebase } from '~/composables/useFirebase';
 
 export const BOSS_STAGE_IDS = [5, 10, 15, 20] as const;
 
@@ -83,6 +88,11 @@ export const useBossRushStore = defineStore('bossRush', () => {
   const totalScoreAccumulated = ref<number>(0);
   const runResult = ref<BossRushResult | null>(null);
   const showExitConfirmModal = ref<boolean>(false);
+
+  // Colosseum Leaderboard State (Task 3.4)
+  const colosseumLeaderboard = ref<BossRushLeaderboardEntry[]>([]);
+  const isLoadingLeaderboard = ref<boolean>(false);
+  const leaderboardError = ref<string | null>(null);
 
   // -------------------------------------------------------------------------
   // Computed Getters
@@ -300,7 +310,7 @@ export const useBossRushStore = defineStore('bossRush', () => {
   }
 
   /**
-   * Defeated all 4 Bosses — computes final score & unlocks rewards
+   * Defeated all 4 Bosses — computes final score, unlocks rewards & submits to cloud
    */
   function handleRunVictory(): void {
     if (arenaTimerInterval) clearInterval(arenaTimerInterval);
@@ -339,7 +349,12 @@ export const useBossRushStore = defineStore('bossRush', () => {
     };
 
     runResult.value = result;
+
+    // 1. Record in local user store
     userStore.recordBossRushRun(result);
+
+    // 2. Submit to backend API for anti-cheat verification & cloud sync
+    void submitBossRushRunToServer(result);
   }
 
   /**
@@ -370,7 +385,68 @@ export const useBossRushStore = defineStore('bossRush', () => {
     };
 
     runResult.value = result;
+
+    // 1. Record in local user store
     userStore.recordBossRushRun(result);
+
+    // 2. Submit to backend API
+    void submitBossRushRunToServer(result);
+  }
+
+  /**
+   * Submits Boss Rush run to Server for anti-cheat audit and cloud persistence
+   */
+  async function submitBossRushRunToServer(result: BossRushResult): Promise<BossRushSubmitResponse | null> {
+    try {
+      let idToken: string | undefined;
+      const { getClientAuth } = useFirebase();
+      const auth = getClientAuth();
+      if (auth?.currentUser) {
+        idToken = await auth.currentUser.getIdToken();
+      }
+
+      const payload: BossRushSubmitPayload = {
+        result,
+        idToken,
+      };
+
+      const response = await $fetch<BossRushSubmitResponse>('/api/game/boss-rush', {
+        method: 'POST',
+        body: payload,
+      });
+
+      if (response && response.success) {
+        userStore.user.exp = (userStore.user.exp || 0) + response.earnedExp;
+        userStore.user.gold = (userStore.user.gold || 0) + response.earnedGold;
+        userStore.user.level = Math.floor(userStore.user.exp / 250) + 1;
+        userStore.saveGuestState();
+      }
+
+      return response;
+    } catch (err: unknown) {
+      console.warn('[BossRushStore] Cloud submit failed, saved locally in guest state:', err);
+      return null;
+    }
+  }
+
+  /**
+   * Fetches Top 10 Speed & Score champions for Boss Rush Colosseum
+   */
+  async function fetchColosseumLeaderboard(track: WorldTrack = currentTrack.value): Promise<void> {
+    isLoadingLeaderboard.value = true;
+    leaderboardError.value = null;
+
+    try {
+      const res = await $fetch<BossRushLeaderboardResponse>('/api/game/boss-rush/leaderboard', {
+        params: { track },
+      });
+      colosseumLeaderboard.value = res.entries || [];
+    } catch (err: unknown) {
+      console.error('[BossRushStore] Failed to fetch leaderboard:', err);
+      leaderboardError.value = 'Không thể tải Bảng Xếp Hạng Đấu Trường lúc này.';
+    } finally {
+      isLoadingLeaderboard.value = false;
+    }
   }
 
   /**
@@ -415,6 +491,10 @@ export const useBossRushStore = defineStore('bossRush', () => {
     totalScoreAccumulated,
     runResult,
     showExitConfirmModal,
+    // Leaderboard state (Task 3.4)
+    colosseumLeaderboard,
+    isLoadingLeaderboard,
+    leaderboardError,
     // Getters
     currentBoss,
     bossesDefeatedCount,
@@ -435,6 +515,8 @@ export const useBossRushStore = defineStore('bossRush', () => {
     handleCurrentBossDefeated,
     handleRunVictory,
     handleRunDefeat,
+    submitBossRushRunToServer,
+    fetchColosseumLeaderboard,
     abortRunToPortal,
     clearAllTimers,
   };

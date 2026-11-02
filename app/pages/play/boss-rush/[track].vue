@@ -6,7 +6,7 @@
  * Reference: docs/roadmap_stage_depth_and_endgame.md - Section 6.3, VII & Sprint 9 (Tasks 3.1 & 3.2).
  */
 
-import { computed, onMounted, onUnmounted, defineAsyncComponent, watch } from 'vue';
+import { computed, onMounted, onUnmounted, defineAsyncComponent, watch, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { WorldTrack } from '~/types/user';
 import { BOSS_RUSH_HARDCORE_MODIFIERS } from '~/types/bossRush';
@@ -163,6 +163,27 @@ function returnToMap(): void {
 }
 
 // ---------------------------------------------------------------------------
+// Colosseum Leaderboard (Task 3.4)
+// ---------------------------------------------------------------------------
+const showLeaderboardModal = ref(false);
+const selectedLeaderboardTrack = ref<WorldTrack>(currentTrack.value);
+
+function openLeaderboard(track?: WorldTrack): void {
+  selectedLeaderboardTrack.value = track || currentTrack.value;
+  showLeaderboardModal.value = true;
+  void bossRushStore.fetchColosseumLeaderboard(selectedLeaderboardTrack.value);
+}
+
+function switchLeaderboardTrack(track: WorldTrack): void {
+  selectedLeaderboardTrack.value = track;
+  void bossRushStore.fetchColosseumLeaderboard(track);
+}
+
+function closeLeaderboard(): void {
+  showLeaderboardModal.value = false;
+}
+
+// ---------------------------------------------------------------------------
 // Lifecycle
 // ---------------------------------------------------------------------------
 onMounted(() => {
@@ -198,6 +219,110 @@ onUnmounted(() => {
       </div>
     </div>
 
+    <!-- Leaderboard Modal (Task 3.4) -->
+    <div
+      v-if="showLeaderboardModal"
+      class="modal-backdrop leaderboard-backdrop"
+      @click.self="closeLeaderboard"
+    >
+      <div class="modal-card theme-card leaderboard-modal-card">
+        <div class="leaderboard-header">
+          <div class="leaderboard-title-group">
+            <h3 class="leaderboard-modal-title">🏆 BẢNG XẾP HẠNG ĐẤU TRƯỜNG</h3>
+            <p class="leaderboard-modal-sub">
+              Top 10 Thần Tốc Phá Đảo Colosseum • Dual-Layer SWR Caching
+            </p>
+          </div>
+          <button
+            class="modal-close-icon"
+            type="button"
+            title="Đóng"
+            @click="closeLeaderboard"
+          >
+            ✕
+          </button>
+        </div>
+
+        <!-- Track Selector in Modal -->
+        <div class="leaderboard-track-tabs">
+          <button
+            v-for="t in validTracks"
+            :key="t"
+            type="button"
+            class="tab-pill"
+            :class="{ active: selectedLeaderboardTrack === t }"
+            @click="switchLeaderboardTrack(t)"
+          >
+            {{ t === 'kids' ? '🔥 Kids' : t === 'teens' ? '⚡ Teens' : '💼 Adults' }}
+          </button>
+        </div>
+
+        <!-- Leaderboard Body -->
+        <div v-if="bossRushStore.isLoadingLeaderboard" class="leaderboard-loading">
+          <div class="spinner" />
+          <span>Đang tải bảng xếp hạng Đấu Trường...</span>
+        </div>
+        <div v-else-if="bossRushStore.leaderboardError" class="error-box">
+          <span>{{ bossRushStore.leaderboardError }}</span>
+        </div>
+        <div
+          v-else-if="!bossRushStore.colosseumLeaderboard || bossRushStore.colosseumLeaderboard.length === 0"
+          class="empty-leaderboard"
+        >
+          <span>Chưa có Chiến Thần nào ghi danh. Hãy là người đầu tiên!</span>
+        </div>
+        <div v-else class="leaderboard-list">
+          <div
+            v-for="entry in bossRushStore.colosseumLeaderboard"
+            :key="entry.rank"
+            class="leaderboard-item"
+            :class="{
+              'rank-top-1': entry.rank === 1,
+              'rank-top-2': entry.rank === 2,
+              'rank-top-3': entry.rank === 3,
+            }"
+          >
+            <!-- Rank Column -->
+            <div class="rank-col">
+              <span v-if="entry.rank === 1" class="rank-medal gold">🥇 1</span>
+              <span v-else-if="entry.rank === 2" class="rank-medal silver">🥈 2</span>
+              <span v-else-if="entry.rank === 3" class="rank-medal bronze">🥉 3</span>
+              <span v-else class="rank-medal normal">#{{ entry.rank }}</span>
+            </div>
+
+            <!-- Avatar & Player Info -->
+            <div class="player-col">
+              <div class="player-avatar-circle">
+                {{ entry.avatar || '👤' }}
+              </div>
+              <div class="player-name-wrap">
+                <span class="player-name">{{ entry.displayName }}</span>
+                <span v-if="entry.equippedTitle" class="player-title-badge">
+                  👑 {{ entry.equippedTitle === 'title_boss_slayer' ? 'Vua Đấu Trường' : entry.equippedTitle === 'title_multiverse_champion' ? 'Bá Chủ Đa Vũ Trụ' : entry.equippedTitle }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Stats: Bosses, Time, Score -->
+            <div class="stats-col">
+              <div class="stat-cell time-cell" title="Thời gian phá đảo">
+                ⏱️ {{ entry.formattedTime }}
+              </div>
+              <div class="stat-cell score-cell" title="Điểm số kỷ lục">
+                ⭐ {{ entry.bestScore.toLocaleString('vi-VN') }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="leaderboard-footer">
+          <button class="btn-cancel" type="button" @click="closeLeaderboard">
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- =================================================================== -->
     <!-- 1. PORTAL GATE (Entry & Rules Overview)                             -->
     <!-- =================================================================== -->
@@ -206,6 +331,9 @@ onUnmounted(() => {
       <div class="gate-top-nav">
         <button class="back-link-btn" type="button" @click="returnToMap">
           ← Về Bản Đồ
+        </button>
+        <button class="btn-view-leaderboard-pill" type="button" @click="openLeaderboard(currentTrack)">
+          🏆 Bảng Xếp Hạng
         </button>
         <div class="track-switcher-pills">
           <NuxtLink
@@ -608,6 +736,9 @@ onUnmounted(() => {
           <button class="theme-btn-primary play-again-btn" type="button" @click="bossRushStore.startColosseumRun(currentTrack, false)">
             ⚔️ Khiêu Chiến Lại Lập Kỷ Lục Mới
           </button>
+          <button class="btn-view-leaderboard-action" type="button" @click="openLeaderboard(currentTrack)">
+            🏆 Bảng Xếp Hạng Top 10
+          </button>
           <button class="btn-return-portal" type="button" @click="proceedExit">
             Về Cổng Đấu Trường
           </button>
@@ -648,6 +779,9 @@ onUnmounted(() => {
         <div class="defeat-actions">
           <button class="theme-btn-primary retry-btn" type="button" @click="bossRushStore.startColosseumRun(currentTrack, isPreviewMode)">
             ⚔️ Tái Đấu Ngay Lập Tức
+          </button>
+          <button class="btn-view-leaderboard-action" type="button" @click="openLeaderboard(currentTrack)">
+            🏆 Xem Bảng Xếp Hạng
           </button>
           <button class="btn-return-portal" type="button" @click="proceedExit">
             Rút Lui Về Cổng
@@ -1635,5 +1769,287 @@ onUnmounted(() => {
   background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
   background-clip: text;
   -webkit-background-clip: text;
+}
+
+/* ------------------------------------------------------------------------- */
+/* 7. COLOSSEUM LEADERBOARD MODAL & BUTTONS (Task 3.4)                       */
+/* ------------------------------------------------------------------------- */
+.btn-view-leaderboard-pill {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.btn-view-leaderboard-pill:hover {
+  background: rgba(245, 158, 11, 0.3);
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+}
+
+.btn-view-leaderboard-action {
+  padding: 0.8rem 1.5rem;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+}
+
+.btn-view-leaderboard-action:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.leaderboard-modal-card {
+  max-width: 620px;
+  width: 95%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  background: #111827;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 0.75rem;
+}
+
+.leaderboard-title-group {
+  text-align: left;
+}
+
+.leaderboard-modal-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fbbf24;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
+
+.leaderboard-modal-sub {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin: 0.2rem 0 0;
+}
+
+.modal-close-icon {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.modal-close-icon:hover {
+  color: #ffffff;
+}
+
+.leaderboard-track-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  justify-content: center;
+}
+
+.tab-pill {
+  padding: 0.4rem 1rem;
+  border-radius: 9999px;
+  background: #1f2937;
+  color: #9ca3af;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-pill.active {
+  background: #f59e0b;
+  color: #111827;
+  border-color: #fbbf24;
+  font-weight: 700;
+}
+
+.leaderboard-loading,
+.empty-leaderboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1rem;
+  color: #94a3b8;
+  font-size: 0.95rem;
+}
+
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  max-height: 48vh;
+}
+
+.leaderboard-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.5rem;
+  background: #1f2937;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.15s ease;
+}
+
+.leaderboard-item:hover {
+  transform: translateX(2px);
+  background: #283548;
+}
+
+.leaderboard-item.rank-top-1 {
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.18) 0%, rgba(31, 41, 55, 0.9) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.6);
+}
+
+.leaderboard-item.rank-top-2 {
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.18) 0%, rgba(31, 41, 55, 0.9) 100%);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.leaderboard-item.rank-top-3 {
+  background: linear-gradient(90deg, rgba(217, 119, 6, 0.15) 0%, rgba(31, 41, 55, 0.9) 100%);
+  border: 1px solid rgba(217, 119, 6, 0.4);
+}
+
+.rank-col {
+  width: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 800;
+}
+
+.rank-medal {
+  font-size: 0.85rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.35rem;
+}
+
+.rank-medal.gold {
+  color: #fbbf24;
+  font-size: 0.95rem;
+}
+
+.rank-medal.silver {
+  color: #cbd5e1;
+  font-size: 0.95rem;
+}
+
+.rank-medal.bronze {
+  color: #d97706;
+  font-size: 0.95rem;
+}
+
+.rank-medal.normal {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.player-col {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
+.player-avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.player-name-wrap {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.player-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #f3f4f6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-title-badge {
+  font-size: 0.7rem;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
+.stats-col {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.stat-cell {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.35rem;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.time-cell {
+  color: #60a5fa;
+}
+
+.score-cell {
+  color: #f59e0b;
+  font-weight: 800;
+}
+
+.leaderboard-footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

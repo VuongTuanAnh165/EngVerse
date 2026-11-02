@@ -101,3 +101,55 @@ export type BossRushSessionState =
   | 'boss_cleared' // Intermission cutscene after defeating 1 Boss
   | 'victory' // Defeated all 4 Bosses
   | 'defeat'; // Lost all 3 HP
+
+/**
+ * Single entry on Boss Rush Colosseum Leaderboard
+ */
+export interface BossRushLeaderboardEntry {
+  uid: string;
+  rank: number;
+  displayName: string;
+  avatar: string;
+  equippedTitle: string;
+  worldTrack: WorldTrack;
+  bestScore: number;
+  bestTimeMs: number;
+  formattedTime: string;
+  bossesDefeated: number; // 0 - 4
+  isCleared: boolean;
+  isPerfect: boolean;
+}
+
+/**
+ * Server response for GET /api/game/boss-rush/leaderboard
+ */
+export interface BossRushLeaderboardResponse {
+  updatedAt: number;
+  worldTrack: string;
+  entries: BossRushLeaderboardEntry[];
+}
+
+/**
+ * Payload for POST /api/game/boss-rush
+ */
+export interface BossRushSubmitPayload {
+  result: BossRushResult;
+  idToken?: string;
+}
+
+/**
+ * Server response for POST /api/game/boss-rush
+ */
+export interface BossRushSubmitResponse {
+  success: boolean;
+  earnedExp: number;
+  earnedGold: number;
+  isNewBestScore: boolean;
+  isNewBestTime: boolean;
+  rewardsUnlocked: {
+    titleId?: string;
+    avatarFrame?: string;
+    cardId?: string;
+  };
+  message?: string;
+}

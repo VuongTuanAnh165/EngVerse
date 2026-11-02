@@ -10,7 +10,14 @@
  */
 
 import type { WorldTrack } from '~/types/user';
-import type { StageData, StageVocabItem, StageGrammarItem, CardRarity, PartOfSpeech } from '~/types/game';
+import type {
+  StageData,
+  StageVocabItem,
+  StageGrammarItem,
+  CardRarity,
+  PartOfSpeech,
+  FunctionalGrammarCategory,
+} from '~/types/game';
 import type { AdminAiGeneratePayload } from '~/types/admin';
 
 function getTrackInitial(track: WorldTrack): 'k' | 't' | 'a' {
@@ -303,6 +310,9 @@ export function normalizeGeneratedStage(
       audioText: String(item.audioText || item.word || ''),
       emoji: String(item.emoji || '✨'),
       cardRarity: rarity,
+      collocations: Array.isArray(item.collocations) ? item.collocations.map(String).slice(0, 3) : undefined,
+      realWorldPhrase: typeof item.realWorldPhrase === 'string' && item.realWorldPhrase.trim() ? item.realWorldPhrase.trim() : undefined,
+      synonyms: Array.isArray(item.synonyms) ? item.synonyms.map(String) : undefined,
     };
   });
 
@@ -321,6 +331,9 @@ export function normalizeGeneratedStage(
       correctSentence: String(g.correctSentence || 'Target English sentence.'),
       distractorWords,
       grammarTip: String(g.grammarTip || 'Mẹo ngữ pháp ngắn gọn.'),
+      functionalCategory: typeof g.functionalCategory === 'string' && g.functionalCategory.trim()
+        ? (g.functionalCategory.trim() as FunctionalGrammarCategory)
+        : undefined,
     };
   });
 

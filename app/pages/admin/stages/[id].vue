@@ -66,7 +66,7 @@ function openAiModal() {
   aiErrorMessage.value = '';
   aiCefrLevel.value = stageForm.cefrLevel || 'A1';
   if (!aiTopic.value && topicSuggestions[activeTrack.value]?.[0]) {
-    aiTopic.value = topicSuggestions[activeTrack.value][0];
+    aiTopic.value = topicSuggestions[activeTrack.value]?.[0] || '';
   }
   isAiModalOpen.value = true;
 }
@@ -664,7 +664,7 @@ onMounted(() => {
 
                 <div class="form-group">
                   <label>3 Nghĩa Gây Nhiễu (Distractor Meanings):</label>
-                  <div class="distractor-inputs">
+                  <div v-if="vocab.distractorMeanings" class="distractor-inputs">
                     <input
                       v-model="vocab.distractorMeanings[0]"
                       type="text"

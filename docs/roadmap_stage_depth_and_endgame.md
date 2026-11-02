@@ -477,7 +477,7 @@ Mỗi stage sẽ được bổ sung:
 
 **Tổng bổ sung Teens**: 480 collocations + 160 real-world phrases + 20 plot twists
 
-### 3.4 Nâng Cấp Cụ Thể — ADULTS (20 Stages)
+### 5.4 Nâng Cấp Cụ Thể — ADULTS (20 Stages)
 
 #### Stage 1 "Sự Cố Tại Sân Bay" (B1)
 - **Vocab hiện tại**: luggage, boarding pass, itinerary, delayed, customs, compensation, fragile, deliver
@@ -495,7 +495,7 @@ Mỗi stage sẽ được bổ sung:
 
 **Tổng bổ sung Adults**: 480 collocations + 160 real-world phrases + 20 plot twists
 
-### 3.5 Tổng Kết Nâng Cấp 60 Stages
+### 5.5 Tổng Kết Nâng Cấp 60 Stages
 
 | Hạng Mục | Hiện Tại | Sau Nâng Cấp | Tăng |
 |:---|:---:|:---:|:---:|
@@ -512,7 +512,7 @@ Mỗi stage sẽ được bổ sung:
 
 ---
 
-## IV. CHỦ ĐỀ GIAO TIẾP BỊ THIẾU — KẾ HOẠCH BỔ SUNG QUA COLLOCATIONS
+### 5.6 Phân Bổ Chủ Đề Đời Thực Vào 60 Chặng Hiện Có
 
 Thay vì thêm stage mới, ta **nhúng chủ đề thiếu vào collocations và real-world phrases** của các stage hiện tại:
 
@@ -530,9 +530,9 @@ Thay vì thêm stage mới, ta **nhúng chủ đề thiếu vào collocations v�
 
 ---
 
-## V. CƠ CHẾ ENDGAME — THIẾT KẾ KỸ THUẬT CHI TIẾT
+## VI. CƠ CHẾ ENDGAME — THIẾT KẾ KỸ THUẬT CHI TIẾT
 
-### 5.1 Kiến Trúc Tổng Thể
+### 6.1 Kiến Trúc Tổng Thể
 
 ```mermaid
 graph TD
@@ -555,7 +555,7 @@ graph TD
     FREE_TALK --> GEMINI
 ```
 
-### 5.2 Daily Challenge — Thử Thách Hàng Ngày
+### 6.2 Daily Challenge — Thử Thách Hàng Ngày
 
 #### Cơ Chế Hoạt Động
 
@@ -629,13 +629,13 @@ interface DailyStreak {
 ```
 Route:          /play/daily-challenge
 API Endpoint:   /api/game/daily-challenge (GET — generate, POST — submit)
-Data Storage:   Firebase user doc → dailyChallenge subcollection
+Data Storage:   Firebase 1-Doc-Per-User → users/{uid}.dailyChallenge (nhúng trực tiếp, 0 subcollection)
 AI Provider:    Gemini 2.0 Flash (fast generation, low cost)
 Cache:          Edge CDN 24h for today's base challenge template
 Personalization: SRS items fetched client-side from user store
 ```
 
-### 5.3 Boss Rush Colosseum — Đấu Trường Sinh Tử
+### 6.3 Boss Rush Colosseum — Đấu Trường Sinh Tử
 
 #### Cơ Chế
 
@@ -676,7 +676,7 @@ interface BossRushResult {
 | Top 10 Speed Run | 🥇 Hiện trên bảng Vinh Danh `/share/[uid]` |
 | Hoàn thành cả 3 tracks | 💎 Danh hiệu "Bá Chủ Đa Vũ Trụ" |
 
-### 5.4 AI Free Simulator — Phòng Giả Lập Giao Tiếp Tự Do
+### 6.4 AI Free Simulator — Phòng Giả Lập Giao Tiếp Tự Do
 
 **Đây là tính năng quan trọng nhất** để đạt mục tiêu "tự tin giao tiếp mọi chủ đề".
 
@@ -747,27 +747,64 @@ Route:          /play/free-simulator
 AI Provider:    Gemini 2.0 Pro (for quality conversation + evaluation)
 Voice Input:    Web Speech API (existing)
 Voice Output:   Gemini TTS / Web Speech Synthesis
-History:        Firebase user doc → freeSimHistory subcollection
+History:        Firebase 1-Doc-Per-User → users/{uid}.freeSimHistory (tối đa 5 phiên gần nhất nhúng trực tiếp, 0 subcollection)
 Rate Limit:     5 sessions/day (free) | Unlimited (premium)
 ```
 
 ---
 
-## VI. LỘ TRÌNH TRIỂN KHAI KỸ THUẬT
+## VII. NGUYÊN TẮC THIẾT KẾ TRẢI NGHIỆM: CHƠI VUI - HỌC TỐT - CHỐNG ỨC CHẾ - KÍCH THÍCH PHÁ ĐẢO
 
-### Pha 1: Nâng Cấp Data & Schema (Sprint 7 — 1 tuần)
+> [!IMPORTANT]
+> Đây là bộ 4 trụ cột triết lý game design & giáo dục ứng dụng đảm bảo người chơi có trải nghiệm hoàn hảo từ tân binh đến khi phá đảo và tiếp tục gắn bó trọn đời.
+
+### 7.1 Trụ Cột 1: "Chơi Vừa Vui, Vừa Học Được Nhiều" (Flow State & Bloom Scaffold)
+- **Chuỗi 4 Mini-game đi đúng Tháp Bloom**:
+  1. *Word Alchemy*: Kích hoạt nhận diện từ vựng qua hình ảnh & âm thanh nhẹ nhàng.
+  2. *Voice Runner*: Vận động cơ miệng, phát âm to rõ trong trạng thái hào hứng.
+  3. *Sentence Lock*: Ghép câu logic, củng cố ngữ pháp không nhàm chán.
+  4. *AI Roleplay*: Thực chiến đối thoại nhập vai với phản hồi thông minh từ AI.
+- **Micro-Learning Vừa Vặn**: Mỗi màn kéo dài 3–4 phút, phù hợp nhịp độ sinh học não bộ, không gây mệt mỏi nhưng tích lũy lượng kiến thức gấp 4 lần nhờ Collocations.
+
+### 7.2 Trụ Cột 2: "Chống Ức Chế Tuyệt Đối" (Anti-Frustration UX Mechanics)
+Để người chơi không bao giờ bực bội hay bỏ dở vì lỗi kỹ thuật hoặc độ khó vô lý:
+- **Thời Gian Gia Hạn Động (Dynamic Speech Grace)**: Trong Voice Runner và AI Roleplay, nếu đồng hồ đếm ngược sắp hết mà người chơi đang nói (Microphone đang active), hệ thống tự động cộng thêm 5 giây đệm (Grace Period) để không ngắt lời thô bạo.
+- **Không Trừ Tim Oan (Adaptive Mic Fallback)**: Nếu mic bị ồn, mạng chập chờn hoặc thiết bị chặn quyền mic, hệ thống tự động chuyển sang chế độ "Nhịp điệu Rhythm Tap" hoặc "Gõ phím", điểm số và tim máu được bảo toàn 100%.
+- **Chế Độ Tua Nhanh Khi Chơi Lại (Fast Replay Mode)**: Khi chơi lại màn đã qua để farm thẻ Codex hoặc luyện tập, cutscene mở đầu có nút "Bỏ qua (Skip)" để vào thẳng bài học.
+- **Bảo Vệ Năng Lượng**: Khi hết 5/5 Năng lượng (Energy), người chơi có thể chơi mini-game đố vui nhanh (Flashcard Quick Quiz) 60 giây để hồi ngay 2 Năng lượng mà không cần trả tiền hay chờ đợi.
+
+### 7.3 Trụ Cột 3: "Kích Thích Tò Mò & Quyết Tâm Phá Đảo" (Curiosity & Drive to 100%)
+- **Tiến Hóa Nhân Vật & Linh Thú (Visual Evolution)**:
+  - *Kids*: Rồng Ignis biến đổi diện mạo qua từng chương (Trứng phát sáng → Rồng con → Rồng giáp vàng → Thần rồng tối thượng).
+  - *Teens*: Avatar Hacker nâng cấp trang bị Cyber sau mỗi Boss (Neon Visor, Quantum Cloak).
+  - *Adults*: Cấp bậc chức danh và phòng làm việc nâng cấp theo sự nghiệp (Intern → Director → Davos Keynote Speaker).
+- **Cốt Truyện Dạng "Móc Câu" (Cliffhanger Storytelling)**: Mỗi màn chơi kết thúc bằng 1 câu hé lộ bí mật màn sau, kích thích não bộ muốn bấm ngay "Chơi Màn Tiếp Theo".
+- **Hội Chứng Sưu Tầm 100% (The Codex Completionist)**: 720 thẻ bài 3D có tỉ lệ rơi gacha theo điểm số (Common, Rare, Epic, Legendary). Người chơi luôn khao khát phủ kín album để mở khóa danh hiệu độc quyền.
+
+### 7.4 Trụ Cột 4: "Giữ Chân Vô Hạn Sau Khi Phá Đảo" (Infinite Endgame Retention)
+- **Daily Challenge (Thói quen bền vững)**: Mỗi ngày 1 bài luyện mới lúc 00:00. AI Gemini tự sinh nội dung theo dòng thời sự kết hợp thuật toán lặp lại ngắt quãng (SRS) lấy các từ người chơi từng phát âm sai để biến điểm yếu thành phản xạ.
+- **Boss Rush Colosseum (Đấu trường danh vọng)**: Đấu liên hoàn 4 Đại Boss, tính điểm tốc độ và độ chuẩn phát âm, cạnh tranh Bảng Xếp Hạng tuần để nhận Khung Avatar Vàng độc quyền.
+- **AI Free Simulator (Công cụ giao tiếp trọn đời)**: Người chơi dùng EngVerse như một trợ lý ảo trước mọi tình huống thực tế (phỏng vấn, xin visa, du lịch, thi IELTS), nhận báo cáo CEFR toàn diện.
+
+---
+
+## VIII. LỘ TRÌNH TRIỂN KHAI KỸ THUẬT
+
+### Pha 1: Nâng Cấp Data, Admin CMS & Schema (Sprint 7 — 1 tuần)
 
 | Task | Chi Tiết | File Ảnh Hưởng |
 |:---|:---|:---|
 | 1.1 | Cập nhật `VocabItem` type: thêm `collocations`, `realWorldPhrase`, `synonyms` | `app/types/game.ts` |
 | 1.2 | Cập nhật `GrammarItem` type: thêm `functionalCategory` | `app/types/game.ts` |
 | 1.3 | Cập nhật `AiRoleplayMission` type: thêm `plotTwist`, tăng `maxTurns` | `app/types/game.ts` |
-| 1.4 | Bổ sung collocations cho 160 từ Kids | `public/data/kids/stages.json` |
-| 1.5 | Bổ sung collocations cho 160 từ Teens | `public/data/teens/stages.json` |
-| 1.6 | Bổ sung collocations cho 160 từ Adults | `public/data/adults/stages.json` |
+| 1.4 | Bổ sung collocations & realWorldPhrase cho 160 từ Kids | `public/data/kids/stages.json` |
+| 1.5 | Bổ sung collocations & realWorldPhrase cho 160 từ Teens | `public/data/teens/stages.json` |
+| 1.6 | Bổ sung collocations & realWorldPhrase cho 160 từ Adults | `public/data/adults/stages.json` |
 | 1.7 | Viết 60 plot twists cho 60 AI Roleplay missions | 3 files stages.json |
-| 1.8 | Cập nhật AI Roleplay Engine để handle plotTwist + extended turns | `app/components/game/` |
-| 1.9 | Cập nhật Word Alchemy mini-game hiển thị collocations | `app/components/game/` |
+| 1.8 | Đồng bộ Auto-Sync Engine & cập nhật thẻ bài Codex với collocations | `server/utils/adminStorage.ts`, `public/data/cards/codex.json` |
+| 1.9 | Nâng cấp Admin CMS: Thêm input Collocations, Real-world phrases, Functional category & Plot Twist | `app/pages/admin/stages/[id].vue`, `app/pages/admin/codex/index.vue` |
+| 1.10 | Cập nhật AI Roleplay Engine để handle plotTwist + extended turns | `app/components/games/GameAiRoleplay.vue` |
+| 1.11 | Cập nhật Word Alchemy mini-game hiển thị collocations gợi ý | `app/components/games/GameWordAlchemy.vue` |
 
 ### Pha 2: Daily Challenge (Sprint 8 — 1.5 tuần)
 
@@ -803,7 +840,7 @@ Rate Limit:     5 sessions/day (free) | Unlimited (premium)
 
 ---
 
-## VII. BẢN ĐỒ KẾT QUẢ MONG ĐỢI
+## IX. BẢN ĐỒ KẾT QUẢ MONG ĐỢI
 
 ```mermaid
 flowchart TD

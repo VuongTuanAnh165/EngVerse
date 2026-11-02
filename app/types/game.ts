@@ -37,7 +37,47 @@ export interface StageVocabItem {
   emoji?: string;
   cardRarity: CardRarity;
   cardId?: string;
+  /**
+   * MỚI (Pha 1 - Task 1.1): 3 cụm từ cố định (collocations / situational chunks) đi kèm từ này
+   * Ví dụ: ["claim my luggage", "excess luggage fee", "damaged luggage claim"]
+   */
+  collocations?: [string, string, string] | string[];
+  /**
+   * MỚI (Pha 1 - Task 1.1): 1 câu giao tiếp đời thực phản xạ chứa từ vựng
+   * Ví dụ: "Excuse me, where can I claim my luggage?"
+   */
+  realWorldPhrase?: string;
+  /**
+   * MỚI (Pha 1 - Task 1.1): Danh sách các từ đồng nghĩa phổ biến
+   * Ví dụ: ["baggage", "suitcase"]
+   */
+  synonyms?: string[];
+  /**
+   * MỚI (Pha 1 - Task 1.1): Danh sách các từ trái nghĩa phổ biến (nếu có)
+   */
+  antonyms?: string[];
 }
+
+/**
+ * Convenient alias for StageVocabItem matching roadmap documentation
+ */
+export type VocabItem = StageVocabItem;
+
+/**
+ * MỚI (Pha 1 - Task 1.2): Phân loại ngữ pháp theo chức năng giao tiếp đời thực
+ * Categorizes patterns by real-world communicative intent rather than purely structural rules.
+ */
+export type FunctionalGrammarCategory =
+  | 'asking'
+  | 'refusing'
+  | 'apologizing'
+  | 'persuading'
+  | 'clarifying'
+  | 'describing'
+  | 'narrating'
+  | 'negotiating'
+  | 'complaining'
+  | 'thanking';
 
 /**
  * Grammar puzzle item inside a Stage
@@ -50,7 +90,17 @@ export interface StageGrammarItem {
   punctuation?: string;
   distractorWords: string[];
   grammarTip: string;
+  /**
+   * MỚI (Pha 1 - Task 1.2): Phân loại ngữ pháp theo chức năng giao tiếp đời thực
+   * Giúp hệ thống và AI lọc câu hỏi theo mục đích đàm thoại (hỏi, từ chối, làm rõ...)
+   */
+  functionalCategory?: FunctionalGrammarCategory;
 }
+
+/**
+ * Convenient alias for StageGrammarItem matching roadmap documentation
+ */
+export type GrammarItem = StageGrammarItem;
 
 /**
  * Offline rule-based fallback when AI API encounters rate limits or errors
@@ -201,6 +251,8 @@ export interface CodexCard {
   emoji: string;
   rarity: CardRarity;
   lore: string;
+  collocations?: string[];
+  realWorldPhrase?: string;
 }
 
 /**

@@ -13,6 +13,7 @@ import { BOSS_RUSH_HARDCORE_MODIFIERS } from '~/types/bossRush';
 import { useUserStore } from '~/stores/user';
 import { useGameSessionStore } from '~/stores/gameSession';
 import { useBossRushStore, BOSS_META_MAP } from '~/stores/bossRush';
+import { useBossRushModifier } from '~/composables/useBossRushModifier';
 import { useSoundEffects } from '~/composables/useSoundEffects';
 
 // Lazy-load Mini-game components
@@ -26,6 +27,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const sessionStore = useGameSessionStore();
 const bossRushStore = useBossRushStore();
+const { activeModifierBadges } = useBossRushModifier();
 const { playSound } = useSoundEffects();
 
 // ---------------------------------------------------------------------------
@@ -278,32 +280,15 @@ onUnmounted(() => {
         <div class="modifiers-section">
           <h2 class="section-title">QUY TẮC SINH TỬ (HARDCORE MODIFIERS)</h2>
           <div class="modifiers-grid">
-            <div class="modifier-card">
-              <span class="mod-icon">🩸</span>
+            <div
+              v-for="badge in activeModifierBadges"
+              :key="badge.id"
+              class="modifier-card"
+            >
+              <span class="mod-icon">{{ badge.icon }}</span>
               <div class="mod-text">
-                <strong>Shared HP 3 Tim</strong>
-                <span>Duy nhất 3 ❤️ cho cả 4 Boss, không hồi máu giữa các trận</span>
-              </div>
-            </div>
-            <div class="modifier-card">
-              <span class="mod-icon">⏱️</span>
-              <div class="mod-text">
-                <strong>Thời Gian -30%</strong>
-                <span>Bộ đếm countdown áp lực cực độ trong mọi thử thách</span>
-              </div>
-            </div>
-            <div class="modifier-card">
-              <span class="mod-icon">🎙️</span>
-              <div class="mod-text">
-                <strong>Chuẩn Âm +5%</strong>
-                <span>Ngưỡng nhận diện giọng nói khắt khe hơn (+0.05 pass)</span>
-              </div>
-            </div>
-            <div class="modifier-card">
-              <span class="mod-icon">🧩</span>
-              <div class="mod-text">
-                <strong>Ẩn Starter Chips</strong>
-                <span>Không có gợi ý câu mẫu, +2 từ vựng ghép thẻ liên hoàn</span>
+                <strong>{{ badge.title }}</strong>
+                <span>{{ badge.description }}</span>
               </div>
             </div>
           </div>
@@ -471,11 +456,13 @@ onUnmounted(() => {
 
       <!-- Active Hardcore Modifiers Banner -->
       <div class="hardcore-hud-strip">
-        <span class="strip-pill">🩸 Shared 3 ❤️</span>
-        <span class="strip-pill">⏱️ Thời Gian -30%</span>
-        <span class="strip-pill">🎙️ Chuẩn Âm +5%</span>
-        <span class="strip-pill">🧩 Ẩn Starter Chips</span>
-        <span class="strip-pill">+2 Từ Vựng</span>
+        <span
+          v-for="badge in activeModifierBadges"
+          :key="badge.id"
+          class="strip-pill"
+        >
+          {{ badge.icon }} {{ badge.shortLabel }}
+        </span>
         <span v-if="isPreviewMode" class="strip-pill preview-badge">⚡ Preview Mode</span>
       </div>
 

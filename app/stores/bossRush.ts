@@ -4,7 +4,7 @@
  * real-time total elapsed timer, hardcore modifier calculations, and results recording.
  *
  * Strict TypeScript (0 any), memory-leak free, Vue 3.5+ script setup.
- * Reference: docs/roadmap_stage_depth_and_endgame.md - Sprint 9, Task 3.2 & Rules.md
+ * Reference: docs/roadmap_stage_depth_and_endgame.md - Sprint 9, Task 3.2, 3.3 & Rules.md
  */
 
 import { defineStore } from 'pinia';
@@ -19,6 +19,7 @@ import {
 } from '~/types/bossRush';
 import { useUserStore } from './user';
 import { useGameSessionStore } from './gameSession';
+import { useBossRushModifier } from '~/composables/useBossRushModifier';
 import { useSoundEffects } from '~/composables/useSoundEffects';
 
 export const BOSS_STAGE_IDS = [5, 10, 15, 20] as const;
@@ -48,6 +49,7 @@ export const useBossRushStore = defineStore('bossRush', () => {
   const userStore = useUserStore();
   const sessionStore = useGameSessionStore();
   const { playSound, triggerVictoryConfetti, triggerScreenShake } = useSoundEffects();
+  const { applyHardcoreModifiers, calculateBossRushScore } = useBossRushModifier();
 
   // -------------------------------------------------------------------------
   // State
@@ -116,35 +118,6 @@ export const useBossRushStore = defineStore('bossRush', () => {
   const userTrackBestRecord = computed(() => {
     return userStore.bossRush?.tracks[currentTrack.value] || null;
   });
-
-  // -------------------------------------------------------------------------
-  // Helper: Hardcore Modifiers Application
-  // -------------------------------------------------------------------------
-  function buildStageWithModifiers(baseStage: StageData): StageData {
-    const cloned: StageData = JSON.parse(JSON.stringify(baseStage));
-
-    // 1. Time limit -30%
-    const originalTime = cloned.config?.timeLimitSeconds ?? 60;
-    const reducedTime = Math.max(25, Math.round(originalTime * BOSS_RUSH_HARDCORE_MODIFIERS.timeMultiplier));
-
-    // 2. Voice pass threshold +0.05
-    const originalThreshold = cloned.config?.voicePassThreshold ?? 0.75;
-    const stricterThreshold = Math.min(0.95, originalThreshold + BOSS_RUSH_HARDCORE_MODIFIERS.voicePassThresholdOffset);
-
-    // 3. Extra vocab picks (+2 items)
-    const originalVocabPick = cloned.config?.vocabPickCount ?? 4;
-    const poolLength = cloned.vocabPool?.length || cloned.vocabList?.length || 8;
-    const boostedVocabPick = Math.min(poolLength, originalVocabPick + BOSS_RUSH_HARDCORE_MODIFIERS.extraVocabPickCount);
-
-    cloned.config = {
-      ...cloned.config,
-      timeLimitSeconds: reducedTime,
-      voicePassThreshold: stricterThreshold,
-      vocabPickCount: boostedVocabPick,
-    };
-
-    return cloned;
-  }
 
   // -------------------------------------------------------------------------
   // Core Actions
@@ -258,7 +231,8 @@ export const useBossRushStore = defineStore('bossRush', () => {
     const boss = currentBoss.value;
     if (!boss) return;
 
-    const modifiedStage = buildStageWithModifiers(boss.stageData);
+    // Apply Hardcore Modifiers through useBossRushModifier composable
+    const modifiedStage = applyHardcoreModifiers(boss.stageData);
     activeModifiedStage.value = modifiedStage;
 
     // Initialize Game Session with retained shared HP
@@ -338,15 +312,13 @@ export const useBossRushStore = defineStore('bossRush', () => {
     const accuracy = overallAccuracy.value;
     const remainingHP = Math.max(0, sharedHp.value);
 
-    // Time Bonus: Max 1,500 points scaling down if run takes > 4 minutes (240s)
-    const totalSeconds = Math.floor(totalElapsedMs.value / 1000);
-    const timeBonus = Math.max(0, Math.floor((360 - totalSeconds) * 8));
-
-    // Scoring formula: (bossesDefeated * 1000) + (accuracyPercent * 10) + (remainingHP * 500) + timeBonus
-    const finalScore =
-      bossesDefeated * 1000 + accuracy * 10 + remainingHP * 500 + timeBonus;
-
-    const isPerfect = remainingHP === 3;
+    // Calculate official Colosseum score through useBossRushModifier composable
+    const scoreResult = calculateBossRushScore({
+      bossesDefeated,
+      accuracyPercent: accuracy,
+      remainingHP,
+      totalTimeMs: totalElapsedMs.value,
+    });
 
     const result: BossRushResult = {
       worldTrack: currentTrack.value,
@@ -354,15 +326,15 @@ export const useBossRushStore = defineStore('bossRush', () => {
       totalTimeMs: totalElapsedMs.value,
       accuracyPercent: accuracy,
       remainingHP,
-      timeBonus,
-      finalScore,
+      timeBonus: scoreResult.timeBonus,
+      finalScore: scoreResult.finalScore,
       isCleared: true,
-      isPerfect,
+      isPerfect: scoreResult.isPerfect,
       completedAt: Date.now(),
       rewardsUnlocked: {
         titleId: 'title_boss_slayer',
         avatarFrame: 'avatar_frame_gold',
-        cardId: isPerfect ? `card_mythic_${currentTrack.value}` : undefined,
+        cardId: scoreResult.isPerfect ? `card_mythic_${currentTrack.value}` : undefined,
       },
     };
 
@@ -452,7 +424,8 @@ export const useBossRushStore = defineStore('bossRush', () => {
     isTrackUnlocked,
     userTrackBestRecord,
     // Actions
-    buildStageWithModifiers,
+    applyHardcoreModifiers,
+    calculateBossRushScore,
     loadBossStages,
     startColosseumRun,
     prepareCurrentBossIntro,
@@ -466,4 +439,3 @@ export const useBossRushStore = defineStore('bossRush', () => {
     clearAllTimers,
   };
 });
-

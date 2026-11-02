@@ -5,7 +5,7 @@
  * Reference: docs/roadmap_stage_depth_and_endgame.md - Section 6.2 & Task 2.1
  */
 
-import { defineEventHandler, getQuery, getRequestHeader } from 'h3';
+import { defineEventHandler, getQuery, getRequestHeader, setResponseHeader } from 'h3';
 import { adminAuth, adminDb } from '../../utils/firebaseAdmin';
 import {
   generateDailyChallenge,
@@ -54,7 +54,15 @@ export default defineEventHandler(async (event): Promise<{ success: boolean; cha
     }
   }
 
-  const challenge = await generateDailyChallenge(dateStr, srsVocabIds);
+  const config = useRuntimeConfig();
+  const challenge = await generateDailyChallenge(dateStr, srsVocabIds, {
+    geminiApiKey: config.geminiApiKey,
+    geminiModel: config.geminiModel,
+    openrouterApiKey: config.openrouterApiKey,
+  });
+
+  // Edge CDN Cache-Control header (Rule 2: 0 read quota)
+  setResponseHeader(event, 'Cache-Control', 'public, max-age=60, s-maxage=3600, stale-while-revalidate=86400');
 
   return {
     success: true,

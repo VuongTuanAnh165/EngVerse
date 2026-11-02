@@ -260,7 +260,7 @@ async function onLogout(): Promise<void> {
 }
 
 .header-inner {
-  max-width: 1320px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0.5rem 1rem;
   display: flex;

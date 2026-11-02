@@ -21,6 +21,66 @@ export function getDailyDateString(dateObj: Date = new Date()): string {
 export const getVietnamDateString = getDailyDateString;
 
 /**
+ * Returns yesterday's date string formatted as YYYY-MM-DD in Vietnam Timezone (GMT+7)
+ */
+export function getYesterdayDateString(dateObj: Date = new Date()): string {
+  const yesterday = new Date(dateObj.getTime() - 24 * 60 * 60 * 1000);
+  return getDailyDateString(yesterday);
+}
+
+/**
+ * Milestone structure for maintaining consecutive streaks
+ */
+export interface StreakMilestone {
+  days: number;
+  rewardKey: string;
+  titleVi: string;
+  descriptionVi: string;
+  rewardIcon: string;
+}
+
+/**
+ * 5 Standard streak milestone rewards according to roadmap section 6.2
+ */
+export const STREAK_MILESTONES: readonly StreakMilestone[] = [
+  {
+    days: 3,
+    rewardKey: 'streak_shield',
+    titleVi: 'Khiên Băng Bảo Vệ',
+    descriptionVi: 'Bảo vệ chuỗi ngày học 1 lần khi lỡ quên làm bài',
+    rewardIcon: '🛡️',
+  },
+  {
+    days: 7,
+    rewardKey: 'exp_x2_24h',
+    titleVi: 'Hào Quang Tri Thức (x2 EXP 24h)',
+    descriptionVi: 'Nhân đôi toàn bộ EXP nhận được trong 24 giờ',
+    rewardIcon: '⚡',
+  },
+  {
+    days: 14,
+    rewardKey: 'codex_epic_pack',
+    titleVi: 'Gói Thẻ Sử Thi (Codex Epic Pack)',
+    descriptionVi: 'Mở khóa ngay 1 gói thẻ bài Codex độ hiếm Epic',
+    rewardIcon: '🃏',
+  },
+  {
+    days: 30,
+    rewardKey: 'codex_legendary',
+    titleVi: 'Thẻ Bài Huyền Thoại (Codex Legendary)',
+    descriptionVi: 'Nhận 1 Thẻ Bài 3D Legendary cực hiếm ngẫu nhiên',
+    rewardIcon: '👑',
+  },
+  {
+    days: 60,
+    rewardKey: 'avatar_frame_gold',
+    titleVi: 'Khung Avatar Vàng Hoàng Gia',
+    descriptionVi: 'Khung ảnh đại diện mạ vàng thể hiện sự bền bỉ tối thượng',
+    rewardIcon: '✨',
+  },
+];
+
+/**
  * Phase 1: Vocab Sprint (6 words - 60 seconds)
  * 50% from user's SRS boss queue + 50% from daily theme / random stages
  */

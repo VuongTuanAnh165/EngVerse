@@ -92,6 +92,7 @@ export interface UserProfile {
   updatedAt: number; // Unix timestamp in milliseconds
   createdAt?: number; // Unix timestamp in milliseconds
   email?: string | null;
+  dailyChallenge?: UserDailyChallenge;
   isGuest?: boolean; // Client-side state indicator for guest mode
 }
 
@@ -215,6 +216,13 @@ export function createDefaultUserProfile(
     },
     updatedAt: now,
     createdAt: now,
+    dailyChallenge: {
+      lastCompletedDate: '',
+      currentStreak: 0,
+      longestStreak: 0,
+      totalCompleted: 0,
+      history: [],
+    },
     isGuest: true,
   };
 }

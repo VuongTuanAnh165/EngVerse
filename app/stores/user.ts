@@ -14,6 +14,7 @@ import {
   type UserDailyChallenge,
   type DailyChallengeSubmitResponse,
   getDailyDateString,
+  getYesterdayDateString,
 } from '~/types/dailyChallenge';
 
 const STORAGE_KEY = 'engverse_guest_profile';
@@ -57,7 +58,12 @@ export const useUserStore = defineStore('user', () => {
 
   // Daily Challenge Getters
   const dailyChallenge = computed<UserDailyChallenge | undefined>(() => user.value.dailyChallenge);
-  const dailyStreak = computed<number>(() => user.value.dailyChallenge?.currentStreak || 0);
+  const dailyStreak = computed<number>(() => {
+    if (typeof user.value.dailyChallenge?.currentStreak === 'number' && user.value.dailyChallenge.currentStreak > 0) {
+      return user.value.dailyChallenge.currentStreak;
+    }
+    return user.value.streak?.current || 0;
+  });
   const isDailyChallengeCompletedToday = computed<boolean>(() => {
     const today = getDailyDateString();
     return user.value.dailyChallenge?.lastCompletedDate === today;
@@ -147,8 +153,31 @@ export const useUserStore = defineStore('user', () => {
       currentStreak: res.currentStreak,
       longestStreak: res.longestStreak,
       totalCompleted,
-      history: currentHistory,
+      history: [
+        {
+          date: today,
+          score: res.earnedExp || 0,
+          stars: 3,
+          durationSeconds: 120,
+          completedAt: Date.now(),
+          theme: 'Daily Challenge',
+        },
+        ...currentHistory.filter((h) => h.date !== today),
+      ].slice(0, 7),
     };
+
+    // Keep user.value.streak in perfect sync
+    if (user.value.streak) {
+      user.value.streak.current = Math.max(user.value.streak.current || 0, res.currentStreak);
+      user.value.streak.lastPlayedDate = today;
+      if (res.shieldUsed && user.value.streak.freezeShields > 0) {
+        user.value.streak.freezeShields -= 1;
+      }
+      if (res.rewardUnlocked && (res.rewardUnlocked.includes('Shield') || res.rewardUnlocked.includes('streak_shield'))) {
+        user.value.streak.freezeShields = Math.min(3, (user.value.streak.freezeShields || 0) + 1);
+      }
+    }
+
 
     // If server returned updated user profile (e.g. from authenticated POST response), merge it
     if (res.user) {
@@ -160,6 +189,76 @@ export const useUserStore = defineStore('user', () => {
 
     user.value.updatedAt = Date.now();
     saveGuestState();
+  }
+
+  /**
+   * Consumes one freeze shield to rescue or protect streak
+   * Returns true if successfully consumed, false if no shield was available
+   */
+  function consumeFreezeShield(): boolean {
+    if (!user.value.streak || user.value.streak.freezeShields <= 0) {
+      return false;
+    }
+    user.value.streak.freezeShields -= 1;
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+    return true;
+  }
+
+  /**
+   * Verifies streak continuity against yesterday and today dates (GMT+7).
+   * If streak is broken but freeze shields exist, automatically applies a shield rescue.
+   */
+  function repairBrokenStreak(rescueWithShield: boolean = true): {
+    isBroken: boolean;
+    rescued: boolean;
+    currentStreak: number;
+  } {
+    const today = getDailyDateString();
+    const yesterday = getYesterdayDateString();
+    const lastDate = user.value.dailyChallenge?.lastCompletedDate || '';
+
+    // If last date is today or yesterday, streak is actively intact
+    if (!lastDate || lastDate === today || lastDate === yesterday) {
+      return {
+        isBroken: false,
+        rescued: false,
+        currentStreak: user.value.dailyChallenge?.currentStreak || 0,
+      };
+    }
+
+    // Streak broken: more than 1 day missed
+    if (rescueWithShield && (user.value.streak?.freezeShields || 0) > 0) {
+      // Consume shield to rescue streak
+      consumeFreezeShield();
+      if (user.value.dailyChallenge) {
+        // Shift last completed date to yesterday so today's completion continues streak
+        user.value.dailyChallenge.lastCompletedDate = yesterday;
+      }
+      user.value.updatedAt = Date.now();
+      saveGuestState();
+      return {
+        isBroken: true,
+        rescued: true,
+        currentStreak: user.value.dailyChallenge?.currentStreak || 0,
+      };
+    }
+
+    // No shield available: reset streak to 0
+    if (user.value.dailyChallenge) {
+      user.value.dailyChallenge.currentStreak = 0;
+    }
+    if (user.value.streak) {
+      user.value.streak.current = 0;
+    }
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+
+    return {
+      isBroken: true,
+      rescued: false,
+      currentStreak: 0,
+    };
   }
 
   /**
@@ -522,6 +621,8 @@ export const useUserStore = defineStore('user', () => {
     isDailyChallengeCompletedToday,
     setDailyChallengeProgress,
     recordDailyChallengeCompletion,
+    consumeFreezeShield,
+    repairBrokenStreak,
     // Operations
     initUserSession,
     saveGuestState,

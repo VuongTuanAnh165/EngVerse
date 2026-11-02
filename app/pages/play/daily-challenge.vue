@@ -21,6 +21,7 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '~/stores/user';
 import { useSpeechEngine } from '~/composables/useSpeechEngine';
 import { useSoundEffects } from '~/composables/useSoundEffects';
+import { useDailyStreak } from '~/composables/useDailyStreak';
 import { useFirebase } from '~/composables/useFirebase';
 import {
   type DailyChallengeData,
@@ -85,15 +86,18 @@ const phaseResults = ref<DailyChallengePhaseResults>({
   quickRoleplay: { score: 0, turnsUsed: 0, completed: false },
 });
 
-// Time until next reset (00:00 GMT+7)
-const timeUntilReset = ref<string>('--:--:--');
-let resetCountdownInterval: ReturnType<typeof setInterval> | null = null;
+const {
+  currentStreak,
+  timeUntilReset,
+  nextMilestone,
+  daysRemainingToMilestone,
+  milestoneProgressPercent,
+  isMaxMilestoneReached,
+} = useDailyStreak();
 
 const isCompletedToday = computed(() => {
   return userStore.isDailyChallengeCompletedToday && !isPracticingAgain.value;
 });
-
-const currentStreak = computed(() => userStore.dailyStreak);
 
 // ---------------------------------------------------------------------------
 // Phase 1: Vocab Sprint State
@@ -142,32 +146,14 @@ const roleplayGrammarCorrection = ref<string | null>(null);
 // Lifecycle & Data Fetching
 // ---------------------------------------------------------------------------
 onMounted(async () => {
-  updateResetCountdown();
-  resetCountdownInterval = setInterval(updateResetCountdown, 1000);
   await loadDailyChallenge();
 });
 
 onUnmounted(() => {
   clearActiveTimer();
-  if (resetCountdownInterval) clearInterval(resetCountdownInterval);
   stopSpeaking();
   stopListening();
 });
-
-function updateResetCountdown(): void {
-  const now = new Date();
-  // GMT+7 current time
-  const vnNow = new Date(now.getTime() + 7 * 60 * 60 * 1000);
-  const vnTomorrow = new Date(vnNow);
-  vnTomorrow.setUTCHours(24, 0, 0, 0);
-
-  const diffMs = Math.max(0, vnTomorrow.getTime() - vnNow.getTime());
-  const hours = Math.floor(diffMs / (1000 * 60 * 60));
-  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
-
-  timeUntilReset.value = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-}
 
 async function loadDailyChallenge(): Promise<void> {
   currentPhase.value = 'loading';
@@ -245,6 +231,7 @@ function startChallenge(forceRetry: boolean = false): void {
   if (forceRetry) {
     isPracticingAgain.value = true;
   }
+  isSubmitting = false;
   totalScore.value = 0;
   combo.value = 1;
   newWrongWordIds.value = [];
@@ -421,7 +408,7 @@ function clearGrammarSelection(): void {
 }
 
 function checkGrammarAnswer(): void {
-  if (!challenge.value || grammarSelectedTokens.value.length === 0) return;
+  if (!challenge.value || grammarSelectedTokens.value.length === 0 || (isGrammarChecked.value && isGrammarCorrect.value)) return;
   const puzzle = challenge.value.grammarFlash[currentGrammarIndex.value];
   if (!puzzle) return;
 
@@ -503,6 +490,7 @@ function playVoiceSentenceAudio(): void {
 }
 
 async function toggleVoiceRecording(): Promise<void> {
+  if (voiceEvaluationStatus.value === 'passed' || voiceEvaluationStatus.value === 'evaluating') return;
   if (isListening.value) {
     stopListening();
     evaluateVoiceSubmission(recognizedText.value);
@@ -560,7 +548,7 @@ function evaluateVoiceSubmission(userSpokenText: string): void {
 }
 
 function submitManualVoiceInput(): void {
-  if (!manualVoiceInput.value.trim()) return;
+  if (!manualVoiceInput.value.trim() || voiceEvaluationStatus.value === 'passed' || voiceEvaluationStatus.value === 'evaluating') return;
   evaluateVoiceSubmission(manualVoiceInput.value);
 }
 
@@ -609,7 +597,7 @@ function onSelectStarterChip(chip: string): void {
 
 async function sendRoleplayMessage(): Promise<void> {
   const text = playerInputText.value.trim();
-  if (!text || isAiResponding.value || !challenge.value) return;
+  if (!text || isAiResponding.value || !challenge.value || roleplayTurnsUsed.value >= 3) return;
 
   const config = challenge.value.quickRoleplay;
   playerInputText.value = '';
@@ -702,7 +690,11 @@ async function sendRoleplayMessage(): Promise<void> {
 // ===========================================================================
 // Submission & Victory Modal
 // ===========================================================================
+let isSubmitting = false;
+
 async function finishChallenge(): Promise<void> {
+  if (isSubmitting) return;
+  isSubmitting = true;
   clearActiveTimer();
   currentPhase.value = 'submitting';
 
@@ -826,6 +818,20 @@ function handleReturnHome(): void {
           <span class="countdown-label">Làm mới sau:</span>
           <span class="countdown-val">{{ timeUntilReset }}</span>
           <span class="countdown-sub">00:00 (GMT+7)</span>
+        </div>
+      </div>
+
+      <!-- Streak Milestone Progress Bar -->
+      <div v-if="nextMilestone" class="streak-milestone-banner">
+        <div class="milestone-text-row">
+          <span class="milestone-title">
+            {{ nextMilestone.rewardIcon }} Mốc tiếp theo: <strong>{{ nextMilestone.titleVi }}</strong> ({{ nextMilestone.days }} ngày)
+          </span>
+          <span v-if="isMaxMilestoneReached" class="milestone-remaining">👑 Đạt mốc tối đa!</span>
+          <span v-else class="milestone-remaining">Còn {{ daysRemainingToMilestone }} ngày</span>
+        </div>
+        <div class="milestone-progress-track">
+          <div class="milestone-progress-fill" :style="{ width: `${milestoneProgressPercent}%` }" />
         </div>
       </div>
 
@@ -1435,6 +1441,54 @@ function handleReturnHome(): void {
 .countdown-sub {
   font-size: 0.7rem;
   color: var(--text-muted);
+}
+
+.streak-milestone-banner {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 0.85rem 1.15rem;
+  border-radius: var(--radius-md);
+  margin-top: -1rem;
+  margin-bottom: 1.75rem;
+  text-align: left;
+}
+
+.milestone-text-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  margin-bottom: 0.45rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.milestone-title {
+  color: var(--text-primary);
+}
+
+.milestone-remaining {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ea580c;
+  background: rgba(234, 88, 12, 0.1);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+}
+
+.milestone-progress-track {
+  width: 100%;
+  height: 8px;
+  background: var(--border-color);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.milestone-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f97316, #eab308);
+  border-radius: var(--radius-pill);
+  transition: width 0.4s ease;
 }
 
 .phases-preview-grid {

@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { useUserStore } from '~/stores/user';
 
+const route = useRoute();
 const userStore = useUserStore();
 
+const isAdminRoute = computed(() => route.path.startsWith('/admin'));
+
 // Dynamically bind <html data-theme="..."> to active world track ('kids' | 'teens' | 'adults')
-const currentTheme = computed(() => userStore.currentTrack || 'kids');
+const currentTheme = computed(() => (isAdminRoute.value ? 'teens' : userStore.currentTrack || 'kids'));
 
 useHead({
   htmlAttrs: {
@@ -31,21 +35,23 @@ onMounted(() => {
 </script>
 
 <template>
-  <div id="engverse-app">
+  <div id="engverse-app" :class="{ 'admin-mode': isAdminRoute }">
     <!-- Global In-App Browser Guard Banner (Zalo/FB/TikTok WebView Warning) -->
-    <BrowserGuardBanner />
+    <BrowserGuardBanner v-if="!isAdminRoute" />
 
     <!-- Global Multi-Universe Navigation Header -->
-    <Header />
+    <Header v-if="!isAdminRoute" />
 
     <NuxtRouteAnnouncer />
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
 
     <!-- Global Multi-Universe Footer -->
-    <AppFooter />
+    <AppFooter v-if="!isAdminRoute" />
 
     <!-- Mobile Persistent Bottom Navigation Bar (< 768px) -->
-    <BottomNav />
+    <BottomNav v-if="!isAdminRoute" />
   </div>
 </template>
 
@@ -69,6 +75,10 @@ body {
   flex-direction: column;
 }
 
+#engverse-app.admin-mode {
+  padding-bottom: 0 !important;
+}
+
 /* Ensure buttons, inputs, textareas explicitly inherit font-family across all browsers */
 button,
 input,
@@ -82,7 +92,7 @@ textarea {
 
 /* Prevent mobile bottom navigation bar from overlapping content */
 @media (max-width: 768px) {
-  #engverse-app {
+  #engverse-app:not(.admin-mode) {
     padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
   }
 }

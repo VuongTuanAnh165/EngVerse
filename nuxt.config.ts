@@ -128,6 +128,8 @@ export default defineNuxtConfig({
     geminiApiKey: process.env.GEMINI_API_KEY || process.env.NUXT_GEMINI_API_KEY || '',
     geminiModel: process.env.GEMINI_MODEL || process.env.NUXT_GEMINI_MODEL || 'gemini-2.5-flash',
     openrouterApiKey: process.env.OPENROUTER_API_KEY || process.env.NUXT_OPENROUTER_API_KEY || '',
+    groqApiKey: process.env.GROQ_API_KEY || process.env.NUXT_GROQ_API_KEY || '',
+    adminSecretKey: process.env.ADMIN_SECRET_KEY || process.env.NUXT_ADMIN_SECRET_KEY || 'engverse_master_admin_2026',
     firebaseClientEmail: process.env.FIREBASE_CLIENT_EMAIL || process.env.NUXT_FIREBASE_CLIENT_EMAIL || '',
     firebasePrivateKey: process.env.FIREBASE_PRIVATE_KEY || process.env.NUXT_FIREBASE_PRIVATE_KEY || '',
     turnstileSecretKey: process.env.NUXT_TURNSTILE_SECRET_KEY || process.env.TURNSTILE_SECRET_KEY || '',

@@ -41,13 +41,13 @@ const {
   startListening,
   stopListening,
   isListening,
-  recognizedText,
+  currentTranscript,
   isSttSupported,
   isTtsSupported,
   hasPermissionDenied,
-  evaluateSpeechFuzzy,
+  evaluateSpeech,
 } = useSpeechEngine();
-const { auth } = useFirebase();
+const { getClientAuth } = useFirebase();
 
 // ---------------------------------------------------------------------------
 // Page & Flow State
@@ -93,7 +93,22 @@ const {
   daysRemainingToMilestone,
   milestoneProgressPercent,
   isMaxMilestoneReached,
+  getMilestoneByDays,
+  claimMilestone,
 } = useDailyStreak();
+
+const isRewardModalOpen = ref<boolean>(false);
+const activeRewardMilestone = ref<StreakMilestone | null>(null);
+
+function openMilestonePreview(milestone: StreakMilestone): void {
+  if (!milestone) return;
+  activeRewardMilestone.value = milestone;
+  isRewardModalOpen.value = true;
+}
+
+function handleClaimMilestoneReward(milestone: StreakMilestone): void {
+  claimMilestone(milestone.days);
+}
 
 const isCompletedToday = computed(() => {
   return userStore.isDailyChallengeCompletedToday && !isPracticingAgain.value;
@@ -135,7 +150,15 @@ const manualVoiceInput = ref<string>('');
 // ---------------------------------------------------------------------------
 // Phase 4: Quick Roleplay State
 // ---------------------------------------------------------------------------
-const roleplayMessages = ref<AiChatMessage[]>([]);
+interface DailyRoleplayMessage {
+  role: 'user' | 'model';
+  content: string;
+  vietnameseHint?: string;
+  grammarCorrection?: string;
+  timestamp?: number;
+}
+
+const roleplayMessages = ref<DailyRoleplayMessage[]>([]);
 const playerInputText = ref<string>('');
 const isAiResponding = ref<boolean>(false);
 const roleplayTurnsUsed = ref<number>(0);
@@ -162,8 +185,9 @@ async function loadDailyChallenge(): Promise<void> {
   try {
     const today = getDailyDateString();
     let idToken = '';
-    if (auth?.currentUser) {
-      idToken = await auth.currentUser.getIdToken();
+    const clientAuth = getClientAuth();
+    if (clientAuth?.currentUser) {
+      idToken = await clientAuth.currentUser.getIdToken();
     }
 
     const queryParams: Record<string, string> = { date: today };
@@ -260,7 +284,7 @@ function initVocabSprint(): void {
 
   setupVocabCard();
   startPhaseTimer(60, () => {
-    playSound('game_over');
+    playSound('wrong');
     advanceToGrammarFlash();
   });
 }
@@ -354,7 +378,7 @@ function advanceToGrammarFlash(): void {
 
   setupGrammarPuzzle();
   startPhaseTimer(50, () => {
-    playSound('game_over');
+    playSound('wrong');
     advanceToVoiceChallenge();
   });
 }
@@ -462,7 +486,7 @@ function advanceToVoiceChallenge(): void {
 
   setupVoiceItem();
   startPhaseTimer(40, () => {
-    playSound('game_over');
+    playSound('wrong');
     advanceToQuickRoleplay();
   });
 }
@@ -491,17 +515,35 @@ function playVoiceSentenceAudio(): void {
 
 async function toggleVoiceRecording(): Promise<void> {
   if (voiceEvaluationStatus.value === 'passed' || voiceEvaluationStatus.value === 'evaluating') return;
+  if (!challenge.value) return;
+  const item = challenge.value.voiceChallenge[currentVoiceIndex.value];
+  if (!item) return;
+
   if (isListening.value) {
     stopListening();
-    evaluateVoiceSubmission(recognizedText.value);
+    evaluateVoiceSubmission(currentTranscript.value);
   } else {
     voiceEvaluationStatus.value = 'listening';
     voiceFeedbackMessage.value = 'Đang lắng nghe... Hãy đọc to câu tiếng Anh trên!';
-    const started = await startListening();
-    if (!started && hasPermissionDenied.value) {
+    startListening(item.sentence, {
+      acceptedVariants: [item.sentence, item.focusWord],
+      threshold: 75,
+      onResult: (res) => {
+        evaluateVoiceSubmission(res.recognizedText || currentTranscript.value);
+      },
+      onError: () => {
+        if (hasPermissionDenied.value) {
+          voiceEvaluationStatus.value = 'idle';
+          isVoiceManualFallback.value = true;
+          voiceFeedbackMessage.value = 'Microphone bị chặn. Bạn có thể chuyển sang chế độ gõ câu!';
+        }
+      },
+    });
+
+    if (hasPermissionDenied.value || !isSttSupported.value) {
       voiceEvaluationStatus.value = 'idle';
       isVoiceManualFallback.value = true;
-      voiceFeedbackMessage.value = 'Microphone bị chặn. Bạn có thể chuyển sang chế độ gõ câu!';
+      voiceFeedbackMessage.value = 'Microphone không khả dụng. Bạn có thể chuyển sang chế độ gõ câu!';
     }
   }
 }
@@ -513,7 +555,7 @@ function evaluateVoiceSubmission(userSpokenText: string): void {
 
   voiceEvaluationStatus.value = 'evaluating';
 
-  const result = evaluateSpeechFuzzy(
+  const result = evaluateSpeech(
     userSpokenText || '',
     item.sentence,
     [item.sentence, item.focusWord],
@@ -571,7 +613,7 @@ function advanceToQuickRoleplay(): void {
   const config = challenge.value.quickRoleplay;
   roleplayMessages.value = [
     {
-      role: 'assistant',
+      role: 'model',
       content: config.openingLine,
       vietnameseHint: config.openingLineVi,
       timestamp: Date.now(),
@@ -585,7 +627,7 @@ function advanceToQuickRoleplay(): void {
   };
 
   startPhaseTimer(90, () => {
-    playSound('game_over');
+    playSound('wrong');
     finishChallenge();
   });
 }
@@ -616,23 +658,32 @@ async function sendRoleplayMessage(): Promise<void> {
   roleplayGrammarCorrection.value = null;
 
   try {
+    const historyPayload: AiChatMessage[] = roleplayMessages.value
+      .slice(-4)
+      .map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+
     const payload: AiRoleplayPayload = {
       worldTrack: userStore.currentTrack || 'adults',
+      stageId: 0,
+      playerInput: text,
+      conversationHistory: historyPayload,
       aiMission: {
-        theme: config.theme,
         npcName: config.npcName,
         npcTitle: config.npcTitle,
+        npcEmoji: config.npcEmoji,
         scenario: config.scenario,
         goal: config.goal,
         openingLine: config.openingLine,
         openingLineVi: config.openingLineVi,
+        recommendedWords: config.targetKeywords,
         targetKeywords: config.targetKeywords,
         starterChips: config.starterChips,
         maxTurns: 3,
       },
-      currentTurn: roleplayTurnsUsed.value,
-      messages: roleplayMessages.value,
-      playerInput: text,
+      guestId: userStore.user.uid || 'guest_user',
     };
 
     const res = await $fetch<AiRoleplayResponse>('/api/ai/roleplay', {
@@ -647,7 +698,7 @@ async function sendRoleplayMessage(): Promise<void> {
       phaseResults.value.quickRoleplay.score += scoreGain;
 
       roleplayMessages.value.push({
-        role: 'assistant',
+        role: 'model',
         content: res.npcReply,
         vietnameseHint: res.vietnameseHint,
         grammarCorrection: res.grammarCorrection,
@@ -670,12 +721,11 @@ async function sendRoleplayMessage(): Promise<void> {
     totalScore.value += 40;
     phaseResults.value.quickRoleplay.score += 40;
     roleplayMessages.value.push({
-      role: 'assistant',
+      role: 'model',
       content: "Great job! That's very natural. Thank you for completing today's roleplay!",
       vietnameseHint: 'Làm tốt lắm! Bạn đã diễn đạt rất tự nhiên.',
       timestamp: Date.now(),
     });
-
     if (roleplayTurnsUsed.value >= 3) {
       phaseResults.value.quickRoleplay.completed = true;
       setTimeout(() => {
@@ -710,9 +760,10 @@ async function finishChallenge(): Promise<void> {
   }
 
   let idToken = '';
-  if (auth?.currentUser) {
+  const clientAuth = getClientAuth();
+  if (clientAuth?.currentUser) {
     try {
-      idToken = await auth.currentUser.getIdToken();
+      idToken = await clientAuth.currentUser.getIdToken();
     } catch {
       // Guest
     }
@@ -740,28 +791,48 @@ async function finishChallenge(): Promise<void> {
     userStore.recordDailyChallengeCompletion(res);
     
     // Play celebratory sound & confetti
-    playSound('victory');
+    playSound('fanfare');
     triggerVictoryConfetti();
+
+    // Check if streak milestone is achieved or reward unlocked
+    const streakMilestone = getMilestoneByDays(res.currentStreak);
+    if (res.rewardUnlocked || streakMilestone) {
+      activeRewardMilestone.value = streakMilestone || nextMilestone.value;
+      setTimeout(() => {
+        isRewardModalOpen.value = true;
+      }, 700);
+    }
 
     currentPhase.value = 'victory';
   } catch (err: unknown) {
     console.error('[DailyChallenge] Submission failed:', err);
     // Offline / Guest local completion fallback
+    const localStreak = (userStore.dailyStreak || 0) + 1;
+    const localMilestone = getMilestoneByDays(localStreak);
     const localRes: DailyChallengeSubmitResponse = {
       success: true,
       earnedExp: 150 * stars,
       earnedGold: 50 * stars,
-      currentStreak: (userStore.dailyStreak || 0) + 1,
-      longestStreak: Math.max((userStore.dailyChallenge?.longestStreak || 0), (userStore.dailyStreak || 0) + 1),
+      currentStreak: localStreak,
+      longestStreak: Math.max((userStore.dailyChallenge?.longestStreak || 0), localStreak),
       isStreakExtended: true,
       shieldUsed: false,
+      rewardUnlocked: localMilestone ? localMilestone.titleVi : undefined,
       message: 'Hoàn thành thử thách hàng ngày thành công!',
     };
     submitResult.value = localRes;
     userStore.recordDailyChallengeCompletion(localRes);
 
-    playSound('victory');
+    playSound('fanfare');
     triggerVictoryConfetti();
+
+    if (localMilestone) {
+      activeRewardMilestone.value = localMilestone;
+      setTimeout(() => {
+        isRewardModalOpen.value = true;
+      }, 700);
+    }
+
     currentPhase.value = 'victory';
   }
 }
@@ -822,13 +893,21 @@ function handleReturnHome(): void {
       </div>
 
       <!-- Streak Milestone Progress Bar -->
-      <div v-if="nextMilestone" class="streak-milestone-banner">
+      <div
+        v-if="nextMilestone"
+        class="streak-milestone-banner clickable"
+        title="Bấm để xem chi tiết phần thưởng mốc!"
+        @click="openMilestonePreview(nextMilestone)"
+      >
         <div class="milestone-text-row">
           <span class="milestone-title">
             {{ nextMilestone.rewardIcon }} Mốc tiếp theo: <strong>{{ nextMilestone.titleVi }}</strong> ({{ nextMilestone.days }} ngày)
           </span>
-          <span v-if="isMaxMilestoneReached" class="milestone-remaining">👑 Đạt mốc tối đa!</span>
-          <span v-else class="milestone-remaining">Còn {{ daysRemainingToMilestone }} ngày</span>
+          <div class="milestone-badge-group">
+            <span v-if="isMaxMilestoneReached" class="milestone-remaining">👑 Đạt mốc tối đa!</span>
+            <span v-else class="milestone-remaining">Còn {{ daysRemainingToMilestone }} ngày</span>
+            <span class="milestone-preview-hint">👁️ Xem quà</span>
+          </div>
         </div>
         <div class="milestone-progress-track">
           <div class="milestone-progress-fill" :style="{ width: `${milestoneProgressPercent}%` }" />
@@ -1153,10 +1232,10 @@ function handleReturnHome(): void {
             v-for="(msg, idx) in roleplayMessages"
             :key="idx"
             class="chat-bubble-wrapper"
-            :class="{ 'user-bubble-wrapper': msg.role === 'user', 'assistant-bubble-wrapper': msg.role === 'assistant' }"
+            :class="{ 'user-bubble-wrapper': msg.role === 'user', 'assistant-bubble-wrapper': msg.role === 'model' }"
           >
             <div class="bubble-avatar">
-              {{ msg.role === 'assistant' ? challenge.quickRoleplay.npcEmoji : '🧑‍🚀' }}
+              {{ msg.role === 'model' ? challenge.quickRoleplay.npcEmoji : '🧑‍🚀' }}
             </div>
             <div class="bubble-body">
               <p class="bubble-text">{{ msg.content }}</p>
@@ -1292,11 +1371,27 @@ function handleReturnHome(): void {
 
       <!-- Final Actions -->
       <div class="victory-actions">
+        <button
+          v-if="submitResult?.rewardUnlocked || activeRewardMilestone"
+          type="button"
+          class="view-milestone-reward-btn theme-btn-secondary"
+          @click="isRewardModalOpen = true"
+        >
+          🎁 Xem Quà Mốc Thưởng
+        </button>
         <button class="theme-btn-primary return-home-btn" @click="handleReturnHome">
           Quay Về Bản Đồ
         </button>
       </div>
     </div>
+
+    <!-- Streak Milestone Reward Modal -->
+    <StreakRewardModal
+      v-model:is-open="isRewardModalOpen"
+      :milestone="activeRewardMilestone"
+      :streak-days="currentStreak"
+      @claim="handleClaimMilestoneReward"
+    />
   </div>
 </template>
 
@@ -1451,6 +1546,47 @@ function handleReturnHome(): void {
   margin-top: -1rem;
   margin-bottom: 1.75rem;
   text-align: left;
+  transition: all 0.2s ease;
+}
+
+.streak-milestone-banner.clickable {
+  cursor: pointer;
+}
+
+.streak-milestone-banner.clickable:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.15);
+  transform: translateY(-1px);
+}
+
+.milestone-badge-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.milestone-preview-hint {
+  font-size: 0.725rem;
+  color: #f59e0b;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+.view-milestone-reward-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #1e1b4b;
+  border: none;
+  font-weight: 800;
+  padding: 0.85rem 1.4rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  transition: all 0.2s ease;
+}
+
+.view-milestone-reward-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(245, 158, 11, 0.5);
 }
 
 .milestone-text-row {

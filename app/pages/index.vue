@@ -115,6 +115,9 @@ useHead({
       </div>
     </section>
 
+    <!-- Streak At-Risk / Shield Rescue Alert Banner -->
+    <StreakAtRiskBanner />
+
     <!-- Daily Challenge Highlight Banner -->
     <section class="daily-challenge-callout-section">
       <div class="daily-callout-card theme-card">

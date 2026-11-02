@@ -42,6 +42,8 @@ const isSyncing = computed(() => userStore.isSyncing);
 const displayName = computed(() => userStore.user.displayName || 'Explorer');
 const avatar = computed(() => userStore.user.avatar || 'rookie_explorer');
 const equippedTitle = computed(() => userStore.user.equippedTitle || 'Tân Binh');
+const isExpBoostActive = computed(() => userStore.isExpBoostActive);
+const activeAvatarFrame = computed(() => userStore.activeAvatarFrame);
 
 function onSwitchTrack(trackId: WorldTrack): void {
   userStore.switchWorldTrack(trackId);
@@ -131,6 +133,16 @@ async function onLogout(): Promise<void> {
           <span class="stat-val">Lv.{{ userLevel }}</span>
         </div>
 
+        <!-- Active x2 EXP Buff Pill -->
+        <div
+          v-if="isExpBoostActive"
+          class="stat-pill exp-boost-pill"
+          title="Hào Quang Tri Thức: Nhân đôi (x2) toàn bộ EXP từ Thử Thách & Màn Chơi!"
+        >
+          <span class="stat-icon" aria-hidden="true">⚡</span>
+          <span class="stat-val exp-boost-val">x2 EXP</span>
+        </div>
+
         <!-- Global Leaderboard Button (Hidden on Mobile < 768px, available in Bottom Nav) -->
         <button
           type="button"
@@ -199,7 +211,11 @@ async function onLogout(): Promise<void> {
 
           <!-- Authenticated User Profile -->
           <div v-else class="user-profile-menu">
-            <div class="user-avatar-badge" :title="`${displayName} (${equippedTitle})`">
+            <div
+              class="user-avatar-badge"
+              :class="{ 'gold-avatar-frame': activeAvatarFrame === 'avatar_frame_gold' }"
+              :title="`${displayName} (${equippedTitle})`"
+            >
               <img
                 v-if="avatar.startsWith('http')"
                 :src="avatar"
@@ -490,6 +506,34 @@ async function onLogout(): Promise<void> {
   color: #ffffff;
   font-weight: bold;
   flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.user-avatar-badge.gold-avatar-frame {
+  border: 2px solid #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.6), inset 0 0 6px rgba(245, 158, 11, 0.4);
+  animation: gold-pulse 2.5s infinite alternate ease-in-out;
+}
+
+.exp-boost-pill {
+  background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(245, 158, 11, 0.1));
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+}
+
+.exp-boost-val {
+  color: #f59e0b;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+@keyframes gold-pulse {
+  0% {
+    box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.85);
+  }
 }
 
 .avatar-img {

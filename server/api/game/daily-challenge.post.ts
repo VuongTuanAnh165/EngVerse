@@ -131,25 +131,41 @@ export default defineEventHandler(async (event): Promise<DailyChallengeSubmitRes
 
   const longestStreak = Math.max(existingDaily.longestStreak || 0, currentStreak);
 
-  // Rewards calculation
-  const earnedExp = 150 + Math.min(100, currentStreak * 10);
+  // Rewards calculation with active x2 EXP Boost check
+  const now = Date.now();
+  const isExpBoostActive = Boolean(userDoc.expBoostUntil && userDoc.expBoostUntil > now);
+  const baseEarnedExp = 150 + Math.min(100, currentStreak * 10);
+  const earnedExp = isExpBoostActive ? baseEarnedExp * 2 : baseEarnedExp;
   const earnedGold = 80 + Math.min(50, currentStreak * 5);
   const updatedExp = (userDoc.exp || 0) + earnedExp;
   const updatedGold = (userDoc.gold || 0) + earnedGold;
   const updatedLevel = Math.floor(updatedExp / 250) + 1;
 
-  // Milestone rewards check
+  // Milestone rewards check according to roadmap Section 6.2 (mốc 3, 7, 14, 30, 60 ngày)
   let freezeShields = userDoc.streak?.freezeShields || 0;
+  let expBoostUntil = userDoc.expBoostUntil || 0;
+  const unlockedFrames = new Set<string>(userDoc.unlockedAvatarFrames || ['default']);
+  const claimedMilestones = new Set<number>(userDoc.claimedMilestones || []);
+
   if (isStreakExtended) {
-    if (currentStreak === 3) {
-      freezeShields += 1;
-      rewardUnlocked = 'Thưởng Khiên Bảo Vệ Chuỗi (Streak Shield)';
-    } else if (currentStreak === 7) {
-      rewardUnlocked = 'Danh Hiệu: Tín Đồ Chăm Chỉ (Daily Devotee)';
-    } else if (currentStreak === 14) {
-      rewardUnlocked = 'Gói Thẻ Sử Thi (Codex Epic Pack)';
-    } else if (currentStreak === 30) {
-      rewardUnlocked = 'Thẻ Bài Huyền Thoại (Codex Legendary)';
+    if (currentStreak === 3 && !claimedMilestones.has(3)) {
+      freezeShields = Math.min(3, freezeShields + 1);
+      claimedMilestones.add(3);
+      rewardUnlocked = 'Thưởng Khiên Bảo Vệ Chuỗi (Streak Shield) 🛡️';
+    } else if (currentStreak === 7 && !claimedMilestones.has(7)) {
+      expBoostUntil = Math.max(expBoostUntil, now + 24 * 60 * 60 * 1000);
+      claimedMilestones.add(7);
+      rewardUnlocked = 'Hào Quang Tri Thức (x2 EXP 24h) ⚡';
+    } else if (currentStreak === 14 && !claimedMilestones.has(14)) {
+      claimedMilestones.add(14);
+      rewardUnlocked = 'Gói Thẻ Sử Thi (Codex Epic Pack) 🃏';
+    } else if (currentStreak === 30 && !claimedMilestones.has(30)) {
+      claimedMilestones.add(30);
+      rewardUnlocked = 'Thẻ Bài Huyền Thoại (Codex Legendary) 👑';
+    } else if (currentStreak === 60 && !claimedMilestones.has(60)) {
+      claimedMilestones.add(60);
+      unlockedFrames.add('avatar_frame_gold');
+      rewardUnlocked = 'Khung Avatar Vàng Hoàng Gia ✨';
     }
   }
 
@@ -170,11 +186,12 @@ export default defineEventHandler(async (event): Promise<DailyChallengeSubmitRes
   // Update Unlocked Titles
   const titlesSet = new Set<string>(userDoc.unlockedTitles || ['rookie_explorer']);
   if (currentStreak >= 7) titlesSet.add('daily_devotee');
+  if (currentStreak >= 14) titlesSet.add('codex_connoisseur');
   if (currentStreak >= 30) titlesSet.add('discipline_master');
+  if (currentStreak >= 60) titlesSet.add('streak_immortal');
   const updatedUnlockedTitles = Array.from(titlesSet);
 
   // New History Entry (max 7 items to keep document lightweight)
-  const now = Date.now();
   const historyEntry: DailyChallengeHistoryEntry = {
     date: body.date,
     score: body.totalScore || 0,
@@ -200,6 +217,9 @@ export default defineEventHandler(async (event): Promise<DailyChallengeSubmitRes
     freezeShields,
   };
 
+  const updatedAvatarFrames = Array.from(unlockedFrames);
+  const updatedClaimedMilestones = Array.from(claimedMilestones);
+
   // Perform single atomic Firestore update
   await userRef.update({
     exp: updatedExp,
@@ -209,6 +229,9 @@ export default defineEventHandler(async (event): Promise<DailyChallengeSubmitRes
     dailyChallenge: updatedDailyChallenge,
     srsBossQueue: updatedSrsQueue,
     unlockedTitles: updatedUnlockedTitles,
+    expBoostUntil,
+    unlockedAvatarFrames: updatedAvatarFrames,
+    claimedMilestones: updatedClaimedMilestones,
     updatedAt: now,
   });
 
@@ -222,6 +245,9 @@ export default defineEventHandler(async (event): Promise<DailyChallengeSubmitRes
     dailyChallenge: updatedDailyChallenge,
     srsBossQueue: updatedSrsQueue,
     unlockedTitles: updatedUnlockedTitles,
+    expBoostUntil,
+    unlockedAvatarFrames: updatedAvatarFrames,
+    claimedMilestones: updatedClaimedMilestones,
     updatedAt: now,
     isGuest: false,
   };

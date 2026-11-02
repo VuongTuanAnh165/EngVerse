@@ -94,6 +94,10 @@ export interface UserProfile {
   email?: string | null;
   dailyChallenge?: UserDailyChallenge;
   isGuest?: boolean; // Client-side state indicator for guest mode
+  expBoostUntil?: number; // Unix timestamp for active x2 EXP buff (Milestone 7)
+  avatarFrame?: string; // Equipped avatar frame e.g. 'avatar_frame_gold' (Milestone 60)
+  unlockedAvatarFrames?: string[]; // List of unlocked avatar frames
+  claimedMilestones?: number[]; // List of claimed streak milestone days e.g. [3, 7]
 }
 
 /**
@@ -223,6 +227,8 @@ export function createDefaultUserProfile(
       totalCompleted: 0,
       history: [],
     },
+    claimedMilestones: [],
+    unlockedAvatarFrames: ['default'],
     isGuest: true,
   };
 }

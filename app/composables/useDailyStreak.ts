@@ -158,6 +158,33 @@ export function useDailyStreak() {
     return userStore.consumeFreezeShield();
   }
 
+  // Milestone Claims & Buffs
+  const claimedMilestoneDays = computed<number[]>(() => {
+    return userStore.claimedMilestones || [];
+  });
+
+  const unclaimedMilestones = computed<StreakMilestone[]>(() => {
+    return allMilestones.filter(
+      (m) => m.days <= currentStreak.value && !claimedMilestoneDays.value.includes(m.days)
+    );
+  });
+
+  const isExpBoostActive = computed<boolean>(() => {
+    return userStore.isExpBoostActive;
+  });
+
+  const activeAvatarFrame = computed<string>(() => {
+    return userStore.activeAvatarFrame;
+  });
+
+  function getMilestoneByDays(days: number): StreakMilestone | undefined {
+    return allMilestones.find((m) => m.days === days);
+  }
+
+  function claimMilestone(days: number) {
+    return userStore.claimStreakMilestone(days);
+  }
+
   return {
     currentStreak,
     longestStreak,
@@ -179,5 +206,11 @@ export function useDailyStreak() {
     calculateTimeUntilReset,
     repairStreakWithShield,
     useFreezeShield,
+    claimedMilestoneDays,
+    unclaimedMilestones,
+    isExpBoostActive,
+    activeAvatarFrame,
+    getMilestoneByDays,
+    claimMilestone,
   };
 }

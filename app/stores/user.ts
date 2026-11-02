@@ -68,6 +68,15 @@ export const useUserStore = defineStore('user', () => {
     const today = getDailyDateString();
     return user.value.dailyChallenge?.lastCompletedDate === today;
   });
+  const isExpBoostActive = computed<boolean>(() => {
+    return Boolean(user.value.expBoostUntil && user.value.expBoostUntil > Date.now());
+  });
+  const activeAvatarFrame = computed<string>(() => {
+    return user.value.avatarFrame || 'default';
+  });
+  const claimedMilestones = computed<number[]>(() => {
+    return user.value.claimedMilestones || [];
+  });
 
   /**
    * Appends newly failed item IDs into SRS Boss queue for spaced repetition review
@@ -178,6 +187,19 @@ export const useUserStore = defineStore('user', () => {
       }
     }
 
+    // Handle reward perks & titles
+    if (res.rewardUnlocked) {
+      if (res.rewardUnlocked.includes('x2 EXP') || res.rewardUnlocked.includes('exp_x2')) {
+        user.value.expBoostUntil = Math.max(user.value.expBoostUntil || 0, Date.now() + 24 * 60 * 60 * 1000);
+      }
+      if (res.rewardUnlocked.includes('avatar_frame_gold') || res.rewardUnlocked.includes('Khung Avatar Vàng')) {
+        const frames = new Set(user.value.unlockedAvatarFrames || ['default']);
+        frames.add('avatar_frame_gold');
+        user.value.unlockedAvatarFrames = Array.from(frames);
+        user.value.avatarFrame = 'avatar_frame_gold';
+      }
+    }
+
 
     // If server returned updated user profile (e.g. from authenticated POST response), merge it
     if (res.user) {
@@ -259,6 +281,67 @@ export const useUserStore = defineStore('user', () => {
       rescued: false,
       currentStreak: 0,
     };
+  }
+
+  /**
+   * Claims a streak milestone reward (3, 7, 14, 30, 60 days) and applies the benefit
+   */
+  function claimStreakMilestone(milestoneDays: number): {
+    success: boolean;
+    rewardTitle: string;
+    description: string;
+  } {
+    const claimed = new Set(user.value.claimedMilestones || []);
+    if (claimed.has(milestoneDays)) {
+      return { success: false, rewardTitle: '', description: 'Mốc thưởng này đã được nhận trước đó.' };
+    }
+
+    claimed.add(milestoneDays);
+    user.value.claimedMilestones = Array.from(claimed);
+
+    let rewardTitle = '';
+    let description = '';
+
+    if (milestoneDays === 3) {
+      if (user.value.streak) {
+        user.value.streak.freezeShields = Math.min(3, (user.value.streak.freezeShields || 0) + 1);
+      }
+      rewardTitle = 'Khiên Băng Bảo Vệ 🛡️';
+      description = 'Đã cộng thêm 1 Khiên Băng vào kho bảo vệ chuỗi ngày học!';
+    } else if (milestoneDays === 7) {
+      user.value.expBoostUntil = Math.max(user.value.expBoostUntil || 0, Date.now() + 24 * 60 * 60 * 1000);
+      const titles = new Set(user.value.unlockedTitles || ['rookie_explorer']);
+      titles.add('daily_devotee');
+      user.value.unlockedTitles = Array.from(titles);
+      rewardTitle = 'Hào Quang Tri Thức ⚡ (x2 EXP 24h)';
+      description = 'Kích hoạt nhân đôi EXP nhận được trong 24 giờ tiếp theo!';
+    } else if (milestoneDays === 14) {
+      const titles = new Set(user.value.unlockedTitles || ['rookie_explorer']);
+      titles.add('codex_connoisseur');
+      user.value.unlockedTitles = Array.from(titles);
+      rewardTitle = 'Gói Thẻ Sử Thi 🃏 (Codex Epic Pack)';
+      description = 'Mở khóa danh hiệu Nhà Sưu Tầm Thẻ Sử Thi!';
+    } else if (milestoneDays === 30) {
+      const titles = new Set(user.value.unlockedTitles || ['rookie_explorer']);
+      titles.add('discipline_master');
+      user.value.unlockedTitles = Array.from(titles);
+      rewardTitle = 'Thẻ Bài Huyền Thoại 👑 (Codex Legendary)';
+      description = 'Nhận danh hiệu Bậc Thầy Kỷ Luật!';
+    } else if (milestoneDays === 60) {
+      const frames = new Set(user.value.unlockedAvatarFrames || ['default']);
+      frames.add('avatar_frame_gold');
+      user.value.unlockedAvatarFrames = Array.from(frames);
+      user.value.avatarFrame = 'avatar_frame_gold';
+      const titles = new Set(user.value.unlockedTitles || ['rookie_explorer']);
+      titles.add('streak_immortal');
+      user.value.unlockedTitles = Array.from(titles);
+      rewardTitle = 'Khung Avatar Vàng Hoàng Gia ✨';
+      description = 'Đã mở khóa & trang bị Khung Avatar Hoàng Kim Bất Tử!';
+    }
+
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+    return { success: true, rewardTitle, description };
   }
 
   /**
@@ -619,10 +702,14 @@ export const useUserStore = defineStore('user', () => {
     dailyChallenge,
     dailyStreak,
     isDailyChallengeCompletedToday,
+    isExpBoostActive,
+    activeAvatarFrame,
+    claimedMilestones,
     setDailyChallengeProgress,
     recordDailyChallengeCompletion,
     consumeFreezeShield,
     repairBrokenStreak,
+    claimStreakMilestone,
     // Operations
     initUserSession,
     saveGuestState,

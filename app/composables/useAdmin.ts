@@ -66,12 +66,17 @@ export function useAdmin() {
   }
 
   /**
-   * Fetches stages for a specific universe track
+   * Fetches stages for a specific universe track with resilient fallback
    */
   async function getStages(track: WorldTrack): Promise<StageData[]> {
-    return await adminFetch<StageData[]>('/api/admin/stages', {
-      query: { track },
-    });
+    try {
+      return await adminFetch<StageData[]>('/api/admin/stages', {
+        query: { track },
+      });
+    } catch (err) {
+      console.warn(`[useAdmin] /api/admin/stages?track=${track} fallback to static CDN:`, err);
+      return await $fetch<StageData[]>(`/data/${track}/stages.json`);
+    }
   }
 
   /**
@@ -105,10 +110,15 @@ export function useAdmin() {
   }
 
   /**
-   * Fetches complete Codex dataset
+   * Fetches complete Codex dataset with resilient fallback
    */
   async function getCodex(): Promise<CodexData> {
-    return await adminFetch<CodexData>('/api/admin/codex');
+    try {
+      return await adminFetch<CodexData>('/api/admin/codex');
+    } catch (err) {
+      console.warn('[useAdmin] /api/admin/codex fallback to static CDN:', err);
+      return await $fetch<CodexData>('/data/cards/codex.json');
+    }
   }
 
   /**

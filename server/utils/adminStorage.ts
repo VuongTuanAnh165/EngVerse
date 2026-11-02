@@ -17,6 +17,12 @@ import type { WorldTrack } from '~/types/user';
 import type { StageData, CodexData, CodexCard, CodexCollection, CodexTitle } from '~/types/game';
 import type { AdminBackupFileInfo, AdminExportBundle } from '~/types/admin';
 
+// Bundled JSON datasets for Serverless environments (Vercel) where public/ is not in the lambda container
+import kidsStagesBundled from '../../public/data/kids/stages.json' with { type: 'json' };
+import teensStagesBundled from '../../public/data/teens/stages.json' with { type: 'json' };
+import adultsStagesBundled from '../../public/data/adults/stages.json' with { type: 'json' };
+import codexBundled from '../../public/data/cards/codex.json' with { type: 'json' };
+
 const VALID_TRACKS: WorldTrack[] = ['kids', 'teens', 'adults'];
 const MAX_BACKUP_FILES = 40;
 
@@ -124,13 +130,15 @@ async function createSnapshotBackup(sourcePath: string, prefix: string): Promise
  * Atomic write helper: writes content to a temporary file, verifies JSON, and renames
  */
 async function atomicWriteJsonFile<T>(filePath: string, data: T): Promise<void> {
+  const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
   const dir = path.dirname(filePath);
-  await fs.mkdir(dir, { recursive: true });
-
-  const jsonString = JSON.stringify(data, null, 2) + '\n';
-  const tempPath = `${filePath}.tmp.${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
   try {
+    await fs.mkdir(dir, { recursive: true });
+
+    const jsonString = JSON.stringify(data, null, 2) + '\n';
+    const tempPath = `${filePath}.tmp.${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
     await fs.writeFile(tempPath, jsonString, 'utf-8');
 
     // Self-verification check before committing to disk
@@ -139,36 +147,48 @@ async function atomicWriteJsonFile<T>(filePath: string, data: T): Promise<void> 
 
     // Atomic replacement
     await fs.rename(tempPath, filePath);
-  } catch (err) {
-    // Clean up temporary file on failure
-    await fs.unlink(tempPath).catch(() => {});
+  } catch (err: unknown) {
+    const nodeErr = err as NodeJS.ErrnoException;
+    if (isServerless || nodeErr?.code === 'EROFS') {
+      throw new Error(
+        'Môi trường Vercel Production là Serverless Read-Only (chỉ đọc). ' +
+        'Để lưu vĩnh viễn dữ liệu vào public/data/, vui lòng thực hiện tại môi trường Local (npm run dev) rồi git push lên GitHub/Vercel, hoặc dùng tính năng "Tải Bản Sao Lưu JSON" ở sidebar.'
+      );
+    }
     throw new Error(`[AdminStorage] Ghi file thất bại (${filePath}): ${err instanceof Error ? err.message : String(err)}`);
   }
 }
 
 /**
  * Reads and parses stages for a specific world track
+ * Automatically falls back to bundled static JSON on Serverless (Vercel)
  */
 export async function readStages(track: WorldTrack): Promise<StageData[]> {
   const filePath = getStageFilePath(track);
   try {
     const raw = await fs.readFile(filePath, 'utf-8');
     return JSON.parse(raw) as StageData[];
-  } catch (err) {
-    throw new Error(`[AdminStorage] Không thể đọc file chặng "${track}": ${err instanceof Error ? err.message : String(err)}`);
+  } catch {
+    // Serverless (Vercel) fallback where public/ is served by CDN and not in Lambda filesystem
+    if (track === 'kids') return JSON.parse(JSON.stringify(kidsStagesBundled)) as StageData[];
+    if (track === 'teens') return JSON.parse(JSON.stringify(teensStagesBundled)) as StageData[];
+    if (track === 'adults') return JSON.parse(JSON.stringify(adultsStagesBundled)) as StageData[];
+    return [];
   }
 }
 
 /**
  * Reads and parses the complete Codex dataset
+ * Automatically falls back to bundled static JSON on Serverless (Vercel)
  */
 export async function readCodex(): Promise<CodexData> {
   const filePath = getCodexFilePath();
   try {
     const raw = await fs.readFile(filePath, 'utf-8');
     return JSON.parse(raw) as CodexData;
-  } catch (err) {
-    throw new Error(`[AdminStorage] Không thể đọc file Codex: ${err instanceof Error ? err.message : String(err)}`);
+  } catch {
+    // Serverless (Vercel) fallback
+    return JSON.parse(JSON.stringify(codexBundled)) as CodexData;
   }
 }
 
@@ -325,12 +345,13 @@ export async function removeStageWithCascade(
 ): Promise<{ deletedStage: StageData; removedCardsCount: number }> {
   const stages = await readStages(track);
   const stageIndex = stages.findIndex((s) => s.stageId === stageId);
+  const deletedStage = stages[stageIndex];
 
-  if (stageIndex === -1) {
+  if (stageIndex === -1 || !deletedStage) {
     throw new Error(`[AdminStorage] Không tìm thấy chặng ID ${stageId} thuộc vũ trụ "${track}".`);
   }
 
-  const [deletedStage] = stages.splice(stageIndex, 1);
+  stages.splice(stageIndex, 1);
   await writeStages(track, stages);
 
   let removedCardsCount = 0;

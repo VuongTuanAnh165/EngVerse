@@ -15,9 +15,11 @@ const kidsStages = ref<StageData[]>([]);
 const teensStages = ref<StageData[]>([]);
 const adultsStages = ref<StageData[]>([]);
 const codexData = ref<CodexData | null>(null);
+const loadError = ref('');
 
 async function loadDashboardData() {
   isLoading.value = true;
+  loadError.value = '';
   try {
     const [kids, teens, adults, codex] = await Promise.all([
       getStages('kids'),
@@ -32,6 +34,7 @@ async function loadDashboardData() {
     codexData.value = codex;
   } catch (err) {
     console.error('[AdminDashboard] Load error:', err);
+    loadError.value = err instanceof Error ? err.message : String(err);
   } finally {
     isLoading.value = false;
   }
@@ -77,6 +80,12 @@ onMounted(() => {
           <span>{{ isLoading ? 'Đang tải...' : 'Làm Mới' }}</span>
         </button>
       </div>
+    </div>
+
+    <!-- Error Banner -->
+    <div v-if="loadError" class="alert alert-danger" style="margin-bottom: 24px;">
+      <span>⚠️</span>
+      <span>{{ loadError }}</span>
     </div>
 
     <!-- Loading State -->

@@ -9,6 +9,7 @@ const currentTrack = computed(() => userStore.currentTrack);
 const collectedCardsCount = computed(() => userStore.user.collectedCards?.length || 0);
 const dailyStreak = computed(() => userStore.dailyStreak || 0);
 const isDailyCompleted = computed(() => userStore.isDailyChallengeCompletedToday);
+const freeSimDailyRemaining = computed(() => userStore.getFreeSimDailyRemaining());
 
 // Dynamic overview counts synchronized with public/data
 const totalStagesCount = ref<number>(10);
@@ -175,6 +176,37 @@ useHead({
             class="theme-btn-primary colosseum-play-btn"
           >
             Vào Đấu Trường ⚔️
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- AI Free Simulator Endgame Callout Banner -->
+    <section class="simulator-callout-section">
+      <div class="simulator-callout-card theme-card">
+        <div class="simulator-callout-left">
+          <div class="simulator-icon-box">
+            <span class="simulator-mic">🎙️</span>
+          </div>
+          <div class="simulator-info">
+            <div class="simulator-title-row">
+              <span class="simulator-tag">AI FREE SIMULATOR</span>
+              <span class="simulator-status-quota">
+                Lượt hôm nay: {{ freeSimDailyRemaining }}/5 phiên ⚡
+              </span>
+            </div>
+            <h3 class="simulator-heading">Phòng Giả Lập Giao Tiếp Tự Do & Báo Cáo CEFR</h3>
+            <p class="simulator-subtext">
+              Thực chiến 24+ tình huống đời thực (Phỏng vấn Visa, Du lịch, IELTS, Đàm phán lương...) hoặc tự thiết kế kịch bản tùy ý!
+            </p>
+          </div>
+        </div>
+        <div class="simulator-callout-right">
+          <NuxtLink
+            to="/play/free-simulator"
+            class="theme-btn-primary simulator-play-btn"
+          >
+            Vào Giả Lập 🎙️
           </NuxtLink>
         </div>
       </div>
@@ -548,6 +580,129 @@ useHead({
 .colosseum-play-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(239, 68, 68, 0.5);
+}
+
+/* AI Free Simulator Callout Banner */
+.simulator-callout-section {
+  max-width: 900px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1rem;
+}
+
+.simulator-callout-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 2px solid rgba(6, 182, 212, 0.4);
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(15, 23, 42, 0.95) 100%);
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.15);
+  transition: all 0.2s ease;
+}
+
+.simulator-callout-card:hover {
+  border-color: #06b6d4;
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
+}
+
+.simulator-callout-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.simulator-icon-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(139, 92, 246, 0.3));
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.simulator-mic {
+  font-size: 1.7rem;
+}
+
+.simulator-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.simulator-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #38bdf8;
+  background: rgba(6, 182, 212, 0.15);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+}
+
+.simulator-status-quota {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #a855f7;
+}
+
+.simulator-heading {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 0 0 0.25rem;
+  color: var(--color-text-primary, #f8fafc);
+}
+
+.simulator-subtext {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary, #94a3b8);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.simulator-play-btn {
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  white-space: nowrap;
+  text-decoration: none;
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+  color: #ffffff;
+  display: inline-block;
+  box-shadow: 0 3px 10px rgba(6, 182, 212, 0.35);
+}
+
+.simulator-play-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(6, 182, 212, 0.5);
+}
+
+@media (max-width: 768px) {
+  .simulator-callout-card {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: 1rem;
+    padding: 1.25rem 1rem;
+  }
+  .simulator-callout-left {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .simulator-title-row {
+    justify-content: center;
+  }
+  .simulator-play-btn {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 </style>

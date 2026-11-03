@@ -1,5 +1,6 @@
 import type { UserDailyChallenge } from './dailyChallenge';
 import type { UserBossRushProgress } from './bossRush';
+import type { UserFreeSimulatorProgress } from './freeSimulator';
 /**
  * EngVerse - Core User Profile & Progress Types
  * Strictly typed schema for 1-Document-Per-User architecture in Firestore
@@ -95,6 +96,7 @@ export interface UserProfile {
   email?: string | null;
   dailyChallenge?: UserDailyChallenge;
   bossRush?: UserBossRushProgress;
+  freeSimulator?: UserFreeSimulatorProgress;
   isGuest?: boolean; // Client-side state indicator for guest mode
   expBoostUntil?: number; // Unix timestamp for active x2 EXP buff (Milestone 7)
   avatarFrame?: string; // Equipped avatar frame e.g. 'avatar_frame_gold' (Milestone 60)

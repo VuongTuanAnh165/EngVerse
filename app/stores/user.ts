@@ -18,6 +18,10 @@ import {
 } from '~/types/dailyChallenge';
 
 import { getTitleDisplayName } from '~/types/rewards';
+import {
+  type FreeSimSessionRecord,
+  MAX_DAILY_FREE_SIM_SESSIONS,
+} from '~/types/freeSimulator';
 
 const STORAGE_KEY = 'engverse_guest_profile';
 
@@ -761,6 +765,54 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // ---------------------------------------------------------------------------
+  // AI Free Simulator (Task 4.1 & 4.5)
+  // ---------------------------------------------------------------------------
+  const freeSimulator = computed(() => user.value.freeSimulator);
+
+  function getFreeSimDailyRemaining(): number {
+    if (!user.value.freeSimulator) return MAX_DAILY_FREE_SIM_SESSIONS;
+    const today = getDailyDateString();
+    if (user.value.freeSimulator.lastPlayedDate !== today) {
+      return MAX_DAILY_FREE_SIM_SESSIONS;
+    }
+    const used = user.value.freeSimulator.dailySessionsCount || 0;
+    return Math.max(0, MAX_DAILY_FREE_SIM_SESSIONS - used);
+  }
+
+  function recordFreeSimSession(record: FreeSimSessionRecord): void {
+    const today = getDailyDateString();
+    if (!user.value.freeSimulator) {
+      user.value.freeSimulator = {
+        dailySessionsCount: 0,
+        lastPlayedDate: today,
+        totalSessionsCompleted: 0,
+        history: [],
+      };
+    }
+
+    if (user.value.freeSimulator.lastPlayedDate !== today) {
+      user.value.freeSimulator.dailySessionsCount = 0;
+      user.value.freeSimulator.lastPlayedDate = today;
+    }
+
+    user.value.freeSimulator.dailySessionsCount += 1;
+    user.value.freeSimulator.totalSessionsCompleted += 1;
+
+    if (!user.value.freeSimulator.history) {
+      user.value.freeSimulator.history = [];
+    }
+
+    // Prepend session to history (capped at 5 recent sessions, 0 subcollection)
+    user.value.freeSimulator.history.unshift(record);
+    if (user.value.freeSimulator.history.length > 5) {
+      user.value.freeSimulator.history = user.value.freeSimulator.history.slice(0, 5);
+    }
+
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+  }
+
+  // ---------------------------------------------------------------------------
   // Cosmetics & Rewards Customization (Task 3.5)
   // ---------------------------------------------------------------------------
   const equippedTitleDisplayName = computed<string>(() => {
@@ -877,6 +929,10 @@ export const useUserStore = defineStore('user', () => {
     bossRush,
     isBossRushUnlocked,
     recordBossRushRun,
+    // AI Free Simulator (Task 4.1 & 4.5)
+    freeSimulator,
+    getFreeSimDailyRemaining,
+    recordFreeSimSession,
     // Cosmetics & Rewards (Task 3.5)
     equippedTitleDisplayName,
     unlockedAvatarFramesList,

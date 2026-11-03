@@ -28,7 +28,7 @@ html[data-theme="kids"] {
   --text-primary: #3b1d07;
   --text-secondary: #63330f;
   --text-muted: #854d0e;
-  --font-family: 'Be Vietnam Pro', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --font-family: 'Be Vietnam Pro', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
 
   /* Brand Accents */
   --accent-primary: #f59e0b;
@@ -78,7 +78,7 @@ html[data-theme="teens"] {
   --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  --font-family: 'Exo 2', 'Be Vietnam Pro', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --font-family: 'Exo 2', 'Be Vietnam Pro', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
 
   /* Brand Accents */
   --accent-primary: #06b6d4;
@@ -128,7 +128,7 @@ html[data-theme="adults"] {
   --text-primary: #0f172a;
   --text-secondary: #334155;
   --text-muted: #64748b;
-  --font-family: 'Be Vietnam Pro', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  --font-family: 'Be Vietnam Pro', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
 
   /* Brand Accents */
   --accent-primary: #0f172a;

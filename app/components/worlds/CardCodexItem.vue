@@ -323,6 +323,7 @@ function getRarityLabel(rarity: string): string {
 
 .card-emoji {
   font-size: 3.25rem;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
   filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15));
   animation: float-card 3s infinite ease-in-out alternate;
 }

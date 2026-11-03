@@ -1151,6 +1151,7 @@ async function handleSaveTitle() {
 
 .emoji-circle {
   font-size: 32px;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -1488,6 +1489,7 @@ async function handleSaveTitle() {
 
 .preview-emoji {
   font-size: 40px;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
   margin-bottom: 8px;
 }
 

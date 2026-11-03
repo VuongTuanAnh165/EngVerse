@@ -47,7 +47,7 @@ const topicSuggestions: Record<WorldTrack, string[]> = {
   teens: [
     'Bẻ khóa Firewall Trùm Phantom AI 💻',
     'Mua linh kiện máy tính tại Chợ Đen Cyber 🤖',
-    'Hẹn bạn bè đi uống trà sữa cuối tuần 🧋',
+    'Hẹn bạn bè đi uống trà sữa cuối tuần 🥤',
     'Trận chung kết giải đấu Thể Thao Điện Tử 🏆',
     'Lái xe bay tuần tra thành phố đêm Neon 🚗',
     'Nhạc hội EDM và vũ điệu ánh sáng 🎧',

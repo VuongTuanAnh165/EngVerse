@@ -2464,7 +2464,7 @@
       "example": "Look into the magic mirror on the wall.",
       "exampleMeaning": "Hãy nhìn vào chiếc gương thần trên tường.",
       "audioText": "magic mirror",
-      "emoji": "🪞",
+      "emoji": "🔮",
       "rarity": "rare",
       "lore": "Chiếc gương thần phản chiếu vị trí của những chiếc chìa khóa bị thất lạc.",
       "collocations": [
@@ -2655,7 +2655,7 @@
       "example": "The dragon opened its strong wings to fly.",
       "exampleMeaning": "Chú rồng sải đôi cánh mạnh mẽ của mình để bay lên.",
       "audioText": "strong wings",
-      "emoji": "🪽",
+      "emoji": "🦅",
       "rarity": "rare",
       "lore": "Đôi cánh rồng rực lửa mọc ra khi Ignis chính thức hoàn tất quá trình tiến hóa.",
       "collocations": [
@@ -4293,7 +4293,7 @@
       "example": "Firefighters rescue people from dangerous fires.",
       "exampleMeaning": "Lính cứu hỏa giải cứu mọi người khỏi những đám cháy nguy hiểm.",
       "audioText": "rescue people",
-      "emoji": "🛟",
+      "emoji": "🚨",
       "rarity": "rare",
       "lore": "Hành động nghĩa hiệp kịp thời cứu nguy cho những bạn thú nhỏ bị mắc kẹt trên cây cao.",
       "collocations": [
@@ -4872,7 +4872,7 @@
       "example": "The phoenix gave Ignis a glowing red feather.",
       "exampleMeaning": "Phượng hoàng đã trao cho Ignis một chiếc lông vũ màu đỏ phát sáng.",
       "audioText": "glowing feather",
-      "emoji": "🪶",
+      "emoji": "🕊️",
       "rarity": "rare",
       "lore": "Chiếc lông vũ đỏ rực mang hơi ấm bất diệt, bảo vệ chủ nhân khỏi mọi luồng khí lạnh.",
       "collocations": [
@@ -6256,7 +6256,7 @@
       "example": "We usually hang out at the cyber cafe on Fridays.",
       "exampleMeaning": "Chúng tôi thường tụ tập ở quán cafe cyber vào thứ Sáu.",
       "audioText": "hang out",
-      "emoji": "🧋",
+      "emoji": "🥤",
       "rarity": "common",
       "lore": "Hoạt động giải trí quen thuộc của học sinh Neo-High sau những giờ học căng thẳng.",
       "collocations": [
@@ -6953,7 +6953,7 @@
       "example": "Only authorized detectives have access to the control room.",
       "exampleMeaning": "Chỉ các thám tử được ủy quyền mới có quyền truy cập vào phòng điều khiển.",
       "audioText": "full access",
-      "emoji": "🪪",
+      "emoji": "💳",
       "rarity": "common",
       "lore": "Thẻ từ cấp quyền mở khóa toàn bộ các cánh cửa an ninh trong tòa tháp.",
       "collocations": [
@@ -8401,7 +8401,7 @@
       "example": "The thief left a holographic decoy inside the glass case.",
       "exampleMeaning": "Tên trộm đã để lại một vật thế thân bằng hologram bên trong tủ kính.",
       "audioText": "clever decoy",
-      "emoji": "🪤",
+      "emoji": "🎯",
       "rarity": "rare",
       "lore": "Bản sao tinh vi được kẻ gian đặt lại hòng đánh lừa cảm biến quang học của bảo tàng.",
       "collocations": [
@@ -8485,7 +8485,7 @@
       "example": "The suspect used a forged ID card to enter the museum vault.",
       "exampleMeaning": "Nghi phạm đã sử dụng một thẻ căn cước làm giả để bước vào hầm bảo tàng.",
       "audioText": "forged document",
-      "emoji": "🪪",
+      "emoji": "📑",
       "rarity": "common",
       "lore": "Chữ ký số giả mạo tinh vi bị hệ thống phát hiện gian lận lật tẩy trong tích tắc.",
       "collocations": [
@@ -8513,7 +8513,7 @@
       "example": "Someone managed to sneak into the exhibition hall at midnight.",
       "exampleMeaning": "Ai đó đã xoay xở lẻn vào sảnh triển lãm lúc nửa đêm.",
       "audioText": "sneak into",
-      "emoji": "🥷",
+      "emoji": "🕵️",
       "rarity": "common",
       "lore": "Kỹ năng xâm nhập bóng tối giúp thám tử tiếp cận hiện trường mà không kích hoạt chuông báo động.",
       "collocations": [
@@ -9213,7 +9213,7 @@
       "example": "Thanks to her clever disguise, nobody recognized the detective.",
       "exampleMeaning": "Nhờ có lớp cải trang khéo léo, không ai nhận ra nữ thám tử.",
       "audioText": "clever disguise",
-      "emoji": "🥸",
+      "emoji": "🎭",
       "rarity": "common",
       "lore": "Mặt nạ sinh trắc học và trang phục đổi màu ngụy trang đánh lừa hệ thống nhận diện khuôn mặt.",
       "collocations": [
@@ -9241,7 +9241,7 @@
       "example": "Everything you see in this mirror hall is just an optical illusion!",
       "exampleMeaning": "Mọi thứ ngươi nhìn thấy trong sảnh gương này chỉ là ảo ảnh thị giác mà thôi!",
       "audioText": "optical illusion",
-      "emoji": "🪞",
+      "emoji": "🔮",
       "rarity": "epic",
       "lore": "Ma trận ảo ảnh thị giác đánh lừa các giác quan hòng che giấu phòng điều khiển ngầm.",
       "collocations": [
@@ -10134,7 +10134,7 @@
       "example": "Our strike team will infiltrate the quantum fortress through the cooling duct.",
       "exampleMeaning": "Đội đặc nhiệm của chúng ta sẽ thâm nhập vào pháo đài lượng tử qua đường ống làm mát.",
       "audioText": "infiltrate the fortress",
-      "emoji": "🥷",
+      "emoji": "🕵️",
       "rarity": "epic",
       "lore": "Chiến dịch đột nhập tàng hình vượt qua lớp lá chắn điện từ kiên cố nhất thế giới.",
       "collocations": [

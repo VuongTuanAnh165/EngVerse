@@ -12,6 +12,8 @@ import { useRouter } from 'vue-router';
 import { useUserStore } from '~/stores/user';
 import { useSoundEffects } from '~/composables/useSoundEffects';
 import { useSpeechEngine } from '~/composables/useSpeechEngine';
+import { useBrowserGuard } from '~/composables/useBrowserGuard';
+import type { SpeechPlaybackRate } from '~/types/speech';
 import {
   type SimulatorCategory,
   type CEFRLevel,
@@ -37,13 +39,40 @@ const { playSound, playClick, playCorrect, playVictoryFanfare } = useSoundEffect
 const {
   speak,
   stopSpeaking,
-  startListening,
+  startFreeSpeechListening,
   stopListening,
+  abortListening,
   isListening,
   currentTranscript,
   isSttSupported,
   isTtsSupported,
+  hasPermissionDenied,
+  setPlaybackRate,
 } = useSpeechEngine();
+const {
+  isRestrictedWebView,
+  browserType,
+  copyCurrentUrl,
+  isCopied,
+} = useBrowserGuard();
+
+// ---------------------------------------------------------------------------
+// Voice Engine Controls & Audio Preferences (Task 4.4)
+// ---------------------------------------------------------------------------
+const isAutoPlayVoice = ref<boolean>(true);
+const currentTtsRate = ref<SpeechPlaybackRate>(1.0);
+const micStatusMessage = ref<string>('');
+
+function setTtsSpeed(rate: SpeechPlaybackRate): void {
+  playClick();
+  currentTtsRate.value = rate;
+  setPlaybackRate(rate);
+}
+
+function toggleAutoPlay(): void {
+  playClick();
+  isAutoPlayVoice.value = !isAutoPlayVoice.value;
+}
 
 // ---------------------------------------------------------------------------
 // Tabs & Screen View State
@@ -214,9 +243,18 @@ function toggleMic(): void {
     stopListening();
     playClick();
   } else {
+    micStatusMessage.value = '';
     userSpeechInput.value = '';
-    startListening('en-US');
     playClick();
+    startFreeSpeechListening({
+      lang: 'en-US',
+      onTranscript: (text) => {
+        userSpeechInput.value = text;
+      },
+      onError: (err) => {
+        micStatusMessage.value = err;
+      },
+    });
   }
 }
 
@@ -233,10 +271,10 @@ function toggleTranslation(idx: number): void {
   translatedTurns.value[idx] = !translatedTurns.value[idx];
 }
 
-function playSpeechAudio(text: string): void {
+function playSpeechAudio(text: string, customRate?: SpeechPlaybackRate): void {
   if (!text) return;
   stopSpeaking();
-  speak(text);
+  speak(text, { rate: customRate ?? currentTtsRate.value });
 }
 
 function selectStarterChip(chip: string): void {
@@ -288,7 +326,7 @@ function startSimulationSession(): void {
       `Hi there, could you help me with this matter?`,
     ];
 
-    if (isTtsSupported.value) {
+    if (isTtsSupported.value && isAutoPlayVoice.value) {
       playSpeechAudio(s.sampleOpening);
     }
   } else if (activeCustomBrief.value) {
@@ -320,7 +358,7 @@ function startSimulationSession(): void {
       `Good morning, I have a few questions for you.`,
     ];
 
-    if (isTtsSupported.value) {
+    if (isTtsSupported.value && isAutoPlayVoice.value) {
       playSpeechAudio(opening);
     }
   }
@@ -407,8 +445,8 @@ async function sendUserTurn(): Promise<void> {
       // Update starter chips for next turn
       currentStarterChips.value = res.quickStarterChips || [];
 
-      // Automatically speak NPC reply if TTS is supported
-      if (isTtsSupported.value) {
+      // Automatically speak NPC reply if TTS is supported and auto-play enabled
+      if (isTtsSupported.value && isAutoPlayVoice.value) {
         playSpeechAudio(res.npcReply);
       }
 
@@ -436,7 +474,7 @@ function exitSimulationArena(): void {
   playClick();
   stopSpeaking();
   if (isListening.value) {
-    stopListening();
+    abortListening();
   }
   isSimulating.value = false;
   activeMessages.value = [];
@@ -579,7 +617,7 @@ onMounted(() => {
 onUnmounted(() => {
   stopSpeaking();
   if (isListening.value) {
-    stopListening();
+    abortListening();
   }
 });
 </script>
@@ -639,6 +677,67 @@ onUnmounted(() => {
             </div>
           </div>
         </header>
+
+        <!-- Voice & Audio Controls Toolbar (Task 4.4) -->
+        <div class="arena-voice-toolbar">
+          <div class="voice-toolbar-left">
+            <!-- Auto-Play Toggle -->
+            <button
+              type="button"
+              class="voice-tool-btn"
+              :class="{ 'tool-btn-active': isAutoPlayVoice }"
+              title="Tự động đọc giọng NPC khi nhận phản hồi mới"
+              @click="toggleAutoPlay"
+            >
+              <span class="tool-icon">{{ isAutoPlayVoice ? '🔊' : '🔇' }}</span>
+              <span class="tool-text">Tự đọc NPC: <strong>{{ isAutoPlayVoice ? 'Bật' : 'Tắt' }}</strong></span>
+            </button>
+          </div>
+
+          <!-- Speed Selector Chips -->
+          <div class="voice-toolbar-right">
+            <div class="tts-speed-selector" title="Điều chỉnh tốc độ phát âm tiếng Anh">
+              <span class="speed-label">⚡ Tốc độ:</span>
+              <div class="speed-chips-group">
+                <button
+                  v-for="rate in ([0.8, 1.0, 1.2] as const)"
+                  :key="rate"
+                  type="button"
+                  class="speed-chip-btn"
+                  :class="{ 'speed-chip-active': currentTtsRate === rate }"
+                  @click="setTtsSpeed(rate)"
+                >
+                  {{ rate === 0.8 ? '0.8x (Chậm)' : rate === 1.0 ? '1.0x (Chuẩn)' : '1.2x (Nhanh)' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- In-App WebView Guard Banner -->
+        <div v-if="isRestrictedWebView" class="sim-guard-banner webview-guard">
+          <span class="guard-icon">🌐</span>
+          <div class="guard-content">
+            <p class="guard-title">Phát hiện trình duyệt WebView ({{ browserType }})</p>
+            <p class="guard-desc">
+              Trình duyệt mạng xã hội có thể hạn chế Microphone. Bạn có thể sử dụng bàn phím gõ hoặc sao chép liên kết để mở trên Chrome / Safari!
+            </p>
+          </div>
+          <button type="button" class="guard-copy-btn" @click="copyCurrentUrl">
+            {{ isCopied ? '✓ Đã sao chép' : 'Sao chép Link' }}
+          </button>
+        </div>
+
+        <!-- Microphone Permission Alert Banner -->
+        <div v-if="hasPermissionDenied || micStatusMessage" class="sim-guard-banner mic-guard">
+          <span class="guard-icon">🎙️</span>
+          <div class="guard-content">
+            <p class="guard-title">Chế độ Nhập Liệu Thích Ứng (Adaptive Mic Guard)</p>
+            <p class="guard-desc">
+              {{ micStatusMessage || 'Microphone chưa được cấp quyền trên trình duyệt. Bạn có thể thoải mái gõ bàn phím hoặc nhấn chọn các gợi ý câu để trò chuyện tiếp!' }}
+            </p>
+          </div>
+        </div>
 
         <!-- Error Alert Banner -->
         <div v-if="simErrorMessage" class="sim-error-banner">
@@ -703,6 +802,18 @@ onUnmounted(() => {
                   🌐 {{ translatedTurns[idx] ? 'Ẩn bản dịch' : 'Xem bản dịch' }}
                 </button>
               </div>
+
+              <!-- Action Bar for User Bubble (Task 4.4: Replay Native Pronunciation) -->
+              <div v-if="msg.role === 'user'" class="bubble-action-bar user-action-bar">
+                <button
+                  type="button"
+                  class="bubble-action-btn"
+                  title="Nghe lại phát âm chuẩn tiếng Anh bản xứ của câu này"
+                  @click="playSpeechAudio(msg.content)"
+                >
+                  🔊 Nghe phát âm
+                </button>
+              </div>
             </div>
 
             <!-- User Avatar -->
@@ -758,6 +869,31 @@ onUnmounted(() => {
 
         <!-- Input & Starter Chips Bar (Only shown when not completed) -->
         <footer v-if="!isSimulationCompleted" class="arena-input-footer">
+          <!-- Live Audio Waveform Animation Dock (Task 4.4) -->
+          <div v-if="isListening" class="live-waveform-dock">
+            <div class="waveform-info">
+              <span class="waveform-pulse-dot" />
+              <span class="waveform-title">Đang thu âm giọng nói tự do (Free-Speech)... Hãy nói tự nhiên</span>
+            </div>
+            <div class="waveform-visualizer" aria-hidden="true">
+              <span class="wave-bar bar-1" />
+              <span class="wave-bar bar-2" />
+              <span class="wave-bar bar-3" />
+              <span class="wave-bar bar-4" />
+              <span class="wave-bar bar-5" />
+              <span class="wave-bar bar-6" />
+              <span class="wave-bar bar-7" />
+            </div>
+            <button
+              type="button"
+              class="waveform-stop-btn"
+              title="Dừng thu âm và hoàn tất câu nói"
+              @click="toggleMic"
+            >
+              ⏹️ Hoàn tất
+            </button>
+          </div>
+
           <!-- Starter Chips Row -->
           <div v-if="currentStarterChips.length > 0 && !isAiThinking" class="starter-chips-row">
             <span class="chips-label">💡 Gợi ý câu nói tiếp:</span>
@@ -1837,6 +1973,144 @@ onUnmounted(() => {
   text-align: center;
 }
 
+/* Arena Voice & Audio Toolbar (Task 4.4) */
+.arena-voice-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.6rem 1.25rem;
+  background: rgba(15, 23, 42, 0.65);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.voice-toolbar-left,
+.voice-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.voice-tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-pill, 9999px);
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.voice-tool-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+.voice-tool-btn.tool-btn-active {
+  background: rgba(6, 182, 212, 0.18);
+  border-color: #06b6d4;
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.25);
+}
+.tts-speed-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.speed-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+}
+.speed-chips-group {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.18rem;
+  border-radius: var(--radius-pill, 9999px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.speed-chip-btn {
+  padding: 0.22rem 0.55rem;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill, 9999px);
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.speed-chip-btn:hover {
+  color: #ffffff;
+}
+.speed-chip-btn.speed-chip-active {
+  background: #06b6d4;
+  color: #04101c;
+  box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+}
+
+/* Guard Banners */
+.sim-guard-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.82rem;
+}
+.sim-guard-banner.webview-guard {
+  background: rgba(245, 158, 11, 0.12);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fde68a;
+}
+.sim-guard-banner.mic-guard {
+  background: rgba(6, 182, 212, 0.1);
+  border-bottom: 1px solid rgba(6, 182, 212, 0.25);
+  color: #bae6fd;
+}
+.guard-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+.guard-content {
+  flex: 1;
+}
+.guard-title {
+  margin: 0 0 0.15rem;
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+.guard-desc {
+  margin: 0;
+  font-size: 0.76rem;
+  opacity: 0.88;
+  line-height: 1.35;
+}
+.guard-copy-btn {
+  padding: 0.3rem 0.75rem;
+  background: rgba(245, 158, 11, 0.25);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-pill, 9999px);
+  color: #fef08a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+.guard-copy-btn:hover {
+  background: #f59e0b;
+  color: #1e1b4b;
+}
+
+/* User Action Bar */
+.user-action-bar {
+  justify-content: flex-end;
+}
+
 /* Chat Stream Window */
 .chat-stream-window {
   flex: 1;
@@ -2063,6 +2337,87 @@ onUnmounted(() => {
   flex-direction: column;
   gap: 0.75rem;
   flex-shrink: 0;
+}
+
+/* Live Waveform Dock (Task 4.4) */
+.live-waveform-dock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  padding: 0.55rem 1rem;
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(15, 23, 42, 0.8) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: var(--radius-md, 10px);
+  animation: glow-red-pulse 2s infinite ease-in-out;
+}
+@keyframes glow-red-pulse {
+  0%, 100% { box-shadow: 0 0 10px rgba(239, 68, 68, 0.2); }
+  50% { box-shadow: 0 0 18px rgba(239, 68, 68, 0.4); }
+}
+
+.waveform-info {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+.waveform-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: pulse-dot-live 0.8s infinite ease-in-out;
+}
+@keyframes pulse-dot-live {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.4); opacity: 1; }
+}
+.waveform-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #fca5a5;
+}
+
+.waveform-visualizer {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 20px;
+}
+.wave-bar {
+  width: 3px;
+  border-radius: var(--radius-pill, 9999px);
+  background: #ef4444;
+  animation: waveHeight 0.9s infinite ease-in-out;
+}
+.wave-bar.bar-1 { height: 6px; animation-delay: 0.05s; }
+.wave-bar.bar-2 { height: 14px; animation-delay: 0.15s; }
+.wave-bar.bar-3 { height: 18px; animation-delay: 0.25s; }
+.wave-bar.bar-4 { height: 10px; animation-delay: 0.35s; }
+.wave-bar.bar-5 { height: 16px; animation-delay: 0.45s; }
+.wave-bar.bar-6 { height: 8px; animation-delay: 0.1s; }
+.wave-bar.bar-7 { height: 12px; animation-delay: 0.3s; }
+
+@keyframes waveHeight {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1.4); }
+}
+
+.waveform-stop-btn {
+  padding: 0.28rem 0.65rem;
+  background: rgba(239, 68, 68, 0.3);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: var(--radius-pill, 9999px);
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+.waveform-stop-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
 }
 
 .starter-chips-row {

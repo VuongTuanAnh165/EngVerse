@@ -12,6 +12,7 @@ import type {
   SpeechPlaybackRate,
   SpeechEngineMode,
   SpeechRecognitionState,
+  FreeSpeechOptions,
   TtsOptions,
   SpeechEvaluationResult,
   RhythmSyllableItem,
@@ -266,11 +267,14 @@ export function useSpeechEngine() {
   // Active Recognition Engine Instance
   let recognitionInstance: ISpeechRecognition | null = null;
   let activeExpectation: {
-    target: string;
-    variants: string[];
-    threshold: number;
+    target?: string;
+    variants?: string[];
+    threshold?: number;
+    isFreeSpeech?: boolean;
     onResult?: (res: SpeechEvaluationResult) => void;
+    onTranscript?: (text: string, isFinal: boolean) => void;
     onError?: (err: string) => void;
+    onEnd?: () => void;
   } | null = null;
 
   // -------------------------------------------------------------------------
@@ -456,14 +460,25 @@ export function useSpeechEngine() {
         currentTranscript.value = activeText;
         currentConfidence.value = highestConfidence;
 
+        // If in Free Speech recognition mode (e.g. Free Simulator)
+        if (activeExpectation?.isFreeSpeech) {
+          if (activeExpectation.onTranscript) {
+            activeExpectation.onTranscript(activeText, Boolean(finalText));
+          }
+          if (finalText) {
+            recognitionState.value = 'idle';
+          }
+          return;
+        }
+
         // If speech recognition produced final transcript, trigger evaluation
-        if (finalText && activeExpectation) {
+        if (finalText && activeExpectation && activeExpectation.target) {
           recognitionState.value = 'processing';
           const evalResult = evaluateSpeechFuzzy(
             finalText,
             activeExpectation.target,
-            activeExpectation.variants,
-            activeExpectation.threshold
+            activeExpectation.variants || [],
+            activeExpectation.threshold ?? 75
           );
           lastEvaluation.value = evalResult;
           recognitionState.value = evalResult.isPassed ? 'success' : 'error';
@@ -480,10 +495,16 @@ export function useSpeechEngine() {
         if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
           hasPermissionDenied.value = true;
           recognitionState.value = 'permission_denied';
-          // Golden Fallback: Automatically shift to Rhythm Tap
-          mode.value = 'rhythm_fallback';
-          if (activeExpectation?.onError) {
-            activeExpectation.onError('Quyền micro bị từ chối. Đã chuyển sang chế độ Nhịp Điệu!');
+          if (activeExpectation?.isFreeSpeech) {
+            if (activeExpectation.onError) {
+              activeExpectation.onError('Quyền micro bị từ chối.');
+            }
+          } else {
+            // Golden Fallback: Automatically shift to Rhythm Tap
+            mode.value = 'rhythm_fallback';
+            if (activeExpectation?.onError) {
+              activeExpectation.onError('Quyền micro bị từ chối. Đã chuyển sang chế độ Nhịp Điệu!');
+            }
           }
         } else if (event.error === 'no-speech') {
           recognitionState.value = 'idle';
@@ -501,15 +522,23 @@ export function useSpeechEngine() {
       };
 
       recognition.onend = () => {
+        if (activeExpectation?.isFreeSpeech) {
+          recognitionState.value = 'idle';
+          if (activeExpectation.onEnd) {
+            activeExpectation.onEnd();
+          }
+          return;
+        }
+
         if (recognitionState.value === 'listening') {
           // If was listening and ended without final result, evaluate what we have
-          if (currentTranscript.value && activeExpectation) {
+          if (currentTranscript.value && activeExpectation && activeExpectation.target) {
             recognitionState.value = 'processing';
             const evalResult = evaluateSpeechFuzzy(
               currentTranscript.value,
               activeExpectation.target,
-              activeExpectation.variants,
-              activeExpectation.threshold
+              activeExpectation.variants || [],
+              activeExpectation.threshold ?? 75
             );
             lastEvaluation.value = evalResult;
             recognitionState.value = evalResult.isPassed ? 'success' : 'error';
@@ -528,6 +557,57 @@ export function useSpeechEngine() {
       isSttSupported.value = false;
       recognitionState.value = 'unsupported';
       mode.value = 'rhythm_fallback';
+    }
+  }
+
+  /**
+   * Start free-speech recognition without target word matching (For AI Free Simulator)
+   */
+  function startFreeSpeechListening(options?: FreeSpeechOptions): void {
+    if (typeof window === 'undefined') return;
+
+    if (!recognitionInstance) {
+      initSpeechRecognition();
+    }
+
+    if (!recognitionInstance || !isSttSupported.value) {
+      if (options?.onError) {
+        options.onError('Trình duyệt không hỗ trợ nhận diện giọng nói Web Speech API.');
+      }
+      return;
+    }
+
+    activeExpectation = {
+      isFreeSpeech: true,
+      onTranscript: options?.onTranscript,
+      onError: options?.onError,
+      onEnd: options?.onEnd,
+    };
+
+    if (options?.lang) {
+      recognitionInstance.lang = options.lang;
+    } else {
+      recognitionInstance.lang = 'en-US';
+    }
+
+    currentTranscript.value = '';
+    lastEvaluation.value = null;
+
+    try {
+      recognitionInstance.abort();
+      recognitionInstance.start();
+    } catch (err) {
+      console.warn('[useSpeechEngine] Failed to start free speech recognition:', err);
+      try {
+        recognitionInstance.abort();
+        setTimeout(() => {
+          recognitionInstance?.start();
+        }, 100);
+      } catch {
+        if (options?.onError) {
+          options.onError('Không thể kích hoạt microphone. Vui lòng thử lại.');
+        }
+      }
     }
   }
 
@@ -737,7 +817,7 @@ export function useSpeechEngine() {
 
   function switchToFallbackMode(): void {
     mode.value = 'rhythm_fallback';
-    if (activeExpectation) {
+    if (activeExpectation && activeExpectation.target) {
       initRhythmChallenge(activeExpectation.target);
     }
   }
@@ -799,6 +879,7 @@ export function useSpeechEngine() {
     currentConfidence,
     lastEvaluation,
     startListening,
+    startFreeSpeechListening,
     stopListening,
     abortListening,
 

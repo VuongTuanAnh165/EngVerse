@@ -5,7 +5,7 @@
  * Reference: docs/ke_hoach.md - Sprint 3, Task 1
  */
 
-export type SpeechPlaybackRate = 0.75 | 1.0 | 1.25 | 1.5;
+export type SpeechPlaybackRate = 0.75 | 0.8 | 1.0 | 1.2 | 1.25 | 1.5;
 
 export type SpeechEngineMode = 'voice' | 'rhythm_fallback';
 
@@ -17,6 +17,16 @@ export type SpeechRecognitionState =
   | 'error'
   | 'unsupported'
   | 'permission_denied';
+
+/**
+ * Free Speech Recognition Options for open conversational simulator
+ */
+export interface FreeSpeechOptions {
+  lang?: string;
+  onTranscript?: (transcript: string, isFinal: boolean) => void;
+  onError?: (errorMessage: string) => void;
+  onEnd?: () => void;
+}
 
 /**
  * Text-to-Speech configuration options

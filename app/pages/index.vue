@@ -705,4 +705,103 @@ useHead({
   }
 }
 
+
+/* ==========================================================================
+   Universe-specific Theme Customizations for Kids & Adults ONLY
+   Cyber City (Teens) retains 100% of its original cyberpunk dark aesthetics
+   ========================================================================== */
+
+/* 1. Đảo Thần Thoại (Kids) */
+html[data-theme="kids"] .colosseum-callout-card {
+  background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #fef2f2 100%);
+  border: 2px solid #fecaca;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.08);
+}
+html[data-theme="kids"] .colosseum-heading {
+  color: #450a0a;
+}
+html[data-theme="kids"] .colosseum-subtext {
+  color: #7f1d1d;
+}
+html[data-theme="kids"] .colosseum-tag {
+  color: #dc2626;
+  background: #fee2e2;
+}
+html[data-theme="kids"] .colosseum-status-locked {
+  color: #b91c1c;
+}
+html[data-theme="kids"] .colosseum-icon-box {
+  background: linear-gradient(135deg, #fee2e2, #fecaca);
+  border: 1px solid #fca5a5;
+}
+
+html[data-theme="kids"] .simulator-callout-card {
+  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #e0f2fe 100%);
+  border: 2px solid #bae6fd;
+  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.08);
+}
+html[data-theme="kids"] .simulator-heading {
+  color: #0c4a6e;
+}
+html[data-theme="kids"] .simulator-subtext {
+  color: #0369a1;
+}
+html[data-theme="kids"] .simulator-tag {
+  color: #0284c7;
+  background: #e0f2fe;
+}
+html[data-theme="kids"] .simulator-status-quota {
+  color: #7c3aed;
+}
+html[data-theme="kids"] .simulator-icon-box {
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+  border: 1px solid #7dd3fc;
+}
+
+/* 2. SimLife Global (Adults) */
+html[data-theme="adults"] .colosseum-callout-card {
+  background: linear-gradient(135deg, #fffafa 0%, #ffffff 60%, #fff1f2 100%);
+  border: 2px solid #fecdd3;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+html[data-theme="adults"] .colosseum-heading {
+  color: #1e293b;
+}
+html[data-theme="adults"] .colosseum-subtext {
+  color: #475569;
+}
+html[data-theme="adults"] .colosseum-tag {
+  color: #e11d48;
+  background: #ffe4e6;
+}
+html[data-theme="adults"] .colosseum-status-locked {
+  color: #be123c;
+}
+html[data-theme="adults"] .colosseum-icon-box {
+  background: linear-gradient(135deg, #ffe4e6, #fecdd3);
+  border: 1px solid #fda4af;
+}
+
+html[data-theme="adults"] .simulator-callout-card {
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 60%, #f0fdfa 100%);
+  border: 2px solid #cbd5e1;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+html[data-theme="adults"] .simulator-heading {
+  color: #0f172a;
+}
+html[data-theme="adults"] .simulator-subtext {
+  color: #334155;
+}
+html[data-theme="adults"] .simulator-tag {
+  color: #0369a1;
+  background: #e0f2fe;
+}
+html[data-theme="adults"] .simulator-status-quota {
+  color: #0d9488;
+}
+html[data-theme="adults"] .simulator-icon-box {
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+  border: 1px solid #7dd3fc;
+}
 </style>

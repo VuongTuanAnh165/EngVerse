@@ -205,13 +205,13 @@ function handleOpenCustomizer(): void {
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
-  border: 2px solid #f59e0b;
-  box-shadow: 0 0 35px rgba(245, 158, 11, 0.4), 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-  border-radius: 1.5rem;
+  background: var(--bg-surface);
+  border: 2px solid var(--accent-primary);
+  box-shadow: 0 0 35px rgba(245, 158, 11, 0.3), 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+  border-radius: var(--radius-lg, 1.5rem);
   padding: 2rem 1.75rem;
   text-align: center;
-  color: #f8fafc;
+  color: var(--text-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -249,7 +249,7 @@ function handleOpenCustomizer(): void {
   font-size: 1.5rem;
   font-weight: 800;
   margin: 0;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #fde68a 100%);
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -258,7 +258,7 @@ function handleOpenCustomizer(): void {
 
 .celebration-subtext {
   font-size: 0.95rem;
-  color: #cbd5e1;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.45;
   max-width: 480px;
@@ -277,9 +277,9 @@ function handleOpenCustomizer(): void {
   align-items: center;
   gap: 1rem;
   padding: 0.85rem 1rem;
-  border-radius: 0.85rem;
-  background: rgba(30, 41, 59, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md, 0.85rem);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   position: relative;
   transition: transform 0.2s;
 }
@@ -290,24 +290,25 @@ function handleOpenCustomizer(): void {
 
 .reward-badge-card.highlight-gold {
   border-color: rgba(245, 158, 11, 0.6);
-  background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, rgba(30, 41, 59, 0.8) 100%);
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.15) 0%, var(--bg-secondary) 100%);
 }
 
 .reward-badge-card.highlight-mythic {
   border-color: rgba(236, 72, 153, 0.6);
-  background: linear-gradient(90deg, rgba(236, 72, 153, 0.15) 0%, rgba(30, 41, 59, 0.8) 100%);
+  background: linear-gradient(90deg, rgba(236, 72, 153, 0.15) 0%, var(--bg-secondary) 100%);
 }
 
 .reward-badge-card.highlight-multiverse {
   border-color: rgba(99, 102, 241, 0.7);
-  background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, rgba(30, 41, 59, 0.8) 100%);
+  background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, var(--bg-secondary) 100%);
 }
 
 .badge-icon-box {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: #334155;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -347,12 +348,12 @@ function handleOpenCustomizer(): void {
   font-size: 1rem;
   font-weight: 700;
   margin: 0;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .badge-lore {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   margin: 0;
   line-height: 1.3;
 }

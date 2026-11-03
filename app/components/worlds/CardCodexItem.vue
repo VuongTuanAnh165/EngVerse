@@ -86,7 +86,7 @@ function getRarityLabel(rarity: string): string {
             :class="{ 'speaking': isSpeaking }"
             title="Nghe phát âm chuẩn"
             aria-label="Phát âm từ vựng"
-            @click="speakWord"
+            @click.stop="speakWord"
           >
             <svg
               viewBox="0 0 24 24"
@@ -295,23 +295,43 @@ function getRarityLabel(rarity: string): string {
 }
 
 .speak-btn {
-  background: rgba(148, 163, 184, 0.15);
+  background: rgba(148, 163, 184, 0.18);
   border: none;
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-primary);
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+/* Touch hit target expanding to 48x48px for effortless 1-tap on mobile */
+.speak-btn::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
 }
 
 .speak-btn:hover {
   background: var(--accent-primary);
   color: var(--accent-text);
   transform: scale(1.1);
+}
+
+.speak-btn.speaking {
+  background: var(--accent-primary);
+  color: var(--accent-text);
+  animation: pulse-speaker 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes pulse-speaker {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.15); box-shadow: 0 0 12px var(--accent-primary); }
 }
 
 .card-visual {

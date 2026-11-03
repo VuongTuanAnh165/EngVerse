@@ -49,7 +49,8 @@ async function loadStage(): Promise<void> {
 
     // Check Energy requirement
     if (userStore.energy.current < 1) {
-      loadError.value = 'Bạn không đủ năng lượng ⚡ để bắt đầu chặng này! Hãy đợi hồi năng lượng hoặc mua tại Cửa Hàng.';
+      loadError.value =
+        'Bạn đã tạm hết năng lượng ⚡! Năng lượng sẽ tự động hồi phục 1 điểm mỗi 20 phút (tối đa 5 điểm). Trong lúc chờ đợi, bạn có thể ôn tập từ vựng tại Sổ Tay hoặc tham gia Thử Thách Hàng Ngày mà không tốn thể lực.';
       return;
     }
 
@@ -149,12 +150,17 @@ onMounted(() => {
 
     <!-- Error / Out of Energy State -->
     <div v-else-if="loadError" class="play-error-state theme-card">
-      <span class="error-icon" aria-hidden="true">⚠️</span>
-      <h2>Không Thể Bắt Đầu</h2>
-      <p>{{ loadError }}</p>
-      <NuxtLink to="/" class="theme-btn-primary return-home-btn">
-        Quay Về Bản Đồ
-      </NuxtLink>
+      <span class="error-icon" aria-hidden="true">⚡</span>
+      <h2>Tạm Hết Năng Lượng</h2>
+      <p class="error-msg-desc">{{ loadError }}</p>
+      <div class="error-actions-row">
+        <NuxtLink to="/" class="theme-btn-primary return-home-btn">
+          Về Bản Đồ
+        </NuxtLink>
+        <NuxtLink to="/codex" class="theme-btn-secondary return-home-btn">
+          Ôn Tập Sổ Tay Thẻ Bài
+        </NuxtLink>
+      </div>
     </div>
 
     <!-- Active Game Session -->
@@ -372,8 +378,23 @@ onMounted(() => {
   margin-bottom: 0.75rem;
 }
 
+.error-msg-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0.5rem 0 1.25rem;
+}
+
+.error-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
 .return-home-btn {
-  margin-top: 1.5rem;
   text-decoration: none;
 }
 

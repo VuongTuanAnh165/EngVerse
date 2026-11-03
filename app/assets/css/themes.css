@@ -323,7 +323,59 @@ html[data-theme="kids"] input[type="radio"] {
   cursor: pointer;
 }
 
-/* 2. SIMLIFE GLOBAL (Adults) Form Controls & Cards */
+/* 2. THÀNH PHỐ ĐÊM CYBER (Teens) Form Controls & Cards */
+html[data-theme="teens"] .theme-card {
+  background-color: #131d31;
+  border: 1.5px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 4px 18px rgba(6, 182, 212, 0.12);
+}
+
+html[data-theme="teens"] .theme-card:hover {
+  border-color: rgba(6, 182, 212, 0.6);
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.25), 0 0 12px rgba(6, 182, 212, 0.15);
+}
+
+html[data-theme="teens"] input[type="text"],
+html[data-theme="teens"] input[type="search"],
+html[data-theme="teens"] input[type="email"],
+html[data-theme="teens"] input[type="password"],
+html[data-theme="teens"] input[type="number"],
+html[data-theme="teens"] textarea,
+html[data-theme="teens"] select {
+  background-color: #101726;
+  border: 1.5px solid rgba(6, 182, 212, 0.35);
+  border-radius: var(--radius-md);
+  color: #f8fafc;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  font-family: inherit;
+}
+
+html[data-theme="teens"] input[type="text"]:focus,
+html[data-theme="teens"] input[type="search"]:focus,
+html[data-theme="teens"] input[type="email"]:focus,
+html[data-theme="teens"] input[type="password"]:focus,
+html[data-theme="teens"] input[type="number"]:focus,
+html[data-theme="teens"] textarea:focus,
+html[data-theme="teens"] select:focus {
+  border-color: #06b6d4;
+  outline: none;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.45), inset 0 1px 3px rgba(0, 0, 0, 0.4);
+  background-color: #141e33;
+}
+
+html[data-theme="teens"] input::placeholder,
+html[data-theme="teens"] textarea::placeholder {
+  color: #94a3b8;
+  opacity: 0.65;
+}
+
+html[data-theme="teens"] input[type="checkbox"],
+html[data-theme="teens"] input[type="radio"] {
+  accent-color: #06b6d4;
+  cursor: pointer;
+}
+
+/* 3. SIMLIFE GLOBAL (Adults) Form Controls & Cards */
 html[data-theme="adults"] .theme-card {
   background-color: #ffffff;
   border: 1.5px solid #cbd5e1;

@@ -279,6 +279,7 @@ useHead({
   font-weight: 700;
   font-size: 0.875rem;
   text-decoration: none;
+  padding: 6px;
 }
 
 .back-link:hover {

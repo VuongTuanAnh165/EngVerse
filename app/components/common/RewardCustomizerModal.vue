@@ -126,7 +126,7 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
         <div class="modal-top-bar">
           <div class="title-wrap">
             <h2 id="customizer-modal-title" class="modal-headline">
-              👑 KHO BÁU & DANH DIỆN
+              👑 KHO BÁU & DANH HIỆU
             </h2>
             <p class="modal-sub">
               Trang bị Khung Avatar Hoàng Kim và Huy Hiệu Đấu Trường để khẳng định vị thế.
@@ -332,12 +332,12 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  background: #111827;
-  border: 1px solid rgba(245, 158, 11, 0.35);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
-  border-radius: 1.25rem;
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border-color);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+  border-radius: var(--radius-lg, 1.25rem);
   padding: 1.5rem;
-  color: #f9fafb;
+  color: var(--text-primary);
   overflow: hidden;
 }
 
@@ -346,28 +346,28 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 0.75rem;
 }
 
 .modal-headline {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #fbbf24;
+  color: var(--accent-primary);
   margin: 0;
   letter-spacing: 0.03em;
 }
 
 .modal-sub {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0.25rem 0 0;
 }
 
 .modal-close-icon {
   background: transparent;
   border: none;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 1.25rem;
   cursor: pointer;
   padding: 0.25rem;
@@ -375,7 +375,7 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
 }
 
 .modal-close-icon:hover {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 /* Live Preview Box */
@@ -384,9 +384,9 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   align-items: center;
   gap: 1.25rem;
   padding: 1rem 1.25rem;
-  border-radius: 0.75rem;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md, 0.75rem);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   margin-bottom: 1rem;
 }
 
@@ -446,7 +446,7 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
 .preview-name {
   font-size: 1.05rem;
   font-weight: 700;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .preview-title-pill {
@@ -483,19 +483,19 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   flex: 1;
   padding: 0.6rem 0.75rem;
   border-radius: 0.5rem;
-  background: #1f2937;
-  color: #94a3b8;
+  background: var(--bg-secondary);
+  color: var(--text-muted);
   font-size: 0.85rem;
   font-weight: 600;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-color);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .tab-btn.active {
-  background: #374151;
-  color: #fbbf24;
-  border-color: rgba(245, 158, 11, 0.5);
+  background: var(--bg-surface);
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
   font-weight: 700;
 }
 
@@ -517,8 +517,8 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
 .frame-item-card {
   padding: 0.85rem;
   border-radius: 0.75rem;
-  background: #1f2937;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -528,7 +528,7 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
 
 .frame-item-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(245, 158, 11, 0.5);
+  border-color: var(--accent-primary);
 }
 
 .frame-item-card.is-previewing {
@@ -589,7 +589,8 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   align-items: center;
   justify-content: center;
   margin: 0.2rem auto;
-  background: #374151;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
 }
 
 .frame-ring-sample.gold-avatar-frame {
@@ -611,12 +612,12 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   font-size: 0.95rem;
   font-weight: 700;
   margin: 0;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .frame-desc {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0;
   line-height: 1.35;
   flex: 1;
@@ -624,7 +625,7 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
 
 .frame-unlock-info {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-muted);
   min-height: 1.8rem;
 }
 
@@ -655,7 +656,7 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
 }
 
 .equip-btn.active {
-  background: #374151;
+  background: var(--bg-card);
   color: #34d399;
   border: 1px solid rgba(52, 211, 153, 0.4);
 }
@@ -665,9 +666,9 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   border-radius: 0.4rem;
   font-size: 0.8rem;
   font-weight: 600;
-  background: #1e293b;
-  color: #64748b;
-  border: 1px dashed rgba(255, 255, 255, 0.1);
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  border: 1px dashed var(--border-color);
   cursor: not-allowed;
 }
 
@@ -684,14 +685,14 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   align-items: center;
   padding: 0.85rem 1rem;
   border-radius: 0.75rem;
-  background: #1f2937;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   gap: 1rem;
 }
 
 .title-item-card.is-equipped {
   border-color: rgba(245, 158, 11, 0.5);
-  background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, #1f2937 100%);
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.12) 0%, var(--bg-secondary) 100%);
 }
 
 .title-item-card.is-locked {
@@ -710,7 +711,8 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #374151;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -734,12 +736,12 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
   font-size: 0.95rem;
   font-weight: 700;
   margin: 0;
-  color: #f8fafc;
+  color: var(--text-primary);
 }
 
 .title-desc {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-muted);
   margin: 0;
   line-height: 1.35;
 }
@@ -752,7 +754,7 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
 .modal-footer {
   margin-top: 1rem;
   padding-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border-color);
   display: flex;
   justify-content: flex-end;
 }
@@ -760,12 +762,17 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
 .btn-done {
   padding: 0.5rem 1.25rem;
   border-radius: 0.5rem;
-  background: #374151;
-  color: #f1f5f9;
-  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+}
+
+.btn-done:hover {
+  background: var(--accent-primary);
+  color: var(--accent-text);
 }
 
 .btn-done:hover {

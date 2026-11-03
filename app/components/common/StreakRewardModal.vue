@@ -275,9 +275,9 @@ onUnmounted(() => {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--text-muted, #94a3b8);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -290,8 +290,8 @@ onUnmounted(() => {
 }
 
 .reward-close-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  background: var(--accent-primary);
+  color: var(--accent-text);
   transform: scale(1.08);
 }
 
@@ -365,22 +365,41 @@ onUnmounted(() => {
   font-size: 1.5rem;
   font-weight: 800;
   margin: 0 0 0.5rem;
-  background: linear-gradient(135deg, #fff 40%, #fbbf24 100%);
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+:root[data-theme="kids"] .reward-title,
+html[data-theme="kids"] .reward-title {
+  background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  line-height: 1.25;
+}
+
+:root[data-theme="teens"] .reward-title,
+html[data-theme="teens"] .reward-title {
+  background: linear-gradient(135deg, #ffffff 30%, #06b6d4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+:root[data-theme="adults"] .reward-title,
+html[data-theme="adults"] .reward-title {
+  background: linear-gradient(135deg, #0f172a 0%, #059669 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .reward-desc {
   font-size: 0.9rem;
-  color: var(--text-muted, #94a3b8);
+  color: var(--text-muted);
   margin: 0 0 1.25rem;
   line-height: 1.45;
 }
 
 .perks-container {
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 1rem;
   padding: 0.85rem 1rem;
   text-align: left;
@@ -396,7 +415,7 @@ onUnmounted(() => {
   gap: 0.5rem;
   font-size: 0.825rem;
   line-height: 1.4;
-  color: #e2e8f0;
+  color: var(--text-primary);
 }
 
 .perk-bullet {

@@ -101,7 +101,7 @@ function getTrackBadge(track: WorldTrack): { name: string; emoji: string } {
             <span class="header-trophy" aria-hidden="true">🏆</span>
             <div>
               <h2 id="leaderboard-title" class="modal-title">Bảng Xếp Hạng Toàn Cầu</h2>
-              <p class="modal-subtitle">Top 30 Nhà Thám Hiểm xuất sắc nhất trên Edge CDN</p>
+              <p class="modal-subtitle">Top 30 Nhà Thám Hiểm xuất sắc nhất toàn hệ thống EngVerse</p>
             </div>
           </div>
 
@@ -156,7 +156,7 @@ function getTrackBadge(track: WorldTrack): { name: string; emoji: string } {
           <!-- Loading State -->
           <div v-if="isLoading" class="loading-state">
             <div class="loading-spinner" />
-            <p>Đang đồng bộ dữ liệu Bảng Xếp Hạng từ Edge CDN...</p>
+            <p>Đang đồng bộ bảng vinh danh toàn cầu...</p>
           </div>
 
           <!-- Error State -->
@@ -225,7 +225,7 @@ function getTrackBadge(track: WorldTrack): { name: string; emoji: string } {
         <div class="modal-footer">
           <div class="footer-note">
             <span class="cdn-dot" />
-            <span>Được lưu đệm 1 giờ trên Vercel Edge CDN (Tiết kiệm 100% quota)</span>
+            <span>Dữ liệu làm mới tự động • Hãy tích lũy thêm EXP để thăng hạng!</span>
           </div>
           <button type="button" class="theme-btn-primary close-action-btn" @click="closeModal">
             Đóng

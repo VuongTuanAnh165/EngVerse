@@ -1689,11 +1689,21 @@ function handleReturnHome(): void {
 
 .banner-text strong {
   display: block;
-  color: #065f46;
+  color: #10b981;
 }
 
 .banner-text span {
   font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+:root[data-theme="kids"] .banner-text strong,
+html[data-theme="kids"] .banner-text strong {
+  color: #047857;
+}
+
+:root[data-theme="adults"] .banner-text strong,
+html[data-theme="adults"] .banner-text strong {
   color: #047857;
 }
 

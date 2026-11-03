@@ -75,6 +75,37 @@ const progressPercent = computed<number>(() => {
   return Math.round((currentObstacleIndex.value / totalObstacles.value) * 100);
 });
 
+// Dynamic Universe Thematic Visuals (Kids: Dragon Hatching, Teens: Cyber City, Adults: Global Career)
+const runnerVisual = computed(() => {
+  switch (props.stage.worldTrack) {
+    case 'teens':
+      return {
+        character: '🤖',
+        attack: '💥⚡',
+        golem: '🛸',
+        barrier: '🚧',
+        gate: '🚪',
+      };
+    case 'adults':
+      return {
+        character: '💼',
+        attack: '✨🎯',
+        golem: '📊',
+        barrier: '⏱️',
+        gate: '🏢',
+      };
+    case 'kids':
+    default:
+      return {
+        character: '🦖',
+        attack: '🔥⚡',
+        golem: '🗿',
+        barrier: '🪵',
+        gate: '🏰',
+      };
+  }
+});
+
 // -------------------------------------------------------------------------
 // Setup Obstacles
 // -------------------------------------------------------------------------
@@ -303,8 +334,8 @@ onScopeDispose(() => {
           'char-attacking': isAttacking
         }"
       >
-        <span class="character-sprite" aria-hidden="true">🏃‍♂️</span>
-        <span v-if="isAttacking" class="attack-slash" aria-hidden="true">⚡⚔️</span>
+        <span class="character-sprite" aria-hidden="true">{{ runnerVisual.character }}</span>
+        <span v-if="isAttacking" class="attack-slash" aria-hidden="true">{{ runnerVisual.attack }}</span>
       </div>
 
       <!-- Obstacle Monster / Gate -->
@@ -314,9 +345,9 @@ onScopeDispose(() => {
         :class="{ 'obstacle-defeated': isObstacleDefeated }"
       >
         <div class="obstacle-sprite">
-          <span v-if="currentObstacle.obstacleType === 'golem'" class="obs-icon">🗿</span>
-          <span v-else-if="currentObstacle.obstacleType === 'barrier'" class="obs-icon">🛑</span>
-          <span v-else class="obs-icon">🚪</span>
+          <span v-if="currentObstacle.obstacleType === 'golem'" class="obs-icon">{{ runnerVisual.golem }}</span>
+          <span v-else-if="currentObstacle.obstacleType === 'barrier'" class="obs-icon">{{ runnerVisual.barrier }}</span>
+          <span v-else class="obs-icon">{{ runnerVisual.gate }}</span>
         </div>
         <span class="obstacle-name">{{ currentVocab?.meaning }}</span>
       </div>
@@ -336,7 +367,10 @@ onScopeDispose(() => {
               aria-label="Nghe giọng đọc mẫu"
               @click="handlePlaySample"
             >
-              🔊
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" />
+              </svg>
             </button>
           </div>
           <span class="target-ipa">{{ currentVocab.ipa }}</span>

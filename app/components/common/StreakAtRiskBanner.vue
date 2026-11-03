@@ -224,20 +224,20 @@ const isVisible = computed<boolean>(() => {
 
 /* Warning Theme (Flame) */
 .banner-warning {
-  border-color: rgba(234, 88, 12, 0.45);
-  background: linear-gradient(90deg, rgba(234, 88, 12, 0.12) 0%, rgba(30, 41, 59, 0.95) 40%);
+  border-color: #ea580c;
+  background: linear-gradient(90deg, rgba(234, 88, 12, 0.15) 0%, var(--bg-surface) 35%);
 }
 
 /* Rescue Theme (Ice Shield) */
 .banner-rescue {
-  border-color: rgba(6, 182, 212, 0.45);
-  background: linear-gradient(90deg, rgba(6, 182, 212, 0.12) 0%, rgba(30, 41, 59, 0.95) 40%);
+  border-color: #06b6d4;
+  background: linear-gradient(90deg, rgba(6, 182, 212, 0.15) 0%, var(--bg-surface) 35%);
 }
 
 /* Success Theme */
 .banner-success {
-  border-color: rgba(16, 185, 129, 0.45);
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.15) 0%, rgba(30, 41, 59, 0.95) 40%);
+  border-color: #10b981;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.15) 0%, var(--bg-surface) 35%);
 }
 
 .banner-icon-box {

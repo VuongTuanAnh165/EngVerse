@@ -1,4 +1,4 @@
-﻿/**
+/**
  * EngVerse - Game, Stage & Codex Types
  * Strictly typed schema for Static Stage JSON, Mini-game Engine & Codex 3D Cards
  * Reference: docs/ke_hoach.md - Section III.1, Sprint 2 & Sprint 3

@@ -147,60 +147,78 @@ function getTrackTitle(track: string): string {
 
     <!-- Interactive Stage Path -->
     <div v-else class="stage-roadmap">
-      <div
-        v-for="(stage, idx) in stages"
-        :key="stage.stageId"
-        class="stage-node-container"
-        :class="{
-          'node-left': idx % 2 === 0,
-          'node-right': idx % 2 !== 0,
-          'boss-node': stage.isBossStage,
-          'unlocked': isStageUnlocked(stage.stageId),
-          'locked': !isStageUnlocked(stage.stageId),
-          'current': isCurrentActiveStage(stage.stageId)
-        }"
-      >
-        <!-- Node Card Button -->
-        <button
-          type="button"
-          class="stage-node-btn theme-card"
-          :disabled="!isStageUnlocked(stage.stageId)"
-          @click="handleStageClick(stage)"
+      <template v-for="(stage, idx) in stages" :key="stage.stageId">
+        <div
+          class="stage-node-container"
+          :class="{
+            'node-left': idx % 2 === 0,
+            'node-right': idx % 2 !== 0,
+            'boss-node': stage.isBossStage,
+            'unlocked': isStageUnlocked(stage.stageId),
+            'locked': !isStageUnlocked(stage.stageId),
+            'current': isCurrentActiveStage(stage.stageId)
+          }"
         >
-          <!-- Boss / Stage Number Emblem -->
-          <div class="stage-emblem">
-            <span v-if="stage.isBossStage" class="boss-icon" aria-hidden="true">👑</span>
-            <span v-else-if="isStageCompleted(stage.stageId)" class="check-icon" aria-hidden="true">✓</span>
-            <span v-else-if="!isStageUnlocked(stage.stageId)" class="lock-icon" aria-hidden="true">🔒</span>
-            <span v-else class="stage-num">{{ stage.stageId }}</span>
-          </div>
-
-          <!-- Stage Info -->
-          <div class="stage-info">
-            <div class="stage-meta">
-              <span v-if="stage.cefrLevel" class="cefr-badge">{{ stage.cefrLevel }}</span>
-              <span v-if="stage.isBossStage" class="boss-badge">BOSS CHƯƠNG</span>
-              <span v-else-if="isCurrentActiveStage(stage.stageId)" class="current-badge">CHẶNG HIỆN TẠI</span>
-              <span class="stage-ch-text">Chặng {{ stage.stageId }}</span>
+          <!-- Node Card Button -->
+          <button
+            type="button"
+            class="stage-node-btn theme-card"
+            :disabled="!isStageUnlocked(stage.stageId)"
+            @click="handleStageClick(stage)"
+          >
+            <!-- Boss / Stage Number Emblem -->
+            <div class="stage-emblem">
+              <span v-if="stage.isBossStage" class="boss-icon" aria-hidden="true">👑</span>
+              <span v-else-if="isStageCompleted(stage.stageId)" class="check-icon" aria-hidden="true">✓</span>
+              <span v-else-if="!isStageUnlocked(stage.stageId)" class="lock-icon" aria-hidden="true">🔒</span>
+              <span v-else class="stage-num">{{ stage.stageId }}</span>
             </div>
 
-            <h3 class="stage-name">{{ stage.title }}</h3>
-            <p v-if="stage.subtitle" class="stage-desc">{{ stage.subtitle }}</p>
+            <!-- Stage Info -->
+            <div class="stage-info">
+              <div class="stage-meta">
+                <span v-if="stage.cefrLevel" class="cefr-badge">{{ stage.cefrLevel }}</span>
+                <span v-if="stage.isBossStage" class="boss-badge">BOSS CHƯƠNG</span>
+                <span v-else-if="isCurrentActiveStage(stage.stageId)" class="current-badge">CHẶNG HIỆN TẠI</span>
+                <span class="stage-ch-text">Chặng {{ stage.stageId }}</span>
+              </div>
 
-            <!-- Stars display -->
-            <div class="stars-row">
-              <span
-                v-for="starIndex in 3"
-                :key="starIndex"
-                class="star-icon"
-                :class="{ 'star-filled': starIndex <= getStageStars(stage.stageId) }"
-              >
-                ★
-              </span>
+              <h3 class="stage-name">{{ stage.title }}</h3>
+              <p v-if="stage.subtitle" class="stage-desc">{{ stage.subtitle }}</p>
+
+              <!-- Stars display -->
+              <div class="stars-row">
+                <span
+                  v-for="starIndex in 3"
+                  :key="starIndex"
+                  class="star-icon"
+                  :class="{ 'star-filled': starIndex <= getStageStars(stage.stageId) }"
+                >
+                  ★
+                </span>
+              </div>
             </div>
+          </button>
+        </div>
+
+        <!-- Quest Trail Connector to next stage -->
+        <div
+          v-if="idx < stages.length - 1 && stages[idx + 1]"
+          class="quest-trail-divider"
+          :class="{
+            'trail-unlocked': !!stages[idx + 1] && isStageUnlocked(stages[idx + 1]!.stageId),
+            'trail-left-to-right': idx % 2 === 0,
+            'trail-right-to-left': idx % 2 !== 0
+          }"
+          aria-hidden="true"
+        >
+          <div class="trail-line">
+            <span class="trail-dot" />
+            <span class="trail-dot" />
+            <span class="trail-dot" />
           </div>
-        </button>
-      </div>
+        </div>
+      </template>
     </div>
 
     <!-- Stage Detail / Start Modal -->
@@ -450,6 +468,70 @@ function getTrackTitle(track: string): string {
 
 .node-right {
   justify-content: flex-end;
+}
+
+/* Quest Trail Connector between alternating stages */
+.quest-trail-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0;
+  position: relative;
+  width: 100%;
+}
+
+.trail-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  position: relative;
+  width: 140px;
+  height: 24px;
+}
+
+.trail-line::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border-color);
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  opacity: 0.5;
+}
+
+.trail-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg-surface);
+  border: 2px solid var(--border-color);
+  z-index: 1;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.trail-unlocked .trail-line::before {
+  background: var(--accent-primary);
+  opacity: 0.9;
+  box-shadow: 0 0 8px var(--accent-primary);
+}
+
+.trail-unlocked .trail-dot {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 8px var(--accent-primary);
+}
+
+@media (min-width: 769px) {
+  .trail-left-to-right {
+    transform: rotate(12deg);
+  }
+  .trail-right-to-left {
+    transform: rotate(-12deg);
+  }
 }
 
 .stage-node-btn {

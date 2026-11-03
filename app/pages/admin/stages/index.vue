@@ -330,8 +330,12 @@ async function confirmDelete() {
                   :to="`/admin/stages/${stage.stageId}?track=${activeTrack}`"
                   class="action-icon-btn edit-btn"
                   title="Chỉnh sửa chặng"
+                  aria-label="Chỉnh sửa chặng"
                 >
-                  ✏️
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                  </svg>
                 </NuxtLink>
 
                 <!-- Clone button -->
@@ -339,9 +343,13 @@ async function confirmDelete() {
                   type="button"
                   class="action-icon-btn clone-btn"
                   title="Nhân bản chặng mới"
+                  aria-label="Nhân bản chặng mới"
                   @click="handleCloneStage(stage)"
                 >
-                  📋
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                  </svg>
                 </button>
 
                 <!-- Test play button -->
@@ -350,18 +358,25 @@ async function confirmDelete() {
                   target="_blank"
                   class="action-icon-btn play-btn"
                   title="Chơi thử chặng"
+                  aria-label="Chơi thử chặng"
                 >
-                  🎮
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
                 </NuxtLink>
 
-                <!-- Delete button -->
+                <!-- Delete button (with safety red style & separated spacing) -->
                 <button
                   type="button"
                   class="action-icon-btn delete-btn"
                   title="Xóa chặng"
+                  aria-label="Xóa chặng"
                   @click="openDeleteModal(stage)"
                 >
-                  🗑️
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#f87171" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                  </svg>
                 </button>
               </div>
             </td>
@@ -756,7 +771,7 @@ async function confirmDelete() {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 6px;
+  gap: 8px;
 }
 
 .action-icon-btn {
@@ -766,22 +781,29 @@ async function confirmDelete() {
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
   text-decoration: none;
-  font-size: 14px;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .action-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.15);
   transform: translateY(-1px);
 }
 
+.delete-btn {
+  margin-left: 6px;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
 .delete-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px);
 }
 
 /* Modal */

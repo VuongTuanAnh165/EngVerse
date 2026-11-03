@@ -44,7 +44,11 @@ const universeEmoji = computed(() => {
         aria-label="Bản đồ thế giới"
       >
         <div class="tab-icon-box">
-          <span class="tab-icon">🗺️</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" />
+            <line x1="8" y1="2" x2="8" y2="18" />
+            <line x1="16" y1="6" x2="16" y2="22" />
+          </svg>
         </div>
         <span class="tab-title">Bản đồ</span>
       </NuxtLink>
@@ -57,7 +61,10 @@ const universeEmoji = computed(() => {
         aria-label="Sổ tay Thẻ bài 3D"
       >
         <div class="tab-icon-box">
-          <span class="tab-icon">📖</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+          </svg>
         </div>
         <span class="tab-title">Sổ tay</span>
       </NuxtLink>
@@ -70,7 +77,13 @@ const universeEmoji = computed(() => {
         @click="openLeaderboard"
       >
         <div class="tab-icon-box">
-          <span class="tab-icon">🏆</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+            <path d="M4 22h16" />
+            <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34" />
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+          </svg>
         </div>
         <span class="tab-title">Xếp hạng</span>
       </button>
@@ -83,7 +96,10 @@ const universeEmoji = computed(() => {
         aria-label="Vinh danh và thành tích"
       >
         <div class="tab-icon-box">
-          <span class="tab-icon">🎖️</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="6" />
+            <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
+          </svg>
         </div>
         <span class="tab-title">Vinh danh</span>
       </NuxtLink>
@@ -96,7 +112,12 @@ const universeEmoji = computed(() => {
         @click="openMobileMenu"
       >
         <div class="tab-icon-box menu-universe-box">
-          <span class="tab-icon">{{ universeEmoji }}</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="2" y1="12" x2="22" y2="12" />
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+          </svg>
+          <span class="universe-active-dot" :class="`dot-${currentTrack}`" />
         </div>
         <span class="tab-title">Vũ trụ</span>
       </button>
@@ -190,8 +211,41 @@ const universeEmoji = computed(() => {
   font-weight: 800;
 }
 
+:root[data-theme="adults"] .tab-selected .tab-title,
+html[data-theme="adults"] .tab-selected .tab-title {
+  color: #059669;
+}
+
+:root[data-theme="adults"] .tab-selected .tab-icon-box,
+html[data-theme="adults"] .tab-selected .tab-icon-box {
+  border-bottom: 2px solid #059669;
+}
+
 .menu-universe-box {
   position: relative;
+}
+
+.universe-active-dot {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid var(--header-bg);
+}
+
+.dot-kids {
+  background-color: #f59e0b;
+}
+
+.dot-teens {
+  background-color: #06b6d4;
+  box-shadow: 0 0 6px #06b6d4;
+}
+
+.dot-adults {
+  background-color: #059669;
 }
 
 @media (max-width: 768px) {

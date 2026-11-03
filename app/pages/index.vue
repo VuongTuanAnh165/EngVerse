@@ -119,93 +119,46 @@ useHead({
     <!-- Streak At-Risk / Shield Rescue Alert Banner -->
     <StreakAtRiskBanner />
 
-    <!-- Daily Challenge Highlight Banner -->
-    <section class="daily-challenge-callout-section">
-      <div class="daily-callout-card theme-card">
-        <div class="daily-callout-left">
-          <div class="daily-icon-box">
-            <span class="daily-flame">🔥</span>
+    <!-- Quick Activity Hub (Daily Challenge, Colosseum Endgame, AI Free Simulator) -->
+    <section class="activity-hub-section" aria-label="Hoạt động nổi bật">
+      <div class="activity-cards-grid">
+        <!-- 1. Daily Challenge Card -->
+        <div class="activity-card theme-card daily-card">
+          <div class="activity-header">
+            <span class="activity-badge badge-flame">🔥 HÀNG NGÀY</span>
+            <span v-if="isDailyCompleted" class="status-pill status-done">Đã xong hôm nay ✓</span>
+            <span v-else class="status-pill status-pending">Chuỗi {{ dailyStreak }} ngày</span>
           </div>
-          <div class="daily-info">
-            <div class="daily-title-row">
-              <span class="daily-tag">THỬ THÁCH HÀNG NGÀY</span>
-              <span v-if="isDailyCompleted" class="daily-status-completed">Đã hoàn thành hôm nay ✅</span>
-              <span v-else class="daily-status-pending">Chưa hoàn thành • Reset 00:00 (GMT+7)</span>
-            </div>
-            <h3 class="daily-heading">3 Phút Luyện Phản Xạ 4 Pha Hàng Ngày</h3>
-            <p class="daily-subtext">Vocab Sprint • Grammar Flash • Voice Challenge • Quick AI Roleplay. Chuỗi hiện tại: <strong>{{ dailyStreak }} ngày</strong>!</p>
-          </div>
-        </div>
-        <div class="daily-callout-right">
-          <NuxtLink
-            to="/play/daily-challenge"
-            class="theme-btn-primary daily-play-btn"
-          >
-            {{ isDailyCompleted ? 'Luyện Tập Lại' : 'Chinh Phục Ngay ⚡' }}
+          <h3 class="activity-title">Luyện Phản Xạ 4 Pha</h3>
+          <p class="activity-desc">3 phút luyện Vocab, Grammar, Voice và Mini Roleplay mỗi ngày.</p>
+          <NuxtLink to="/play/daily-challenge" class="theme-btn-primary activity-cta">
+            {{ isDailyCompleted ? 'Luyện Lại' : 'Chinh Phục Ngay ⚡' }}
           </NuxtLink>
         </div>
-      </div>
-    </section>
 
-    <!-- Boss Rush Colosseum Endgame Callout Banner -->
-    <section class="colosseum-callout-section">
-      <div class="colosseum-callout-card theme-card">
-        <div class="colosseum-callout-left">
-          <div class="colosseum-icon-box">
-            <span class="colosseum-skull">⚔️</span>
+        <!-- 2. Colosseum Endgame Card -->
+        <div class="activity-card theme-card colosseum-card">
+          <div class="activity-header">
+            <span class="activity-badge badge-colosseum">⚔️ ENDGAME</span>
+            <span v-if="userStore.isBossRushUnlocked(currentTrack)" class="status-pill status-done">Đã mở 🔓</span>
+            <span v-else class="status-pill status-locked">Cần 20 chặng 🔒</span>
           </div>
-          <div class="colosseum-info">
-            <div class="colosseum-title-row">
-              <span class="colosseum-tag">ENDGAME COLOSSEUM</span>
-              <span v-if="userStore.isBossRushUnlocked(currentTrack)" class="colosseum-status-unlocked">
-                Đã mở khóa 🔓
-              </span>
-              <span v-else class="colosseum-status-locked">
-                Cần 20 chặng (Hiện có: {{ Math.min(20, userStore.currentTrackProgress?.unlockedStage || 1) }}/20) 🔒
-              </span>
-            </div>
-            <h3 class="colosseum-heading">Đấu Trường Sinh Tử: Chuỗi 4 Đại Boss Liên Hoàn</h3>
-            <p class="colosseum-subtext">
-              Thử thách Shared 3 ❤️ cực hạn • Thời gian -30% • Chuẩn âm +5% • Tranh đoạt Huy hiệu "Vua Đấu Trường" & Khung Avatar Vàng!
-            </p>
-          </div>
-        </div>
-        <div class="colosseum-callout-right">
-          <NuxtLink
-            :to="`/play/boss-rush/${currentTrack}`"
-            class="theme-btn-primary colosseum-play-btn"
-          >
+          <h3 class="activity-title">Đấu Trường Sinh Tử</h3>
+          <p class="activity-desc">Thử thách 4 Boss liên hoàn, tranh đoạt Khung Avatar Hoàng Kim.</p>
+          <NuxtLink :to="`/play/boss-rush/${currentTrack}`" class="theme-btn-primary activity-cta cta-colosseum">
             Vào Đấu Trường ⚔️
           </NuxtLink>
         </div>
-      </div>
-    </section>
 
-    <!-- AI Free Simulator Endgame Callout Banner -->
-    <section class="simulator-callout-section">
-      <div class="simulator-callout-card theme-card">
-        <div class="simulator-callout-left">
-          <div class="simulator-icon-box">
-            <span class="simulator-mic">🎙️</span>
+        <!-- 3. AI Free Simulator Card -->
+        <div class="activity-card theme-card simulator-card">
+          <div class="activity-header">
+            <span class="activity-badge badge-simulator">🎙️ SIMULATOR</span>
+            <span class="status-pill status-quota">{{ freeSimDailyRemaining }}/5 lượt hôm nay</span>
           </div>
-          <div class="simulator-info">
-            <div class="simulator-title-row">
-              <span class="simulator-tag">AI FREE SIMULATOR</span>
-              <span class="simulator-status-quota">
-                Lượt hôm nay: {{ freeSimDailyRemaining }}/5 phiên ⚡
-              </span>
-            </div>
-            <h3 class="simulator-heading">Phòng Giả Lập Giao Tiếp Tự Do & Báo Cáo CEFR</h3>
-            <p class="simulator-subtext">
-              Thực chiến 24+ tình huống đời thực (Phỏng vấn Visa, Du lịch, IELTS, Đàm phán lương...) hoặc tự thiết kế kịch bản tùy ý!
-            </p>
-          </div>
-        </div>
-        <div class="simulator-callout-right">
-          <NuxtLink
-            to="/play/free-simulator"
-            class="theme-btn-primary simulator-play-btn"
-          >
+          <h3 class="activity-title">Giả Lập Giao Tiếp & CEFR</h3>
+          <p class="activity-desc">24+ tình huống đời thực hoặc tự thiết kế kịch bản với AI.</p>
+          <NuxtLink to="/play/free-simulator" class="theme-btn-primary activity-cta cta-simulator">
             Vào Giả Lập 🎙️
           </NuxtLink>
         </div>
@@ -355,453 +308,129 @@ useHead({
     font-size: 1rem;
   }
 }
-/* Daily Challenge Banner */
-.daily-challenge-callout-section {
+/* ==========================================================================
+   Quick Activity Hub (Daily Challenge, Colosseum Endgame, AI Simulator)
+   ========================================================================== */
+.activity-hub-section {
   max-width: 900px;
   margin: 1.25rem auto 1.5rem;
   padding: 0 1rem;
 }
 
-.daily-callout-card {
+.activity-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+}
+
+.activity-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.activity-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--border-focus);
+}
+
+.activity-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--radius-lg);
-  border: 2px solid var(--border-color);
-  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-card-hover) 100%);
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.activity-badge {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+}
+
+.badge-flame {
+  color: #ea580c;
+  background: rgba(234, 88, 12, 0.12);
+}
+
+.badge-colosseum {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.badge-simulator {
+  color: #06b6d4;
+  background: rgba(6, 182, 212, 0.12);
+}
+
+.status-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.status-done {
+  color: #059669;
+}
+
+.status-pending {
+  color: var(--text-muted);
+}
+
+.status-unlocked {
+  color: #10b981;
+}
+
+.status-locked {
+  color: #ef4444;
+}
+
+.status-quota {
+  color: #8b5cf6;
+}
+
+.activity-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 0.35rem;
+}
+
+.activity-desc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 1rem;
+  flex: 1;
+}
+
+.activity-cta {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  padding: 0.55rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
 }
 
-.daily-callout-card:hover {
-  border-color: #f97316;
-  box-shadow: var(--shadow-md);
-}
-
-.daily-callout-left {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.daily-icon-box {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ffedd5, #fed7aa);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.daily-flame {
-  font-size: 2rem;
-}
-
-.daily-title-row {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 0.25rem;
-  flex-wrap: wrap;
-}
-
-.daily-tag {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: #ea580c;
-  background: rgba(234, 88, 12, 0.1);
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-pill);
-}
-
-.daily-status-completed {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #059669;
-}
-
-.daily-status-pending {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.daily-heading {
-  font-size: 1.15rem;
-  font-weight: 800;
-  margin: 0 0 0.25rem;
-  color: var(--text-primary);
-}
-
-.daily-subtext {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin: 0;
-  line-height: 1.4;
-}
-
-.daily-play-btn {
-  white-space: nowrap;
-  padding: 0.75rem 1.35rem;
-  font-size: 0.95rem;
-}
-
-@media (max-width: 768px) {
-  .daily-callout-card {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-    gap: 1rem;
-    padding: 1.25rem 1rem;
-  }
-  .daily-callout-left {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .daily-title-row {
-    justify-content: center;
-  }
-  .daily-heading {
-    font-size: 1.05rem;
-  }
-  .daily-play-btn {
-    width: 100%;
-    text-align: center;
-  }
-}
-
-/* Colosseum Callout Banner */
-.colosseum-callout-section {
-  max-width: 900px;
-  margin: 0 auto 1.5rem;
-  padding: 0 1rem;
-}
-
-.colosseum-callout-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--radius-lg);
-  border: 2px solid rgba(239, 68, 68, 0.4);
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(15, 23, 42, 0.95) 100%);
-  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15);
-  transition: all 0.2s ease;
-}
-
-.colosseum-callout-card:hover {
-  border-color: #ef4444;
-  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
-}
-
-.colosseum-callout-left {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.colosseum-icon-box {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #fee2e2, #fca5a5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.colosseum-skull {
-  font-size: 1.8rem;
-}
-
-.colosseum-title-row {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 0.25rem;
-  flex-wrap: wrap;
-}
-
-.colosseum-tag {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.15);
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-pill);
-}
-
-.colosseum-status-unlocked {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #10b981;
-}
-
-.colosseum-status-locked {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #f87171;
-}
-
-.colosseum-heading {
-  font-size: 1.1rem;
-  font-weight: 800;
-  margin: 0 0 0.25rem;
-  color: var(--color-text-primary, #f8fafc);
-}
-
-.colosseum-subtext {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary, #94a3b8);
-  margin: 0;
-  line-height: 1.4;
-}
-
-.colosseum-play-btn {
-  padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-md);
-  font-weight: 700;
-  white-space: nowrap;
-  text-decoration: none;
-  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+.cta-colosseum {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: #ffffff;
-  display: inline-block;
-  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.35);
 }
 
-.colosseum-play-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(239, 68, 68, 0.5);
-}
-
-/* AI Free Simulator Callout Banner */
-.simulator-callout-section {
-  max-width: 900px;
-  margin: 0 auto 1.5rem;
-  padding: 0 1rem;
-}
-
-.simulator-callout-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-radius: var(--radius-lg);
-  border: 2px solid rgba(6, 182, 212, 0.4);
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.08) 0%, rgba(139, 92, 246, 0.08) 50%, rgba(15, 23, 42, 0.95) 100%);
-  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.15);
-  transition: all 0.2s ease;
-}
-
-.simulator-callout-card:hover {
-  border-color: #06b6d4;
-  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
-}
-
-.simulator-callout-left {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.simulator-icon-box {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(139, 92, 246, 0.3));
-  border: 1px solid rgba(6, 182, 212, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.simulator-mic {
-  font-size: 1.7rem;
-}
-
-.simulator-title-row {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  margin-bottom: 0.25rem;
-  flex-wrap: wrap;
-}
-
-.simulator-tag {
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: #38bdf8;
-  background: rgba(6, 182, 212, 0.15);
-  padding: 0.15rem 0.5rem;
-  border-radius: var(--radius-pill);
-}
-
-.simulator-status-quota {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #a855f7;
-}
-
-.simulator-heading {
-  font-size: 1.1rem;
-  font-weight: 800;
-  margin: 0 0 0.25rem;
-  color: var(--color-text-primary, #f8fafc);
-}
-
-.simulator-subtext {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary, #94a3b8);
-  margin: 0;
-  line-height: 1.4;
-}
-
-.simulator-play-btn {
-  padding: 0.65rem 1.25rem;
-  border-radius: var(--radius-md);
-  font-weight: 700;
-  white-space: nowrap;
-  text-decoration: none;
-  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+.cta-simulator {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
   color: #ffffff;
-  display: inline-block;
-  box-shadow: 0 3px 10px rgba(6, 182, 212, 0.35);
-}
-
-.simulator-play-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(6, 182, 212, 0.5);
-}
-
-@media (max-width: 768px) {
-  .simulator-callout-card {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
-    gap: 1rem;
-    padding: 1.25rem 1rem;
-  }
-  .simulator-callout-left {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  .simulator-title-row {
-    justify-content: center;
-  }
-  .simulator-play-btn {
-    width: 100%;
-    text-align: center;
-  }
-}
-
-
-/* ==========================================================================
-   Universe-specific Theme Customizations for Kids & Adults ONLY
-   Cyber City (Teens) retains 100% of its original cyberpunk dark aesthetics
-   ========================================================================== */
-
-/* 1. Đảo Thần Thoại (Kids) */
-html[data-theme="kids"] .colosseum-callout-card {
-  background: linear-gradient(135deg, #fff5f5 0%, #ffffff 50%, #fef2f2 100%);
-  border: 2px solid #fecaca;
-  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.08);
-}
-html[data-theme="kids"] .colosseum-heading {
-  color: #450a0a;
-}
-html[data-theme="kids"] .colosseum-subtext {
-  color: #7f1d1d;
-}
-html[data-theme="kids"] .colosseum-tag {
-  color: #dc2626;
-  background: #fee2e2;
-}
-html[data-theme="kids"] .colosseum-status-locked {
-  color: #b91c1c;
-}
-html[data-theme="kids"] .colosseum-icon-box {
-  background: linear-gradient(135deg, #fee2e2, #fecaca);
-  border: 1px solid #fca5a5;
-}
-
-html[data-theme="kids"] .simulator-callout-card {
-  background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #e0f2fe 100%);
-  border: 2px solid #bae6fd;
-  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.08);
-}
-html[data-theme="kids"] .simulator-heading {
-  color: #0c4a6e;
-}
-html[data-theme="kids"] .simulator-subtext {
-  color: #0369a1;
-}
-html[data-theme="kids"] .simulator-tag {
-  color: #0284c7;
-  background: #e0f2fe;
-}
-html[data-theme="kids"] .simulator-status-quota {
-  color: #7c3aed;
-}
-html[data-theme="kids"] .simulator-icon-box {
-  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-  border: 1px solid #7dd3fc;
-}
-
-/* 2. SimLife Global (Adults) */
-html[data-theme="adults"] .colosseum-callout-card {
-  background: linear-gradient(135deg, #fffafa 0%, #ffffff 60%, #fff1f2 100%);
-  border: 2px solid #fecdd3;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
-}
-html[data-theme="adults"] .colosseum-heading {
-  color: #1e293b;
-}
-html[data-theme="adults"] .colosseum-subtext {
-  color: #475569;
-}
-html[data-theme="adults"] .colosseum-tag {
-  color: #e11d48;
-  background: #ffe4e6;
-}
-html[data-theme="adults"] .colosseum-status-locked {
-  color: #be123c;
-}
-html[data-theme="adults"] .colosseum-icon-box {
-  background: linear-gradient(135deg, #ffe4e6, #fecdd3);
-  border: 1px solid #fda4af;
-}
-
-html[data-theme="adults"] .simulator-callout-card {
-  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 60%, #f0fdfa 100%);
-  border: 2px solid #cbd5e1;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
-}
-html[data-theme="adults"] .simulator-heading {
-  color: #0f172a;
-}
-html[data-theme="adults"] .simulator-subtext {
-  color: #334155;
-}
-html[data-theme="adults"] .simulator-tag {
-  color: #0369a1;
-  background: #e0f2fe;
-}
-html[data-theme="adults"] .simulator-status-quota {
-  color: #0d9488;
-}
-html[data-theme="adults"] .simulator-icon-box {
-  background: linear-gradient(135deg, #e0f2fe, #bae6fd);
-  border: 1px solid #7dd3fc;
 }
 </style>

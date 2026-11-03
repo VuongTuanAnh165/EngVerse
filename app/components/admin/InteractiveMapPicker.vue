@@ -111,7 +111,14 @@ function handleManualInput(axis: 'x' | 'y', val: number) {
           <span>📍</span>
           <span class="active-badge">{{ currentStageId || 'NEW' }}</span>
         </div>
-        <div class="pin-tooltip">
+        <div
+          class="pin-tooltip"
+          :class="{
+            'tooltip-below': modelValue.y < 16,
+            'tooltip-left-align': modelValue.x > 82,
+            'tooltip-right-align': modelValue.x < 18
+          }"
+        >
           <strong>{{ stageTitle || 'Chặng mới' }}</strong>
           <span>({{ modelValue.x }}%, {{ modelValue.y }}%)</span>
         </div>
@@ -300,6 +307,27 @@ function handleManualInput(axis: 'x' | 'y', val: number) {
   color: #f1f5f9;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
   pointer-events: none;
+  z-index: 20;
+  transition: bottom 0.2s, top 0.2s;
+}
+
+/* Auto-flip downward when near top border */
+.pin-tooltip.tooltip-below {
+  bottom: auto;
+  top: 120%;
+}
+
+/* Auto-align inward when near right edge */
+.pin-tooltip.tooltip-left-align {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* Auto-align inward when near left edge */
+.pin-tooltip.tooltip-right-align {
+  left: 0;
+  transform: none;
 }
 
 /* Coordinates bar below */

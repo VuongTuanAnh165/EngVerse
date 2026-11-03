@@ -277,9 +277,101 @@ function createBlankVocab(index: number): StageVocabItem {
   };
 }
 
+// Accordion & Collapse States for reducing visual density ("Hết dày cộm")
+const expandedGrammars = ref<Record<number, boolean>>({});
+const expandedVocabs = ref<Record<number, boolean>>({});
+
+function isGrammarExpanded(index: number): boolean {
+  if (expandedGrammars.value[index] === undefined) {
+    return index === 0;
+  }
+  return !!expandedGrammars.value[index];
+}
+
+function toggleGrammarCard(index: number) {
+  const current = isGrammarExpanded(index);
+  expandedGrammars.value[index] = !current;
+}
+
+function focusGrammarCard(index: number) {
+  expandedGrammars.value[index] = true;
+}
+
+const allGrammarsExpanded = computed(() => {
+  if (stageForm.grammarPool.length === 0) return false;
+  return stageForm.grammarPool.every((_, idx) => isGrammarExpanded(idx));
+});
+
+function toggleAllGrammars() {
+  const willExpand = !allGrammarsExpanded.value;
+  stageForm.grammarPool.forEach((_, idx) => {
+    expandedGrammars.value[idx] = willExpand;
+  });
+}
+
+function moveGrammarItem(index: number, direction: 'up' | 'down') {
+  const targetIndex = direction === 'up' ? index - 1 : index + 1;
+  if (targetIndex < 0 || targetIndex >= stageForm.grammarPool.length) return;
+  const currentItem = stageForm.grammarPool[index];
+  const targetItem = stageForm.grammarPool[targetIndex];
+  if (!currentItem || !targetItem) return;
+  stageForm.grammarPool[index] = targetItem;
+  stageForm.grammarPool[targetIndex] = currentItem;
+
+  const wasCurrentExpanded = isGrammarExpanded(index);
+  const wasTargetExpanded = isGrammarExpanded(targetIndex);
+  expandedGrammars.value[index] = wasTargetExpanded;
+  expandedGrammars.value[targetIndex] = wasCurrentExpanded;
+}
+
+// Vocab Accordion Helpers
+function isVocabExpanded(index: number): boolean {
+  if (expandedVocabs.value[index] === undefined) {
+    return index === 0;
+  }
+  return !!expandedVocabs.value[index];
+}
+
+function toggleVocabCard(index: number) {
+  const current = isVocabExpanded(index);
+  expandedVocabs.value[index] = !current;
+}
+
+function focusVocabCard(index: number) {
+  expandedVocabs.value[index] = true;
+}
+
+const allVocabsExpanded = computed(() => {
+  if (stageForm.vocabPool.length === 0) return false;
+  return stageForm.vocabPool.every((_, idx) => isVocabExpanded(idx));
+});
+
+function toggleAllVocabs() {
+  const willExpand = !allVocabsExpanded.value;
+  stageForm.vocabPool.forEach((_, idx) => {
+    expandedVocabs.value[idx] = willExpand;
+  });
+}
+
+function moveVocabItem(index: number, direction: 'up' | 'down') {
+  const targetIndex = direction === 'up' ? index - 1 : index + 1;
+  if (targetIndex < 0 || targetIndex >= stageForm.vocabPool.length) return;
+  const currentItem = stageForm.vocabPool[index];
+  const targetItem = stageForm.vocabPool[targetIndex];
+  if (!currentItem || !targetItem) return;
+  stageForm.vocabPool[index] = targetItem;
+  stageForm.vocabPool[targetIndex] = currentItem;
+
+  const wasCurrentExpanded = isVocabExpanded(index);
+  const wasTargetExpanded = isVocabExpanded(targetIndex);
+  expandedVocabs.value[index] = wasTargetExpanded;
+  expandedVocabs.value[targetIndex] = wasCurrentExpanded;
+}
+
 function addVocabItem() {
   const nextIndex = stageForm.vocabPool.length + 1;
   stageForm.vocabPool.push(createBlankVocab(nextIndex));
+  expandedVocabs.value[stageForm.vocabPool.length - 1] = true;
 }
 
 function removeVocabItem(index: number) {
@@ -288,6 +380,7 @@ function removeVocabItem(index: number) {
     return;
   }
   stageForm.vocabPool.splice(index, 1);
+  delete expandedVocabs.value[index];
 }
 
 function addGrammarItem() {
@@ -299,11 +392,14 @@ function addGrammarItem() {
     correctSentence: '',
     distractorWords: [],
     grammarTip: '',
+    functionalCategory: 'describing',
   });
+  expandedGrammars.value[stageForm.grammarPool.length - 1] = true;
 }
 
 function removeGrammarItem(index: number) {
   stageForm.grammarPool.splice(index, 1);
+  delete expandedGrammars.value[index];
 }
 
 // Pronounce text with Web Speech API
@@ -616,52 +712,140 @@ onMounted(() => {
       <div v-show="activeTab === 'vocab'" class="tab-pane">
         <div class="pane-header">
           <div>
-            <h3>Danh Sách Từ Vựng Của Chặng ({{ stageForm.vocabPool.length }} từ)</h3>
-            <p>Mỗi từ vựng sẽ tự động được sinh thành 1 thẻ bài tương ứng trong 3D Codex.</p>
+            <div class="pane-title-row">
+              <h3>Kho Từ Vựng Của Chặng</h3>
+              <span class="count-badge">{{ stageForm.vocabPool.length }} từ vựng</span>
+            </div>
+            <p>Mỗi từ vựng sẽ tự động được đồng bộ và sinh thành 1 thẻ bài tương ứng trong 3D Codex.</p>
           </div>
-          <button type="button" class="btn btn-secondary" @click="addVocabItem">
-            <span>➕</span>
-            <span>Thêm Từ Vựng</span>
+          <div class="pane-header-actions">
+            <button
+              v-if="stageForm.vocabPool.length > 0"
+              type="button"
+              class="btn btn-ghost-compact"
+              @click="toggleAllVocabs"
+            >
+              <svg v-if="allVocabsExpanded" class="btn-icon-svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <svg v-else class="btn-icon-svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+              </svg>
+              <span>{{ allVocabsExpanded ? 'Thu gọn tất cả' : 'Mở rộng tất cả' }}</span>
+            </button>
+            <button type="button" class="btn btn-secondary" @click="addVocabItem">
+              <span>➕</span>
+              <span>Thêm Từ Vựng</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Vocab Nav Strip -->
+        <div v-if="stageForm.vocabPool.length > 0" class="vocab-nav-strip">
+          <button
+            v-for="(v, idx) in stageForm.vocabPool"
+            :key="idx"
+            type="button"
+            class="vocab-nav-pill"
+            :class="{ active: isVocabExpanded(idx) }"
+            @click="focusVocabCard(idx)"
+          >
+            <span class="pill-num">#{{ idx + 1 }}</span>
+            <span class="pill-preview">{{ v.emoji || '✨' }} {{ v.word || `Từ ${idx + 1}` }}</span>
           </button>
         </div>
 
-        <div class="vocab-cards-list">
+        <div v-if="stageForm.vocabPool.length === 0" class="empty-sub-state">
+          <div class="empty-icon">🎴</div>
+          <h4>Chưa có từ vựng nào trong chặng</h4>
+          <p>Bấm nút "Thêm Từ Vựng" phía trên hoặc dùng Co-Pilot AI để sinh tự động.</p>
+        </div>
+
+        <div v-else class="vocab-cards-list">
           <div
             v-for="(vocab, vIdx) in stageForm.vocabPool"
             :key="vocab.id || vIdx"
-            class="vocab-edit-card"
+            class="vocab-accordion-card"
+            :class="{ expanded: isVocabExpanded(vIdx) }"
           >
-            <div class="vocab-card-header">
-              <span class="vocab-index-badge">#{{ vIdx + 1 }}</span>
-              <input
-                v-model="vocab.emoji"
-                type="text"
-                class="emoji-input"
-                title="Emoji đại diện"
-              />
-              <strong class="vocab-card-title">{{ vocab.word || '(Chưa nhập từ)' }}</strong>
+            <!-- Accordion Header -->
+            <div class="vocab-accordion-header" @click="toggleVocabCard(vIdx)">
+              <div class="header-left">
+                <button
+                  type="button"
+                  class="chevron-toggle-btn"
+                  :class="{ rotated: isVocabExpanded(vIdx) }"
+                  title="Đóng / Mở từ vựng này"
+                  @click.stop="toggleVocabCard(vIdx)"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+                <span class="vocab-index-badge">#{{ vIdx + 1 }}</span>
+                <input
+                  v-model="vocab.emoji"
+                  type="text"
+                  class="emoji-input"
+                  title="Emoji đại diện thẻ bài"
+                  @click.stop
+                />
+                <div class="header-preview-summary">
+                  <strong class="vocab-card-title">{{ vocab.word || '(Chưa nhập từ)' }}</strong>
+                  <span v-if="vocab.ipa" class="vocab-ipa-preview">/{{ vocab.ipa.replace(/^\/|\/$/g, '') }}/</span>
+                  <span v-if="vocab.meaning" class="sentence-vi-preview">• {{ vocab.meaning }}</span>
+                </div>
+              </div>
 
-              <div class="vocab-header-right">
+              <div class="header-right" @click.stop>
                 <select v-model="vocab.cardRarity" class="rarity-badge-select" :class="`rarity-${vocab.cardRarity}`">
                   <option v-for="r in rarityOptions" :key="r" :value="r">
                     {{ r.toUpperCase() }}
                   </option>
                 </select>
+
+                <div class="card-reorder-actions">
+                  <button
+                    type="button"
+                    class="btn-icon-tiny"
+                    :disabled="vIdx === 0"
+                    title="Di chuyển lên trên"
+                    @click.stop="moveVocabItem(vIdx, 'up')"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-icon-tiny"
+                    :disabled="vIdx === stageForm.vocabPool.length - 1"
+                    title="Di chuyển xuống dưới"
+                    @click.stop="moveVocabItem(vIdx, 'down')"
+                  >
+                    ▼
+                  </button>
+                </div>
+
                 <button
                   type="button"
                   class="btn-icon delete-vocab-btn"
                   title="Xóa từ vựng này"
-                  @click="removeVocabItem(vIdx)"
+                  @click.stop="removeVocabItem(vIdx)"
                 >
-                  ✕
+                  <svg viewBox="0 0 20 20" fill="currentColor" class="icon-svg">
+                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
                 </button>
               </div>
             </div>
 
-            <div class="vocab-card-body">
+            <!-- Accordion Body -->
+            <div v-show="isVocabExpanded(vIdx)" class="vocab-accordion-body">
               <div class="form-row-3">
                 <div class="form-group">
-                  <label>Từ tiếng Anh (Word):</label>
+                  <label class="form-label-compact">
+                    <span class="label-icon">🔤</span>
+                    <span>Từ tiếng Anh (Word):</span>
+                  </label>
                   <div class="input-with-action">
                     <input v-model="vocab.word" type="text" placeholder="dragon" />
                     <button
@@ -676,12 +860,18 @@ onMounted(() => {
                 </div>
 
                 <div class="form-group">
-                  <label>Phiên âm (IPA):</label>
+                  <label class="form-label-compact">
+                    <span class="label-icon">🗣️</span>
+                    <span>Phiên âm quốc tế (IPA):</span>
+                  </label>
                   <input v-model="vocab.ipa" type="text" placeholder="/ˈdræɡ.ən/" />
                 </div>
 
                 <div class="form-group">
-                  <label>Loại từ (Part of Speech):</label>
+                  <label class="form-label-compact">
+                    <span class="label-icon">🏷️</span>
+                    <span>Loại từ (Part of Speech):</span>
+                  </label>
                   <select v-model="vocab.partOfSpeech">
                     <option v-for="pos in posOptions" :key="pos" :value="pos">
                       {{ pos }}
@@ -692,12 +882,18 @@ onMounted(() => {
 
               <div class="form-row-2">
                 <div class="form-group">
-                  <label>Nghĩa tiếng Việt (Meaning):</label>
+                  <label class="form-label-compact">
+                    <span class="label-icon">🇻🇳</span>
+                    <span>Nghĩa tiếng Việt (Meaning):</span>
+                  </label>
                   <input v-model="vocab.meaning" type="text" placeholder="con rồng" />
                 </div>
 
                 <div class="form-group">
-                  <label>3 Nghĩa Gây Nhiễu (Distractor Meanings):</label>
+                  <label class="form-label-compact">
+                    <span class="label-icon">🎯</span>
+                    <span>3 Nghĩa Gây Nhiễu (Distractor Meanings):</span>
+                  </label>
                   <div v-if="vocab.distractorMeanings" class="distractor-inputs">
                     <input
                       v-model="vocab.distractorMeanings[0]"
@@ -720,7 +916,10 @@ onMounted(() => {
 
               <div class="form-row-2">
                 <div class="form-group">
-                  <label>Câu ví dụ tiếng Anh (Example):</label>
+                  <label class="form-label-compact">
+                    <span class="label-icon">💬</span>
+                    <span>Câu ví dụ tiếng Anh (Example):</span>
+                  </label>
                   <input
                     v-model="vocab.example"
                     type="text"
@@ -729,7 +928,10 @@ onMounted(() => {
                 </div>
 
                 <div class="form-group">
-                  <label>Dịch nghĩa câu ví dụ:</label>
+                  <label class="form-label-compact">
+                    <span class="label-icon">🇻🇳</span>
+                    <span>Dịch nghĩa câu ví dụ:</span>
+                  </label>
                   <input
                     v-model="vocab.exampleMeaning"
                     type="text"
@@ -746,97 +948,252 @@ onMounted(() => {
       <div v-show="activeTab === 'grammar'" class="tab-pane">
         <div class="pane-header">
           <div>
-            <h3>Thử Thách Ngữ Pháp & Ráp Câu ({{ stageForm.grammarPool.length }} câu đố)</h3>
-            <p>Học viên sẽ sắp xếp các mảnh từ vựng để hoàn thành câu hoàn chỉnh.</p>
+            <div class="pane-title-row">
+              <h3>Thử Thách Ngữ Pháp & Ráp Câu</h3>
+              <span class="count-badge">{{ stageForm.grammarPool.length }} câu đố</span>
+            </div>
+            <p>Học viên sẽ sắp xếp các mảnh từ vựng để ráp câu hoàn chỉnh trong Game Sentence Lock.</p>
           </div>
-          <button type="button" class="btn btn-secondary" @click="addGrammarItem">
-            <span>➕</span>
-            <span>Thêm Câu Đố Ngữ Pháp</span>
+          <div class="pane-header-actions">
+            <button
+              v-if="stageForm.grammarPool.length > 0"
+              type="button"
+              class="btn btn-ghost-compact"
+              @click="toggleAllGrammars"
+            >
+              <svg v-if="allGrammarsExpanded" class="btn-icon-svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+              <svg v-else class="btn-icon-svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd" />
+              </svg>
+              <span>{{ allGrammarsExpanded ? 'Thu gọn tất cả' : 'Mở rộng tất cả' }}</span>
+            </button>
+            <button type="button" class="btn btn-secondary" @click="addGrammarItem">
+              <span>➕</span>
+              <span>Thêm Câu Đố Ngữ Pháp</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Question Strip / Breadcrumbs -->
+        <div v-if="stageForm.grammarPool.length > 0" class="grammar-nav-strip">
+          <button
+            v-for="(g, idx) in stageForm.grammarPool"
+            :key="idx"
+            type="button"
+            class="grammar-nav-pill"
+            :class="{ active: isGrammarExpanded(idx) }"
+            @click="focusGrammarCard(idx)"
+          >
+            <span class="pill-num">#{{ idx + 1 }}</span>
+            <span class="pill-preview">{{ g.correctSentence || g.vietnamesePrompt || `Câu đố ${idx + 1}` }}</span>
           </button>
         </div>
 
         <div v-if="stageForm.grammarPool.length === 0" class="empty-sub-state">
-          <p>Chưa có câu đố ngữ pháp nào. Bấm nút phía trên để thêm.</p>
+          <div class="empty-icon">🧩</div>
+          <h4>Chưa có câu đố ngữ pháp nào</h4>
+          <p>Bấm nút "Thêm Câu Đố Ngữ Pháp" phía trên để tạo câu đố ráp câu đầu tiên.</p>
         </div>
 
         <div v-else class="grammar-cards-list">
           <div
             v-for="(grammar, gIdx) in stageForm.grammarPool"
             :key="grammar.id || gIdx"
-            class="grammar-edit-card"
+            class="grammar-accordion-card"
+            :class="{ expanded: isGrammarExpanded(gIdx) }"
           >
-            <div class="grammar-card-header">
-              <span class="grammar-index-badge">Câu #{{ gIdx + 1 }}</span>
-              <input
-                v-model="grammar.grammarPattern"
-                type="text"
-                class="pattern-input"
-                placeholder="Mẫu: S + have/has + O"
-              />
-              <button
-                type="button"
-                class="btn-icon delete-vocab-btn"
-                @click="removeGrammarItem(gIdx)"
-              >
-                ✕
-              </button>
+            <!-- Collapsible Header -->
+            <div
+              class="grammar-accordion-header"
+              @click="toggleGrammarCard(gIdx)"
+            >
+              <div class="header-left">
+                <button
+                  type="button"
+                  class="chevron-toggle-btn"
+                  :class="{ rotated: isGrammarExpanded(gIdx) }"
+                  title="Đóng / Mở câu đố này"
+                  @click.stop="toggleGrammarCard(gIdx)"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+                <span class="grammar-index-badge">Câu #{{ gIdx + 1 }}</span>
+
+                <div class="header-preview-summary">
+                  <span class="sentence-en-preview" :class="{ empty: !grammar.correctSentence }">
+                    {{ grammar.correctSentence || '(Chưa nhập câu tiếng Anh)' }}
+                  </span>
+                  <span v-if="grammar.vietnamesePrompt" class="sentence-vi-preview">
+                    • {{ grammar.vietnamesePrompt }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="header-right" @click.stop>
+                <span v-if="grammar.grammarPattern" class="header-formula-pill" title="Công thức ngữ pháp">
+                  📐 {{ grammar.grammarPattern }}
+                </span>
+                <span v-if="grammar.functionalCategory" class="header-category-pill" title="Chức năng giao tiếp">
+                  🏷️ {{ grammar.functionalCategory }}
+                </span>
+
+                <div class="card-reorder-actions">
+                  <button
+                    type="button"
+                    class="btn-icon-tiny"
+                    :disabled="gIdx === 0"
+                    title="Di chuyển lên trên"
+                    @click.stop="moveGrammarItem(gIdx, 'up')"
+                  >
+                    ▲
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-icon-tiny"
+                    :disabled="gIdx === stageForm.grammarPool.length - 1"
+                    title="Di chuyển xuống dưới"
+                    @click.stop="moveGrammarItem(gIdx, 'down')"
+                  >
+                    ▼
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  class="btn-icon delete-vocab-btn"
+                  title="Xóa câu đố này"
+                  @click.stop="removeGrammarItem(gIdx)"
+                >
+                  <svg viewBox="0 0 20 20" fill="currentColor" class="icon-svg">
+                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
             </div>
 
-            <div class="grammar-card-body">
-              <div class="form-group">
-                <label>Gợi ý tiếng Việt (Vietnamese Prompt):</label>
-                <input
-                  v-model="grammar.vietnamesePrompt"
-                  type="text"
-                  placeholder="Ví dụ: Tôi nhìn thấy một quả trứng rồng vàng."
-                />
-              </div>
-
-              <div class="form-group">
-                <label>Câu tiếng Anh chuẩn xác (Correct Sentence):</label>
-                <input
-                  v-model="grammar.correctSentence"
-                  type="text"
-                  placeholder="Ví dụ: I see a golden dragon egg."
-                />
-              </div>
-
+            <!-- Expanded Body -->
+            <div v-show="isGrammarExpanded(gIdx)" class="grammar-accordion-body">
+              <!-- Row 1: Formula & Category -->
               <div class="form-row-2">
                 <div class="form-group">
-                  <label>Từ Gây Nhiễu (phân tách bằng dấu phẩy):</label>
+                  <label class="form-label-compact">
+                    <span class="label-icon">📐</span>
+                    <span>Công thức Cấu trúc (Grammar Pattern / Formula):</span>
+                  </label>
+                  <input
+                    v-model="grammar.grammarPattern"
+                    type="text"
+                    class="input-monospace"
+                    placeholder="Mẫu: S (số ít) + wants + a + Adj + N"
+                  />
+                  <span class="field-micro-hint">Gợi ý khuôn mẫu cấu trúc ngữ pháp học sinh sẽ ráp nối.</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label-compact">
+                    <span class="label-icon">🏷️</span>
+                    <span>Chức năng giao tiếp đời thực (Functional Category):</span>
+                  </label>
+                  <select v-model="grammar.functionalCategory" class="theme-select">
+                    <option value="">-- Mặc định (Tự động nhận diện) --</option>
+                    <option value="asking">🙋‍♂️ Asking — Yêu cầu &amp; Hỏi han lịch sự</option>
+                    <option value="refusing">🛡️ Refusing — Từ chối khéo &amp; Ngăn chặn</option>
+                    <option value="apologizing">🙏 Apologizing — Xin lỗi &amp; Nhận lỗi</option>
+                    <option value="persuading">💡 Persuading — Khuyên nhủ &amp; Thuyết phục</option>
+                    <option value="clarifying">🔍 Clarifying — Làm rõ &amp; Xác nhận chứng cứ</option>
+                    <option value="describing">🎨 Describing — Miêu tả đặc điểm &amp; Nhận định</option>
+                    <option value="narrating">📖 Narrating — Kể chuyện &amp; Diễn biến thời gian</option>
+                    <option value="negotiating">🤝 Negotiating — Đàm phán &amp; Thỏa thuận điều kiện</option>
+                    <option value="complaining">⚠️ Complaining — Khiếu nại &amp; Báo sự cố</option>
+                    <option value="thanking">💐 Thanking — Cảm ơn &amp; Tri ân</option>
+                  </select>
+                  <span class="field-micro-hint">Phân loại giúp hệ thống đánh giá kỹ năng phản xạ thực tế.</span>
+                </div>
+              </div>
+
+              <!-- Row 2: Prompt VI & Correct Sentence EN side by side -->
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label-compact">
+                    <span class="label-icon">🇻🇳</span>
+                    <span>Gợi ý tiếng Việt (Vietnamese Prompt):</span>
+                  </label>
+                  <input
+                    v-model="grammar.vietnamesePrompt"
+                    type="text"
+                    placeholder="Ví dụ: Chú rồng con muốn ăn một quả táo đỏ."
+                  />
+                  <span class="field-micro-hint">Đề bài tiếng Việt để học viên hình dung câu cần sắp xếp.</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label-compact">
+                    <span class="label-icon">🇬🇧</span>
+                    <span>Câu tiếng Anh chuẩn xác (Correct Sentence):</span>
+                  </label>
+                  <div class="input-with-action">
+                    <input
+                      v-model="grammar.correctSentence"
+                      type="text"
+                      class="input-highlight-target"
+                      placeholder="Ví dụ: The baby dragon wants a red apple"
+                    />
+                    <button
+                      type="button"
+                      class="btn-icon-inline"
+                      title="Phát âm thử bằng giọng đọc chuẩn"
+                      @click="testPronunciation(grammar.correctSentence)"
+                    >
+                      🔊
+                    </button>
+                  </div>
+                  <span class="field-micro-hint">Học viên sẽ sắp xếp từng từ theo đúng thứ tự câu này.</span>
+                </div>
+              </div>
+
+              <!-- Row 3: Distractors & Grammar Tip -->
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label class="form-label-compact">
+                    <span class="label-icon">🎯</span>
+                    <span>Từ Gây Nhiễu (phân tách bằng dấu phẩy):</span>
+                  </label>
                   <input
                     :value="(grammar.distractorWords || []).join(', ')"
                     type="text"
-                    placeholder="an, red, sleeping"
+                    placeholder="Ví dụ: want, an, apples"
                     @input="grammar.distractorWords = ($event.target as HTMLInputElement).value.split(',').map(s => s.trim()).filter(Boolean)"
                   />
+                  <!-- Visual live token chips -->
+                  <div v-if="grammar.distractorWords && grammar.distractorWords.length > 0" class="distractor-chips-preview">
+                    <span class="chips-label">Mảnh bẫy gây nhiễu:</span>
+                    <span
+                      v-for="(word, wIdx) in grammar.distractorWords"
+                      :key="wIdx"
+                      class="distractor-chip-tag"
+                    >
+                      {{ word }}
+                    </span>
+                  </div>
                 </div>
 
                 <div class="form-group">
-                  <label>Mẹo Ngữ Pháp (Grammar Tip):</label>
-                  <input
+                  <label class="form-label-compact">
+                    <span class="label-icon">💡</span>
+                    <span>Mẹo Ngữ Pháp (Grammar Tip):</span>
+                  </label>
+                  <textarea
                     v-model="grammar.grammarTip"
-                    type="text"
-                    placeholder="Mẹo: Dùng 'a' trước phụ âm, 'an' trước nguyên âm."
-                  />
+                    rows="2"
+                    class="grammar-tip-textarea"
+                    placeholder="Ví dụ: Chủ ngữ số ít (The baby dragon) đi với động từ thêm -s (wants)."
+                  ></textarea>
+                  <span class="field-micro-hint">Hiển thị khi người chơi bấm nút Trợ Giúp (Hint) trong màn chơi.</span>
                 </div>
-              </div>
-
-              <div class="form-group">
-                <label>Chức năng giao tiếp đời thực (Functional Category):</label>
-                <select v-model="grammar.functionalCategory" class="theme-select">
-                  <option value="">-- Mặc định (Tự động nhận diện) --</option>
-                  <option value="asking">🙋‍♂️ Asking — Yêu cầu &amp; Hỏi han lịch sự</option>
-                  <option value="refusing">🛡️ Refusing — Từ chối khéo &amp; Ngăn chặn</option>
-                  <option value="apologizing">🙏 Apologizing — Xin lỗi &amp; Nhận lỗi</option>
-                  <option value="persuading">💡 Persuading — Khuyên nhủ &amp; Thuyết phục</option>
-                  <option value="clarifying">🔍 Clarifying — Làm rõ &amp; Xác nhận chứng cứ</option>
-                  <option value="describing">🎨 Describing — Miêu tả đặc điểm &amp; Nhận định</option>
-                  <option value="narrating">📖 Narrating — Kể chuyện &amp; Diễn biến thời gian</option>
-                  <option value="negotiating">🤝 Negotiating — Đàm phán &amp; Thỏa thuận điều kiện</option>
-                  <option value="complaining">⚠️ Complaining — Khiếu nại &amp; Báo sự cố</option>
-                  <option value="thanking">💐 Thanking — Cảm ơn &amp; Tri ân</option>
-                </select>
               </div>
             </div>
           </div>
@@ -1468,32 +1825,217 @@ input:checked + .switch-slider:before {
   transform: translateX(20px);
 }
 
-/* Vocab List */
-.vocab-cards-list {
+/* ==========================================================================
+   Accordion & Compact Cards System (Solves "UI form gì mà dày thế này")
+   ========================================================================== */
+
+.pane-title-row {
   display: flex;
-  flex-direction: column;
-  gap: 16px;
+  align-items: center;
+  gap: 12px;
 }
 
-.vocab-edit-card {
-  background: rgba(30, 41, 59, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 16px 20px;
-  transition: border-color 0.2s;
-}
-
-.vocab-edit-card:hover {
-  border-color: rgba(56, 189, 248, 0.3);
-}
-
-.vocab-card-header {
+.pane-header-actions {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.count-badge {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.btn-ghost-compact {
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #94a3b8;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-ghost-compact:hover {
+  background: rgba(51, 65, 85, 0.8);
+  color: #f1f5f9;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-icon-svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Quick Nav Strip */
+.grammar-nav-strip,
+.vocab-nav-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.grammar-nav-pill,
+.vocab-nav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #94a3b8;
+  cursor: pointer;
+  transition: all 0.2s;
+  max-width: 220px;
+}
+
+.grammar-nav-pill:hover,
+.vocab-nav-pill:hover {
+  background: rgba(51, 65, 85, 0.8);
+  color: #e2e8f0;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.grammar-nav-pill.active {
+  background: rgba(168, 85, 247, 0.2);
+  border-color: rgba(168, 85, 247, 0.5);
+  color: #e9d5ff;
+}
+
+.vocab-nav-pill.active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: rgba(56, 189, 248, 0.5);
+  color: #bae6fd;
+}
+
+.pill-num {
+  font-weight: 700;
+  color: #38bdf8;
+  font-size: 11px;
+}
+
+.grammar-nav-pill.active .pill-num {
+  color: #c084fc;
+}
+
+.pill-preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Accordion Card Container */
+.grammar-cards-list,
+.vocab-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grammar-accordion-card,
+.vocab-accordion-card {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  overflow: hidden;
+}
+
+.grammar-accordion-card:hover,
+.vocab-accordion-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.grammar-accordion-card.expanded {
+  border-color: rgba(168, 85, 247, 0.35);
+  border-left: 3px solid #a855f7;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.vocab-accordion-card.expanded {
+  border-color: rgba(56, 189, 248, 0.35);
+  border-left: 3px solid #06b6d4;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Header */
+.grammar-accordion-header,
+.vocab-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: rgba(30, 41, 59, 0.35);
+  cursor: pointer;
+  user-select: none;
+  gap: 12px;
+  transition: background 0.2s;
+}
+
+.grammar-accordion-header:hover,
+.vocab-accordion-header:hover {
+  background: rgba(30, 41, 59, 0.6);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.chevron-toggle-btn {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s;
+}
+
+.chevron-toggle-btn.rotated {
+  transform: rotate(90deg);
+  color: #38bdf8;
+}
+
+.grammar-index-badge {
+  font-size: 11px;
+  font-weight: 800;
+  background: rgba(168, 85, 247, 0.15);
+  color: #c084fc;
+  padding: 2px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
 }
 
 .vocab-index-badge {
@@ -1501,30 +2043,207 @@ input:checked + .switch-slider:before {
   font-weight: 800;
   background: rgba(56, 189, 248, 0.15);
   color: #38bdf8;
-  padding: 2px 8px;
-  border-radius: 6px;
+  padding: 2px 7px;
+  border-radius: 5px;
+  white-space: nowrap;
 }
 
-.emoji-input {
-  width: 38px;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 4px;
-  font-size: 16px;
+.header-preview-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sentence-en-preview {
+  font-size: 13px;
+  font-weight: 600;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sentence-en-preview.empty {
+  color: #64748b;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.sentence-vi-preview {
+  font-size: 12px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vocab-ipa-preview {
+  font-size: 11.5px;
+  color: #38bdf8;
+  font-family: monospace;
 }
 
 .vocab-card-title {
-  font-size: 15px;
+  font-size: 14px;
+  font-weight: 700;
   color: #f8fafc;
 }
 
-.vocab-header-right {
-  margin-left: auto;
+.emoji-input {
+  width: 34px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  padding: 3px;
+  font-size: 15px;
+}
+
+.header-formula-pill {
+  font-size: 11px;
+  font-family: monospace;
+  background: rgba(56, 189, 248, 0.1);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.header-category-pill {
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  padding: 2px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-transform: capitalize;
+}
+
+.card-reorder-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 3px;
+}
+
+.btn-icon-tiny {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-icon-tiny:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
+}
+
+.btn-icon-tiny:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.icon-svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Accordion Body */
+.grammar-accordion-body,
+.vocab-accordion-body {
+  padding: 16px 18px 20px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.form-label-compact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-bottom: 6px;
+}
+
+.label-icon {
+  font-size: 13px;
+}
+
+.field-micro-hint {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+.input-monospace {
+  font-family: monospace;
+  color: #38bdf8 !important;
+  font-size: 12.5px;
+}
+
+.input-highlight-target {
+  border-color: rgba(6, 182, 212, 0.4) !important;
+  color: #ecfeff !important;
+  font-weight: 600;
+}
+
+.input-highlight-target:focus {
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3) !important;
+}
+
+.grammar-tip-textarea {
+  width: 100%;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: #e2e8f0;
+  font-size: 12.5px;
+  resize: vertical;
+  min-height: 60px;
+  box-sizing: border-box;
+}
+
+/* Distractor chips preview */
+.distractor-chips-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.chips-label {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.distractor-chip-tag {
+  font-size: 11px;
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  padding: 1px 7px;
+  border-radius: 4px;
+  font-family: monospace;
 }
 
 .rarity-badge-select {
@@ -1564,11 +2283,15 @@ input:checked + .switch-slider:before {
   height: 28px;
   border-radius: 6px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-icon:hover {
   background: rgba(239, 68, 68, 0.2);
   color: #f87171;
+  border-color: rgba(239, 68, 68, 0.4);
 }
 
 .input-with-action {
@@ -1653,47 +2376,6 @@ input:checked + .switch-slider:before {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 6px;
-}
-
-/* Grammar list */
-.grammar-cards-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.grammar-edit-card {
-  background: rgba(30, 41, 59, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 16px 20px;
-}
-
-.grammar-card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
-}
-
-.grammar-index-badge {
-  font-size: 11px;
-  font-weight: 800;
-  background: rgba(168, 85, 247, 0.15);
-  color: #c084fc;
-  padding: 2px 8px;
-  border-radius: 6px;
-}
-
-.pattern-input {
-  flex: 1;
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  padding: 6px 10px;
-  color: #38bdf8;
-  font-size: 13px;
-  font-family: monospace;
 }
 
 .section-title {

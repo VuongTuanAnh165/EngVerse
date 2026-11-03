@@ -821,6 +821,23 @@ onMounted(() => {
                   />
                 </div>
               </div>
+
+              <div class="form-group">
+                <label>Chức năng giao tiếp đời thực (Functional Category):</label>
+                <select v-model="grammar.functionalCategory" class="theme-select">
+                  <option value="">-- Mặc định (Tự động nhận diện) --</option>
+                  <option value="asking">🙋‍♂️ Asking — Yêu cầu &amp; Hỏi han lịch sự</option>
+                  <option value="refusing">🛡️ Refusing — Từ chối khéo &amp; Ngăn chặn</option>
+                  <option value="apologizing">🙏 Apologizing — Xin lỗi &amp; Nhận lỗi</option>
+                  <option value="persuading">💡 Persuading — Khuyên nhủ &amp; Thuyết phục</option>
+                  <option value="clarifying">🔍 Clarifying — Làm rõ &amp; Xác nhận chứng cứ</option>
+                  <option value="describing">🎨 Describing — Miêu tả đặc điểm &amp; Nhận định</option>
+                  <option value="narrating">📖 Narrating — Kể chuyện &amp; Diễn biến thời gian</option>
+                  <option value="negotiating">🤝 Negotiating — Đàm phán &amp; Thỏa thuận điều kiện</option>
+                  <option value="complaining">⚠️ Complaining — Khiếu nại &amp; Báo sự cố</option>
+                  <option value="thanking">💐 Thanking — Cảm ơn &amp; Tri ân</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>

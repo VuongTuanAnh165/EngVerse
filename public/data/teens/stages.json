@@ -367,7 +367,8 @@
           "open",
           "whom"
         ],
-        "grammarTip": "Sau 'need to' là động từ nguyên mẫu (figure out). Mệnh đề danh từ làm tân ngữ theo cấu trúc 'who + V-ed' (who opened)."
+        "grammarTip": "Sau 'need to' là động từ nguyên mẫu (figure out). Mệnh đề danh từ làm tân ngữ theo cấu trúc 'who + V-ed' (who opened).",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_t_102",
@@ -380,7 +381,8 @@
           "hang",
           "ring"
         ],
-        "grammarTip": "Dùng Quá khứ tiếp diễn (was/were + V-ing) cho hành động đang diễn ra và Quá khứ đơn (V2/ed) cho hành động cắt ngang."
+        "grammarTip": "Dùng Quá khứ tiếp diễn (was/were + V-ing) cho hành động đang diễn ra và Quá khứ đơn (V2/ed) cho hành động cắt ngang.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_103",
@@ -393,7 +395,8 @@
           "nothing",
           "suspiciously"
         ],
-        "grammarTip": "Trong câu hỏi quá khứ với 'Did', động từ chính ở dạng nguyên mẫu (see). Tính từ (suspicious) luôn đứng SAU đại từ bất định (anything)."
+        "grammarTip": "Trong câu hỏi quá khứ với 'Did', động từ chính ở dạng nguyên mẫu (see). Tính từ (suspicious) luôn đứng SAU đại từ bất định (anything).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_104",
@@ -406,7 +409,8 @@
           "alibis",
           "in"
         ],
-        "grammarTip": "Với trạng từ chỉ thời gian quá khứ 'last night', động từ 'have/has' chuyển về quá khứ đơn là 'had'."
+        "grammarTip": "Với trạng từ chỉ thời gian quá khứ 'last night', động từ 'have/has' chuyển về quá khứ đơn là 'had'.",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_t_105",
@@ -419,7 +423,8 @@
           "forgets",
           "backups"
         ],
-        "grammarTip": "Cấu trúc 'forget to + V (nguyên mẫu)' dùng để nhắc nhở ai đó đừng quên làm một nhiệm vụ cần thiết."
+        "grammarTip": "Cấu trúc 'forget to + V (nguyên mẫu)' dùng để nhắc nhở ai đó đừng quên làm một nhiệm vụ cần thiết.",
+        "functionalCategory": "refusing"
       }
     ],
     "aiRoleplayMission": {
@@ -836,7 +841,8 @@
           "go",
           "went"
         ],
-        "grammarTip": "Thì Hiện tại hoàn thành với 'just' diễn tả hành động vừa mới xảy ra: Chủ ngữ số ít + has + just + V3/ed (gone)."
+        "grammarTip": "Thì Hiện tại hoàn thành với 'just' diễn tả hành động vừa mới xảy ra: Chủ ngữ số ít + has + just + V3/ed (gone).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_202",
@@ -849,7 +855,8 @@
           "upload",
           "a"
         ],
-        "grammarTip": "Câu bị động ở thì Quá khứ đơn: S (số ít) + was + V3/ed (uploaded) + by + tác nhân. 'Anonymous' bắt đầu bằng nguyên âm nên đi với 'an'."
+        "grammarTip": "Câu bị động ở thì Quá khứ đơn: S (số ít) + was + V3/ed (uploaded) + by + tác nhân. 'Anonymous' bắt đầu bằng nguyên âm nên đi với 'an'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_203",
@@ -862,7 +869,8 @@
           "tracking",
           "to"
         ],
-        "grammarTip": "Sau động từ khuyết thiếu 'can', cụm động từ 'track down' giữ nguyên mẫu."
+        "grammarTip": "Sau động từ khuyết thiếu 'can', cụm động từ 'track down' giữ nguyên mẫu.",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_t_204",
@@ -875,7 +883,8 @@
           "hacked",
           "on"
         ],
-        "grammarTip": "Cấu trúc 'try to + V (nguyên mẫu)' mang nghĩa là cố gắng, nỗ lực thực hiện điều gì đó."
+        "grammarTip": "Cấu trúc 'try to + V (nguyên mẫu)' mang nghĩa là cố gắng, nỗ lực thực hiện điều gì đó.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_205",
@@ -888,7 +897,8 @@
           "to",
           "fakes"
         ],
-        "grammarTip": "Cấu trúc 'Stop + V-ing' có nghĩa là chấm dứt, ngừng hẳn một hành động đang làm."
+        "grammarTip": "Cấu trúc 'Stop + V-ing' có nghĩa là chấm dứt, ngừng hẳn một hành động đang làm.",
+        "functionalCategory": "refusing"
       }
     ],
     "aiRoleplayMission": {
@@ -1310,7 +1320,8 @@
           "showed",
           "would"
         ],
-        "grammarTip": "Câu điều kiện loại 1 (có thể xảy ra ở hiện tại/tương lai): Mệnh đề 'If' chia Hiện tại đơn (does not show up), mệnh đề chính dùng 'will + V'."
+        "grammarTip": "Câu điều kiện loại 1 (có thể xảy ra ở hiện tại/tương lai): Mệnh đề 'If' chia Hiện tại đơn (does not show up), mệnh đề chính dùng 'will + V'.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_t_302",
@@ -1323,7 +1334,8 @@
           "knockoffs",
           "cheaper"
         ],
-        "grammarTip": "Chủ ngữ số ít 'This gadget' đi với động từ 'looks'. Cấu trúc 'look like + cụm danh từ' nghĩa là trông giống như cái gì."
+        "grammarTip": "Chủ ngữ số ít 'This gadget' đi với động từ 'looks'. Cấu trúc 'look like + cụm danh từ' nghĩa là trông giống như cái gì.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_303",
@@ -1336,7 +1348,8 @@
           "are",
           "legitimately"
         ],
-        "grammarTip": "Trong câu hỏi ghép, mệnh đề phụ đứng sau 'know that...' giữ nguyên trật tự câu trần thuật (this chip is legit), không đảo ngữ."
+        "grammarTip": "Trong câu hỏi ghép, mệnh đề phụ đứng sau 'know that...' giữ nguyên trật tự câu trần thuật (this chip is legit), không đảo ngữ.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_304",
@@ -1349,7 +1362,8 @@
           "tells",
           "selling"
         ],
-        "grammarTip": "Câu mệnh lệnh bắt đầu bằng động từ nguyên mẫu (Chill out ... and tell me ...)."
+        "grammarTip": "Câu mệnh lệnh bắt đầu bằng động từ nguyên mẫu (Chill out ... and tell me ...).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_305",
@@ -1362,7 +1376,8 @@
           "enough",
           "crowd"
         ],
-        "grammarTip": "Cấu trúc 'too + Tính từ + to + Động từ nguyên mẫu' mang nghĩa: quá ... đến mức không thể làm gì."
+        "grammarTip": "Cấu trúc 'too + Tính từ + to + Động từ nguyên mẫu' mang nghĩa: quá ... đến mức không thể làm gì.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -1789,7 +1804,8 @@
           "ran",
           "times"
         ],
-        "grammarTip": "Sau liên từ chỉ thời gian 'before', dùng thì Hiện tại đơn (we run out of time) dù hành động hướng tới tương lai."
+        "grammarTip": "Sau liên từ chỉ thời gian 'before', dùng thì Hiện tại đơn (we run out of time) dù hành động hướng tới tương lai.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_402",
@@ -1802,7 +1818,8 @@
           "evidences",
           "store"
         ],
-        "grammarTip": "'Evidence' (bằng chứng) là danh từ KHÔNG đếm được trong tiếng Anh, nên không bao giờ thêm '-s' và luôn chia với động từ số ít (is)."
+        "grammarTip": "'Evidence' (bằng chứng) là danh từ KHÔNG đếm được trong tiếng Anh, nên không bao giờ thêm '-s' và luôn chia với động từ số ít (is).",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_t_403",
@@ -1815,7 +1832,8 @@
           "broke",
           "has"
         ],
-        "grammarTip": "Cấu trúc suy luận logic có căn cứ trong quá khứ: 'must have + V3/ed' (hẳn là đã làm gì)."
+        "grammarTip": "Cấu trúc suy luận logic có căn cứ trong quá khứ: 'must have + V3/ed' (hẳn là đã làm gì).",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_t_404",
@@ -1828,7 +1846,8 @@
           "accesses",
           "for"
         ],
-        "grammarTip": "Danh từ 'access' luôn đi kèm với giới từ 'to': 'access to something' (quyền truy cập vào cái gì)."
+        "grammarTip": "Danh từ 'access' luôn đi kèm với giới từ 'to': 'access to something' (quyền truy cập vào cái gì).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_405",
@@ -1841,7 +1860,8 @@
           "encrypting",
           "encrypt"
         ],
-        "grammarTip": "Bị động thì Hiện tại tiếp diễn: Chủ ngữ số nhiều (files) + are + being + V3/ed (encrypted)."
+        "grammarTip": "Bị động thì Hiện tại tiếp diễn: Chủ ngữ số nhiều (files) + are + being + V3/ed (encrypted).",
+        "functionalCategory": "narrating"
       }
     ],
     "aiRoleplayMission": {
@@ -2263,7 +2283,8 @@
           "stole",
           "gets"
         ],
-        "grammarTip": "Sau giới từ 'with' trong cụm 'get away with', động từ bắt buộc chia ở dạng V-ing (stealing)."
+        "grammarTip": "Sau giới từ 'with' trong cụm 'get away with', động từ bắt buộc chia ở dạng V-ing (stealing).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_502",
@@ -2276,7 +2297,8 @@
           "track",
           "expose"
         ],
-        "grammarTip": "Hai động từ nối nhau bằng 'and' cùng chia ở thì Hiện tại hoàn thành: have + tracked down ... and exposed."
+        "grammarTip": "Hai động từ nối nhau bằng 'and' cùng chia ở thì Hiện tại hoàn thành: have + tracked down ... and exposed.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_503",
@@ -2289,7 +2311,8 @@
           "will",
           "confessing"
         ],
-        "grammarTip": "Câu điều kiện loại 2 dùng để đưa lời khuyên đanh thép: 'If I were you, I would + V (nguyên mẫu)'."
+        "grammarTip": "Câu điều kiện loại 2 dùng để đưa lời khuyên đanh thép: 'If I were you, I would + V (nguyên mẫu)'.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_t_504",
@@ -2302,7 +2325,8 @@
           "stopping",
           "too"
         ],
-        "grammarTip": "'Enough' đứng TRƯỚC danh từ (enough evidence) và theo sau bởi 'to + V nguyên mẫu'."
+        "grammarTip": "'Enough' đứng TRƯỚC danh từ (enough evidence) và theo sau bởi 'to + V nguyên mẫu'.",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_t_505",
@@ -2315,7 +2339,8 @@
           "a",
           "figure"
         ],
-        "grammarTip": "'Even though' theo sau là một mệnh đề đầy đủ (S + V), khác với 'Despite / In spite of' đi với cụm danh từ."
+        "grammarTip": "'Even though' theo sau là một mệnh đề đầy đủ (S + V), khác với 'Despite / In spite of' đi với cụm danh từ.",
+        "functionalCategory": "clarifying"
       }
     ],
     "aiRoleplayMission": {
@@ -2749,7 +2774,8 @@
           "disqualify",
           "disqualifying"
         ],
-        "grammarTip": "Câu bị động thì Hiện tại hoàn thành: Chủ ngữ số ít + has been + V3/ed (disqualified)."
+        "grammarTip": "Câu bị động thì Hiện tại hoàn thành: Chủ ngữ số ít + has been + V3/ed (disqualified).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_602",
@@ -2762,7 +2788,8 @@
           "was",
           "comebacks"
         ],
-        "grammarTip": "Sau 'Even though' là một mệnh đề đầy đủ (S + V: they were the underdog)."
+        "grammarTip": "Sau 'Even though' là một mệnh đề đầy đủ (S + V: they were the underdog).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_603",
@@ -2775,7 +2802,8 @@
           "to",
           "for"
         ],
-        "grammarTip": "Cấu trúc cố định: 'accuse someone of + V-ing' (buộc tội/cáo buộc ai làm việc gì)."
+        "grammarTip": "Cấu trúc cố định: 'accuse someone of + V-ing' (buộc tội/cáo buộc ai làm việc gì).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_604",
@@ -2788,7 +2816,8 @@
           "fixes",
           "lagging"
         ],
-        "grammarTip": "Câu điều kiện loại 1: 'If + S + V (Hiện tại đơn), S + can/will + V (nguyên mẫu)'."
+        "grammarTip": "Câu điều kiện loại 1: 'If + S + V (Hiện tại đơn), S + can/will + V (nguyên mẫu)'.",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_t_605",
@@ -2801,7 +2830,8 @@
           "reporting",
           "toxicity"
         ],
-        "grammarTip": "Sau động từ khuyết thiếu 'should', động từ chính giữ nguyên mẫu (report)."
+        "grammarTip": "Sau động từ khuyết thiếu 'should', động từ chính giữ nguyên mẫu (report).",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -3225,7 +3255,8 @@
           "are",
           "imposters"
         ],
-        "grammarTip": "Mệnh đề quan hệ: Dùng 'that' (hoặc 'which') để bổ nghĩa cho sự vật/hiện tượng (The hologram)."
+        "grammarTip": "Mệnh đề quan hệ: Dùng 'that' (hoặc 'which') để bổ nghĩa cho sự vật/hiện tượng (The hologram).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_702",
@@ -3238,7 +3269,8 @@
           "to not",
           "warns"
         ],
-        "grammarTip": "Cấu trúc cảnh báo ai đừng làm gì: 'warn + someone + NOT to + V (nguyên mẫu)'."
+        "grammarTip": "Cấu trúc cảnh báo ai đừng làm gì: 'warn + someone + NOT to + V (nguyên mẫu)'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_703",
@@ -3251,7 +3283,8 @@
           "among",
           "clones"
         ],
-        "grammarTip": "Cấu trúc 'It is + tính từ + to V (nguyên mẫu)' kết hợp giới từ 'between A and B' (giữa A và B)."
+        "grammarTip": "Cấu trúc 'It is + tính từ + to V (nguyên mẫu)' kết hợp giới từ 'between A and B' (giữa A và B).",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_t_704",
@@ -3264,7 +3297,8 @@
           "refuse",
           "ransoms"
         ],
-        "grammarTip": "Sau động từ 'refuse' (từ chối), động từ theo sau luôn ở dạng 'to + V (nguyên mẫu)'."
+        "grammarTip": "Sau động từ 'refuse' (từ chối), động từ theo sau luôn ở dạng 'to + V (nguyên mẫu)'.",
+        "functionalCategory": "refusing"
       },
       {
         "id": "g_t_705",
@@ -3277,7 +3311,8 @@
           "speaks",
           "at"
         ],
-        "grammarTip": "Sau 'Let us' (Let's), các động từ nối bằng 'and' đều giữ nguyên mẫu (sneak into ... and speak up)."
+        "grammarTip": "Sau 'Let us' (Let's), các động từ nối bằng 'and' đều giữ nguyên mẫu (sneak into ... and speak up).",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -3704,7 +3739,8 @@
           "took",
           "keeping"
         ],
-        "grammarTip": "'Unless' (= If ... not: Trừ khi) đi với mệnh đề chia ở thì Hiện tại đơn (we take a shortcut)."
+        "grammarTip": "'Unless' (= If ... not: Trừ khi) đi với mệnh đề chia ở thì Hiện tại đơn (we take a shortcut).",
+        "functionalCategory": "refusing"
       },
       {
         "id": "g_t_802",
@@ -3717,7 +3753,8 @@
           "avoid",
           "obstacles"
         ],
-        "grammarTip": "Trạng từ 'narrowly' đứng trước động từ thường (avoided) để nhấn mạnh hành động xảy ra suýt soát trong gang tấc."
+        "grammarTip": "Trạng từ 'narrowly' đứng trước động từ thường (avoided) để nhấn mạnh hành động xảy ra suýt soát trong gang tấc.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_803",
@@ -3730,7 +3767,8 @@
           "are",
           "malfunction"
         ],
-        "grammarTip": "Câu mệnh lệnh mở đầu bằng động từ nguyên mẫu (Switch off). Chủ ngữ số ít 'the sensor' đi với 'is + V-ing'."
+        "grammarTip": "Câu mệnh lệnh mở đầu bằng động từ nguyên mẫu (Switch off). Chủ ngữ số ít 'the sensor' đi với 'is + V-ing'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_804",
@@ -3743,7 +3781,8 @@
           "outsmarts",
           "manage"
         ],
-        "grammarTip": "Cấu trúc 'manage to + V (nguyên mẫu)' diễn tả việc nỗ lực xoay xở và thực hiện thành công một việc khó khăn."
+        "grammarTip": "Cấu trúc 'manage to + V (nguyên mẫu)' diễn tả việc nỗ lực xoay xở và thực hiện thành công một việc khó khăn.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_805",
@@ -3756,7 +3795,8 @@
           "flew",
           "radars"
         ],
-        "grammarTip": "Sau liên từ 'while' khi rút gọn chủ ngữ, động từ chia ở dạng V-ing (while flying)."
+        "grammarTip": "Sau liên từ 'while' khi rút gọn chủ ngữ, động từ chia ở dạng V-ing (while flying).",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -4190,7 +4230,8 @@
           "transmitted",
           "be"
         ],
-        "grammarTip": "Thì Tương lai tiếp diễn (will be + V-ing) diễn tả hành động sẽ đang diễn ra tại một thời điểm xác định trong tương lai."
+        "grammarTip": "Thì Tương lai tiếp diễn (will be + V-ing) diễn tả hành động sẽ đang diễn ra tại một thời điểm xác định trong tương lai.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_902",
@@ -4203,7 +4244,8 @@
           "relying",
           "in"
         ],
-        "grammarTip": "Chủ ngữ số nhiều 'Millions of people' đi với cụm động từ nguyên mẫu 'rely on'."
+        "grammarTip": "Chủ ngữ số nhiều 'Millions of people' đi với cụm động từ nguyên mẫu 'rely on'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_903",
@@ -4216,7 +4258,8 @@
           "would",
           "blackouts"
         ],
-        "grammarTip": "Câu điều kiện loại 1 cảnh báo nguy cơ thực tế: 'If + S + do not + V, S + will + V'."
+        "grammarTip": "Câu điều kiện loại 1 cảnh báo nguy cơ thực tế: 'If + S + do not + V, S + will + V'.",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_t_904",
@@ -4229,7 +4272,8 @@
           "preventing",
           "catastrophes"
         ],
-        "grammarTip": "'There are' đi với danh từ số nhiều 'only seconds'. Cụm 'to prevent a catastrophe' chỉ mục đích."
+        "grammarTip": "'There are' đi với danh từ số nhiều 'only seconds'. Cụm 'to prevent a catastrophe' chỉ mục đích.",
+        "functionalCategory": "refusing"
       },
       {
         "id": "g_t_905",
@@ -4242,7 +4286,8 @@
           "transmitting",
           "orbits"
         ],
-        "grammarTip": "Câu bị động với động từ khuyết thiếu: 'must + be + V3/ed (transmitted)'."
+        "grammarTip": "Câu bị động với động từ khuyết thiếu: 'must + be + V3/ed (transmitted)'.",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -4679,7 +4724,8 @@
           "are",
           "manipulating"
         ],
-        "grammarTip": "Cấu trúc nhượng bộ nâng cao B2: 'No matter how + Tính từ/Trạng từ + S + V' (Dù có ... thế nào đi chăng nữa)."
+        "grammarTip": "Cấu trúc nhượng bộ nâng cao B2: 'No matter how + Tính từ/Trạng từ + S + V' (Dù có ... thế nào đi chăng nữa).",
+        "functionalCategory": "refusing"
       },
       {
         "id": "g_t_1002",
@@ -4692,7 +4738,8 @@
           "standing",
           "freely"
         ],
-        "grammarTip": "Cụm động từ 3 từ 'stand up for' (đứng lên bảo vệ) giữ nguyên mẫu sau 'will'."
+        "grammarTip": "Cụm động từ 3 từ 'stand up for' (đứng lên bảo vệ) giữ nguyên mẫu sau 'will'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1003",
@@ -4705,7 +4752,8 @@
           "have",
           "unstoppably"
         ],
-        "grammarTip": "'By + V-ing' chỉ phương thức. Danh từ tập hợp 'our squad' chia số ít với 'has become + Tính từ (unstoppable)'."
+        "grammarTip": "'By + V-ing' chỉ phương thức. Danh từ tập hợp 'our squad' chia số ít với 'has become + Tính từ (unstoppable)'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_1004",
@@ -4718,7 +4766,8 @@
           "destinies",
           "who"
         ],
-        "grammarTip": "Câu chẻ (Cleft sentence) nhấn mạnh chủ ngữ: 'It is + Chủ ngữ (số ít) + that + V-s/es (chooses)'."
+        "grammarTip": "Câu chẻ (Cleft sentence) nhấn mạnh chủ ngữ: 'It is + Chủ ngữ (số ít) + that + V-s/es (chooses)'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1005",
@@ -4731,7 +4780,8 @@
           "stops",
           "stopping"
         ],
-        "grammarTip": "Cấu trúc 'Neither A nor B' (Cả A lẫn B đều không...)."
+        "grammarTip": "Cấu trúc 'Neither A nor B' (Cả A lẫn B đều không...).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -5162,7 +5212,8 @@
           "replace",
           "arriving"
         ],
-        "grammarTip": "Thì Quá khứ hoàn thành (had + V3/ed) diễn tả một hành động đã xảy ra và hoàn tất TRƯỚC một hành động khác trong quá khứ."
+        "grammarTip": "Thì Quá khứ hoàn thành (had + V3/ed) diễn tả một hành động đã xảy ra và hoàn tất TRƯỚC một hành động khác trong quá khứ.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1102",
@@ -5175,7 +5226,8 @@
           "a",
           "accomplices"
         ],
-        "grammarTip": "Cấu trúc 'could not have + V3/ed' dùng để suy luận một việc chắc chắn đã KHÔNG THỂ xảy ra trong quá khứ."
+        "grammarTip": "Cấu trúc 'could not have + V3/ed' dùng để suy luận một việc chắc chắn đã KHÔNG THỂ xảy ra trong quá khứ.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_t_1103",
@@ -5188,7 +5240,8 @@
           "disable",
           "disabling"
         ],
-        "grammarTip": "Câu bị động ở thì Quá khứ hoàn thành: 'had been + V3/ed (disabled)'."
+        "grammarTip": "Câu bị động ở thì Quá khứ hoàn thành: 'had been + V3/ed (disabled)'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1104",
@@ -5201,7 +5254,8 @@
           "forging",
           "pricelessly"
         ],
-        "grammarTip": "Tính từ 'priceless' dù có đuôi '-less' nhưng mang nghĩa tích cực là 'vô giá' (quá quý giá không định giá được)."
+        "grammarTip": "Tính từ 'priceless' dù có đuôi '-less' nhưng mang nghĩa tích cực là 'vô giá' (quá quý giá không định giá được).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1105",
@@ -5214,7 +5268,8 @@
           "being",
           "decoys"
         ],
-        "grammarTip": "Cấu trúc 'turn out to be + Danh từ/Tính từ' có nghĩa là 'hóa ra là...'."
+        "grammarTip": "Cấu trúc 'turn out to be + Danh từ/Tính từ' có nghĩa là 'hóa ra là...'.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -5646,7 +5701,8 @@
           "logging",
           "worlds"
         ],
-        "grammarTip": "Trong câu tường thuật (Reported speech) với động từ giới thiệu ở quá khứ (said), 'can not' lùi một thì thành 'could not'."
+        "grammarTip": "Trong câu tường thuật (Reported speech) với động từ giới thiệu ở quá khứ (said), 'can not' lùi một thì thành 'could not'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_1202",
@@ -5659,7 +5715,8 @@
           "has",
           "decoding"
         ],
-        "grammarTip": "Câu ước ở hiện tại: 'S + wish(es) + S + V2/ed (Quá khứ đơn)' dùng để diễn tả mong ước trái ngược với thực tế hiện tại."
+        "grammarTip": "Câu ước ở hiện tại: 'S + wish(es) + S + V2/ed (Quá khứ đơn)' dùng để diễn tả mong ước trái ngược với thực tế hiện tại.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1203",
@@ -5672,7 +5729,8 @@
           "will",
           "trapping"
         ],
-        "grammarTip": "Câu điều kiện loại 2 (giả định ở hiện tại): 'If + S + V2/ed (fixed), S + would (not) + V nguyên mẫu'."
+        "grammarTip": "Câu điều kiện loại 2 (giả định ở hiện tại): 'If + S + V2/ed (fixed), S + would (not) + V nguyên mẫu'.",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_t_1204",
@@ -5685,7 +5743,8 @@
           "to",
           "logged"
         ],
-        "grammarTip": "Cấu trúc cố định: 'prevent + someone + from + V-ing' (ngăn cản ai làm việc gì)."
+        "grammarTip": "Cấu trúc cố định: 'prevent + someone + from + V-ing' (ngăn cản ai làm việc gì).",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_t_1205",
@@ -5698,7 +5757,8 @@
           "opens",
           "opening"
         ],
-        "grammarTip": "Liên từ 'Once' (Một khi...) đi với thì Hiện tại đơn (we decode) để chỉ điều kiện xảy ra trước trong tương lai."
+        "grammarTip": "Liên từ 'Once' (Một khi...) đi với thì Hiện tại đơn (we decode) để chỉ điều kiện xảy ra trước trong tương lai.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -6135,7 +6195,8 @@
           "contaminate",
           "contaminated"
         ],
-        "grammarTip": "Thì Hiện tại hoàn thành tiếp diễn (have/has been + V-ing) nhấn mạnh tính liên tục của một hành động bắt đầu trong quá khứ và vẫn đang tiếp diễn ở hiện tại."
+        "grammarTip": "Thì Hiện tại hoàn thành tiếp diễn (have/has been + V-ing) nhấn mạnh tính liên tục của một hành động bắt đầu trong quá khứ và vẫn đang tiếp diễn ở hiện tại.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1302",
@@ -6148,7 +6209,8 @@
           "testing",
           "tests"
         ],
-        "grammarTip": "Thể sai khiến bị động: 'have/had + Vật (that water sample) + V3/ed (tested)' mang nghĩa là nhờ/cho ai làm gì đối với vật đó."
+        "grammarTip": "Thể sai khiến bị động: 'have/had + Vật (that water sample) + V3/ed (tested)' mang nghĩa là nhờ/cho ai làm gì đối với vật đó.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_1303",
@@ -6161,7 +6223,8 @@
           "covers",
           "hazards"
         ],
-        "grammarTip": "Cấu trúc 'try to + Phrasal Verb nguyên mẫu (cover up)' diễn tả nỗ lực cố gắng che đậy một sai phạm."
+        "grammarTip": "Cấu trúc 'try to + Phrasal Verb nguyên mẫu (cover up)' diễn tả nỗ lực cố gắng che đậy một sai phạm.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1304",
@@ -6174,7 +6237,8 @@
           "neutralizes",
           "formulas"
         ],
-        "grammarTip": "Cấu trúc 'use + Object + to + V nguyên mẫu' dùng để chỉ mục đích sử dụng."
+        "grammarTip": "Cấu trúc 'use + Object + to + V nguyên mẫu' dùng để chỉ mục đích sử dụng.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1305",
@@ -6187,7 +6251,8 @@
           "place",
           "on"
         ],
-        "grammarTip": "Cụm giới từ cố định: 'under quarantine' (đang trong tình trạng cách ly phong tỏa)."
+        "grammarTip": "Cụm giới từ cố định: 'under quarantine' (đang trong tình trạng cách ly phong tỏa).",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -6619,7 +6684,8 @@
           "has",
           "arrived"
         ],
-        "grammarTip": "Thì Tương lai hoàn thành (will have + V3/ed) diễn tả một hành động sẽ hoàn tất trước một thời điểm hoặc một hành động khác trong tương lai (by the time + Hiện tại đơn)."
+        "grammarTip": "Thì Tương lai hoàn thành (will have + V3/ed) diễn tả một hành động sẽ hoàn tất trước một thời điểm hoặc một hành động khác trong tương lai (by the time + Hiện tại đơn).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_t_1402",
@@ -6632,7 +6698,8 @@
           "blends",
           "so that"
         ],
-        "grammarTip": "Cấu trúc 'in order to + V nguyên mẫu' (để làm gì) dùng để nhấn mạnh mục đích của hành động."
+        "grammarTip": "Cấu trúc 'in order to + V nguyên mẫu' (để làm gì) dùng để nhấn mạnh mục đích của hành động.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1403",
@@ -6645,7 +6712,8 @@
           "intercepts",
           "compartments"
         ],
-        "grammarTip": "Cụm từ cố định 'go undercover' (đi làm nhiệm vụ mật phục dưới vỏ bọc)."
+        "grammarTip": "Cụm từ cố định 'go undercover' (đi làm nhiệm vụ mật phục dưới vỏ bọc).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_1404",
@@ -6658,7 +6726,8 @@
           "handing",
           "to hand"
         ],
-        "grammarTip": "Thức giả định (Subjunctive): Sau 'demand that + Chủ ngữ', động từ luôn ở dạng nguyên mẫu không chia (hand over)."
+        "grammarTip": "Thức giả định (Subjunctive): Sau 'demand that + Chủ ngữ', động từ luôn ở dạng nguyên mẫu không chia (hand over).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_1405",
@@ -6671,7 +6740,8 @@
           "opened",
           "blackmail"
         ],
-        "grammarTip": "Cấu trúc 'be blackmailed into + V-ing' có nghĩa là bị tống tiền/uy hiếp buộc phải làm việc gì."
+        "grammarTip": "Cấu trúc 'be blackmailed into + V-ing' có nghĩa là bị tống tiền/uy hiếp buộc phải làm việc gì.",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -7103,7 +7173,8 @@
           "intercept",
           "succeed"
         ],
-        "grammarTip": "Câu điều kiện loại 3 (giả định trái ngược với quá khứ): 'If + S + had (not) + V3/ed, S + would (not) have + V3/ed'."
+        "grammarTip": "Câu điều kiện loại 3 (giả định trái ngược với quá khứ): 'If + S + had (not) + V3/ed, S + would (not) have + V3/ed'.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_t_1502",
@@ -7116,7 +7187,8 @@
           "seeing",
           "illusion"
         ],
-        "grammarTip": "Cụm động từ 'see through something' (nhìn thấu bản chất/mánh khóe) giữ nguyên mẫu sau 'can'."
+        "grammarTip": "Cụm động từ 'see through something' (nhìn thấu bản chất/mánh khóe) giữ nguyên mẫu sau 'can'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1503",
@@ -7129,7 +7201,8 @@
           "deceives",
           "deceiving"
         ],
-        "grammarTip": "Đảo ngữ nhấn mạnh với trạng từ phủ định ở đầu câu: 'Never again + will + S + V (nguyên mẫu)'."
+        "grammarTip": "Đảo ngữ nhấn mạnh với trạng từ phủ định ở đầu câu: 'Never again + will + S + V (nguyên mẫu)'.",
+        "functionalCategory": "refusing"
       },
       {
         "id": "g_t_1504",
@@ -7142,7 +7215,8 @@
           "backfire",
           "unmasking"
         ],
-        "grammarTip": "Chủ ngữ số ít 'Your evil plan' đi với Hiện tại hoàn thành 'has backfired' để nhấn mạnh kết quả vừa xảy ra."
+        "grammarTip": "Chủ ngữ số ít 'Your evil plan' đi với Hiện tại hoàn thành 'has backfired' để nhấn mạnh kết quả vừa xảy ra.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1505",
@@ -7155,7 +7229,8 @@
           "invincibly",
           "win"
         ],
-        "grammarTip": "Sau 'No matter how' là một Tính từ (invincible) làm bổ ngữ cho động từ 'are'."
+        "grammarTip": "Sau 'No matter how' là một Tính từ (invincible) làm bổ ngữ cho động từ 'are'.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -7592,7 +7667,8 @@
           "cuts",
           "overloaded"
         ],
-        "grammarTip": "Cấu trúc 'had better + V (nguyên mẫu)' dùng để đưa ra lời khuyên khẩn cấp (nếu không làm sẽ dẫn đến hậu quả xấu)."
+        "grammarTip": "Cấu trúc 'had better + V (nguyên mẫu)' dùng để đưa ra lời khuyên khẩn cấp (nếu không làm sẽ dẫn đến hậu quả xấu).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_1602",
@@ -7605,7 +7681,8 @@
           "stabilized",
           "altitudes"
         ],
-        "grammarTip": "Liên từ điều kiện 'As long as' (Miễn là...) đi với thì Hiện tại đơn (we stabilize) để diễn tả điều kiện ở tương lai."
+        "grammarTip": "Liên từ điều kiện 'As long as' (Miễn là...) đi với thì Hiện tại đơn (we stabilize) để diễn tả điều kiện ở tương lai.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1603",
@@ -7618,7 +7695,8 @@
           "evacuating",
           "precautions"
         ],
-        "grammarTip": "Câu bị động với động từ khuyết thiếu: 'must + be + V3/ed (evacuated)'."
+        "grammarTip": "Câu bị động với động từ khuyết thiếu: 'must + be + V3/ed (evacuated)'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_1604",
@@ -7631,7 +7709,8 @@
           "renewably",
           "cause"
         ],
-        "grammarTip": "Chủ ngữ số ít 'the sky city' đi với động từ chia ngôi thứ 3 số ít 'causes'."
+        "grammarTip": "Chủ ngữ số ít 'the sky city' đi với động từ chia ngôi thứ 3 số ít 'causes'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_1605",
@@ -7644,7 +7723,8 @@
           "activates",
           "activating"
         ],
-        "grammarTip": "'In case of + Danh từ/Cụm danh từ' (Trong trường hợp có sự cố gì) khác với 'In case + Mệnh đề (S + V)'."
+        "grammarTip": "'In case of + Danh từ/Cụm danh từ' (Trong trường hợp có sự cố gì) khác với 'In case + Mệnh đề (S + V)'.",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -8082,7 +8162,8 @@
           "unravel",
           "ciphers"
         ],
-        "grammarTip": "Mệnh đề phân từ hoàn thành 'Having + V3/ed' đứng đầu câu dùng để nhấn mạnh hành động đã hoàn tất trước khi hành động ở mệnh đề chính xảy ra."
+        "grammarTip": "Mệnh đề phân từ hoàn thành 'Having + V3/ed' đứng đầu câu dùng để nhấn mạnh hành động đã hoàn tất trước khi hành động ở mệnh đề chính xảy ra.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1702",
@@ -8095,7 +8176,8 @@
           "sending",
           "must send"
         ],
-        "grammarTip": "Suy luận bị động trong quá khứ: 'must have been + V3/ed (sent)' (hẳn là đã được...)."
+        "grammarTip": "Suy luận bị động trong quá khứ: 'must have been + V3/ed (sent)' (hẳn là đã được...).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_1703",
@@ -8108,7 +8190,8 @@
           "foresaw",
           "origins"
         ],
-        "grammarTip": "Đảo ngữ với 'Little' ở đầu câu: 'Little + did + S + V (nguyên mẫu: foresee)' mang nghĩa 'Hầu như không biết/không ngờ rằng...'."
+        "grammarTip": "Đảo ngữ với 'Little' ở đầu câu: 'Little + did + S + V (nguyên mẫu: foresee)' mang nghĩa 'Hầu như không biết/không ngờ rằng...'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1704",
@@ -8121,7 +8204,8 @@
           "stopped",
           "would"
         ],
-        "grammarTip": "Ôn tập 'Unless + S + V (Hiện tại đơn), S + will + V (nguyên mẫu)'."
+        "grammarTip": "Ôn tập 'Unless + S + V (Hiện tại đơn), S + will + V (nguyên mẫu)'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1705",
@@ -8134,7 +8218,8 @@
           "unravels",
           "classify"
         ],
-        "grammarTip": "Cấu trúc 'It is (high) time + S + V2/ed (Quá khứ giả định)' dùng để nhấn mạnh đã đến lúc cần phải làm ngay một việc gì đó."
+        "grammarTip": "Cấu trúc 'It is (high) time + S + V2/ed (Quá khứ giả định)' dùng để nhấn mạnh đã đến lúc cần phải làm ngay một việc gì đó.",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -8572,7 +8657,8 @@
           "with",
           "innocently"
         ],
-        "grammarTip": "Tính từ 'innocent' đi với giới từ 'of' (be innocent of a crime/charge: vô tội trước một tội danh)."
+        "grammarTip": "Tính từ 'innocent' đi với giới từ 'of' (be innocent of a crime/charge: vô tội trước một tội danh).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1802",
@@ -8585,7 +8671,8 @@
           "forges",
           "corruptly"
         ],
-        "grammarTip": "Câu chẻ nhấn mạnh thủ phạm trong quá khứ: 'It was + [Người] + who + V2/ed'."
+        "grammarTip": "Câu chẻ nhấn mạnh thủ phạm trong quá khứ: 'It was + [Người] + who + V2/ed'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_t_1803",
@@ -8598,7 +8685,8 @@
           "testifying",
           "verdicts"
         ],
-        "grammarTip": "Chủ ngữ số ít 'the tribunal' đi với động từ chia ngôi thứ 3 số ít 'announces'."
+        "grammarTip": "Chủ ngữ số ít 'the tribunal' đi với động từ chia ngôi thứ 3 số ít 'announces'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_1804",
@@ -8611,7 +8699,8 @@
           "exonerating",
           "classify"
         ],
-        "grammarTip": "Động từ 'exonerate' (minh oan/giải tội) giữ nguyên mẫu sau 'will'."
+        "grammarTip": "Động từ 'exonerate' (minh oan/giải tội) giữ nguyên mẫu sau 'will'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1805",
@@ -8624,7 +8713,8 @@
           "objections",
           "were"
         ],
-        "grammarTip": "Cụm từ cố định trong tòa án: 'raise an objection' (đưa ra lời phản đối)."
+        "grammarTip": "Cụm từ cố định trong tòa án: 'raise an objection' (đưa ra lời phản đối).",
+        "functionalCategory": "refusing"
       }
     ],
     "aiRoleplayMission": {
@@ -9056,7 +9146,8 @@
           "infiltrating",
           "use"
         ],
-        "grammarTip": "Đảo ngữ với 'Only by + V-ing' ở đầu câu: mệnh đề chính phải đảo trợ động từ lên trước chủ ngữ (can we infiltrate)."
+        "grammarTip": "Đảo ngữ với 'Only by + V-ing' ở đầu câu: mệnh đề chính phải đảo trợ động từ lên trước chủ ngữ (can we infiltrate).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1902",
@@ -9069,7 +9160,8 @@
           "disable",
           "open"
         ],
-        "grammarTip": "Cấu trúc đảo ngữ nâng cao C1: 'No sooner + had + S + V3/ed + than + S + V2/ed' (Vừa mới ... thì đã ...)."
+        "grammarTip": "Cấu trúc đảo ngữ nâng cao C1: 'No sooner + had + S + V3/ed + than + S + V2/ed' (Vừa mới ... thì đã ...).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_1903",
@@ -9082,7 +9174,8 @@
           "bypassing",
           "a"
         ],
-        "grammarTip": "'Electromagnetic' bắt đầu bằng nguyên âm 'e' nên đi với mạo từ 'an'."
+        "grammarTip": "'Electromagnetic' bắt đầu bằng nguyên âm 'e' nên đi với mạo từ 'an'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_1904",
@@ -9095,7 +9188,8 @@
           "synchronize",
           "be"
         ],
-        "grammarTip": "Trạng từ 'perfectly' đứng trước tính từ/phân từ 'synchronized' để bổ nghĩa."
+        "grammarTip": "Trạng từ 'perfectly' đứng trước tính từ/phân từ 'synchronized' để bổ nghĩa.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_1905",
@@ -9108,7 +9202,8 @@
           "reaching",
           "mainframes"
         ],
-        "grammarTip": "Ôn tập mệnh đề phân từ hoàn thành 'Having + V3/ed (bypassed)' chỉ hành động xảy ra trước."
+        "grammarTip": "Ôn tập mệnh đề phân từ hoàn thành 'Having + V3/ed (bypassed)' chỉ hành động xảy ra trước.",
+        "functionalCategory": "narrating"
       }
     ],
     "aiRoleplayMission": {
@@ -9542,7 +9637,8 @@
           "coexisting",
           "coexists"
         ],
-        "grammarTip": "Mệnh đề nhượng bộ với 'Even though + S + V' dùng để tạo lập luận đối chiếu sắc bén ở cấp độ B2+/C1."
+        "grammarTip": "Mệnh đề nhượng bộ với 'Even though + S + V' dùng để tạo lập luận đối chiếu sắc bén ở cấp độ B2+/C1.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_t_2002",
@@ -9555,7 +9651,8 @@
           "creates",
           "legacies"
         ],
-        "grammarTip": "Danh động từ của 'defy' là 'defying' (By defying impossible odds)."
+        "grammarTip": "Danh động từ của 'defy' là 'defying' (By defying impossible odds).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_2003",
@@ -9568,7 +9665,8 @@
           "brings",
           "singularities"
         ],
-        "grammarTip": "Sau 'Instead of' là V-ing (erasing). Sau 'let + Object (this singularity)' là động từ nguyên mẫu (bring)."
+        "grammarTip": "Sau 'Instead of' là V-ing (erasing). Sau 'let + Object (this singularity)' là động từ nguyên mẫu (bring).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_t_2004",
@@ -9581,7 +9679,8 @@
           "are",
           "paradoxes"
         ],
-        "grammarTip": "Mệnh đề danh ngữ 'What seems like a paradox' làm chủ ngữ số ít nên đi với động từ 'is'."
+        "grammarTip": "Mệnh đề danh ngữ 'What seems like a paradox' làm chủ ngữ số ít nên đi với động từ 'is'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_t_2005",
@@ -9594,7 +9693,8 @@
           "remaining",
           "destinies"
         ],
-        "grammarTip": "Cấu trúc 'remain + Tính từ (sovereign) + over something' (luôn giữ vị thế làm chủ tối cao đối với cái gì)."
+        "grammarTip": "Cấu trúc 'remain + Tính từ (sovereign) + over something' (luôn giữ vị thế làm chủ tối cao đối với cái gì).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {

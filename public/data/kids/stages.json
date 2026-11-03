@@ -362,7 +362,8 @@
           "an",
           "apples"
         ],
-        "grammarTip": "Chủ ngữ số ít (The baby dragon) đi với động từ thêm -s (wants). Tính từ màu sắc (red) đứng trước danh từ (apple)."
+        "grammarTip": "Chủ ngữ số ít (The baby dragon) đi với động từ thêm -s (wants). Tính từ màu sắc (red) đứng trước danh từ (apple).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_102",
@@ -375,7 +376,8 @@
           "these",
           "warmly"
         ],
-        "grammarTip": "'This' + danh từ số ít (golden egg) luôn đi với động từ to-be là 'is'."
+        "grammarTip": "'This' + danh từ số ít (golden egg) luôn đi với động từ to-be là 'is'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_103",
@@ -388,7 +390,8 @@
           "banana",
           "a"
         ],
-        "grammarTip": "Khi số lượng từ 2 trở lên (two), danh từ đếm được phải thêm -s ở cuối (bananas)."
+        "grammarTip": "Khi số lượng từ 2 trở lên (two), danh từ đếm được phải thêm -s ở cuối (bananas).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_104",
@@ -401,7 +404,8 @@
           "are",
           "pets"
         ],
-        "grammarTip": "Chủ ngữ 'My pet' (Thú cưng của tôi - số ít) đi với động từ to-be 'is'."
+        "grammarTip": "Chủ ngữ 'My pet' (Thú cưng của tôi - số ít) đi với động từ to-be 'is'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_105",
@@ -414,7 +418,8 @@
           "waters",
           "gives"
         ],
-        "grammarTip": "'Water' (nước) là danh từ không đếm được nên dùng 'some' chứ không dùng 'a' hoặc thêm '-s'."
+        "grammarTip": "'Water' (nước) là danh từ không đếm được nên dùng 'some' chứ không dùng 'a' hoặc thêm '-s'.",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -824,7 +829,8 @@
           "to",
           "jumping"
         ],
-        "grammarTip": "Sau động từ khuyết thiếu 'can' (có thể), động từ giữ nguyên mẫu không thêm -s hay -ing (can jump)."
+        "grammarTip": "Sau động từ khuyết thiếu 'can' (có thể), động từ giữ nguyên mẫu không thêm -s hay -ing (can jump).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_202",
@@ -837,7 +843,8 @@
           "on",
           "a"
         ],
-        "grammarTip": "Chủ ngữ số nhiều (Dolphins) đi với động từ nguyên mẫu không thêm -s (swim)."
+        "grammarTip": "Chủ ngữ số nhiều (Dolphins) đi với động từ nguyên mẫu không thêm -s (swim).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_203",
@@ -850,7 +857,8 @@
           "fly",
           "are"
         ],
-        "grammarTip": "'Eagle' bắt đầu bằng nguyên âm 'e' nên dùng mạo từ 'An' thay vì 'A'."
+        "grammarTip": "'Eagle' bắt đầu bằng nguyên âm 'e' nên dùng mạo từ 'An' thay vì 'A'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_204",
@@ -863,7 +871,8 @@
           "flies",
           "a"
         ],
-        "grammarTip": "Câu hỏi với 'Can': Đưa 'Can' lên đầu câu + Chủ ngữ + Động từ nguyên mẫu."
+        "grammarTip": "Câu hỏi với 'Can': Đưa 'Can' lên đầu câu + Chủ ngữ + Động từ nguyên mẫu.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_205",
@@ -876,7 +885,8 @@
           "animal",
           "much"
         ],
-        "grammarTip": "'Many' đi với danh từ đếm được số nhiều (animals) và động từ nguyên mẫu (live)."
+        "grammarTip": "'Many' đi với danh từ đếm được số nhiều (animals) và động từ nguyên mẫu (live).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -1290,7 +1300,8 @@
           "rain",
           "colds"
         ],
-        "grammarTip": "Dùng cấu trúc 'It is + tính từ chỉ thời tiết' (sunny, rainy, snowy, windy, cold, warm) để miêu tả thời tiết."
+        "grammarTip": "Dùng cấu trúc 'It is + tính từ chỉ thời tiết' (sunny, rainy, snowy, windy, cold, warm) để miêu tả thời tiết.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_302",
@@ -1303,7 +1314,8 @@
           "jackets",
           "you"
         ],
-        "grammarTip": "Cụm động từ 'Put on' có nghĩa là mặc (quần áo) hoặc đội (mũ)."
+        "grammarTip": "Cụm động từ 'Put on' có nghĩa là mặc (quần áo) hoặc đội (mũ).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_303",
@@ -1316,7 +1328,8 @@
           "umbrellas",
           "are"
         ],
-        "grammarTip": "'Umbrella' bắt đầu bằng âm nguyên âm /ʌ/ nên đi với mạo từ 'an'."
+        "grammarTip": "'Umbrella' bắt đầu bằng âm nguyên âm /ʌ/ nên đi với mạo từ 'an'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_304",
@@ -1329,7 +1342,8 @@
           "on",
           "rainbows"
         ],
-        "grammarTip": "'There is + a/an + danh từ số ít' dùng để giới thiệu sự tồn tại của một sự vật."
+        "grammarTip": "'There is + a/an + danh từ số ít' dùng để giới thiệu sự tồn tại của một sự vật.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_305",
@@ -1342,7 +1356,8 @@
           "what",
           "weathers"
         ],
-        "grammarTip": "Câu hỏi thời tiết quen thuộc: 'How is the weather?' hoặc 'What is the weather like?'."
+        "grammarTip": "Câu hỏi thời tiết quen thuộc: 'How is the weather?' hoặc 'What is the weather like?'.",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -1758,7 +1773,8 @@
           "on",
           "beds"
         ],
-        "grammarTip": "Giới từ 'under' dùng để chỉ vị trí ở ngay phía dưới một vật gì đó."
+        "grammarTip": "Giới từ 'under' dùng để chỉ vị trí ở ngay phía dưới một vật gì đó.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_402",
@@ -1771,7 +1787,8 @@
           "in",
           "book"
         ],
-        "grammarTip": "'There are' đi với danh từ số nhiều (many good books); ở trên bề mặt kệ sách dùng giới từ 'on'."
+        "grammarTip": "'There are' đi với danh từ số nhiều (many good books); ở trên bề mặt kệ sách dùng giới từ 'on'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_403",
@@ -1784,7 +1801,8 @@
           "keys",
           "are"
         ],
-        "grammarTip": "'Behind' có nghĩa là ở phía sau / đằng sau một vật."
+        "grammarTip": "'Behind' có nghĩa là ở phía sau / đằng sau một vật.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_404",
@@ -1797,7 +1815,8 @@
           "cook",
           "are"
         ],
-        "grammarTip": "Bên trong một căn phòng (kitchen, bedroom) chúng ta sử dụng giới từ 'in'."
+        "grammarTip": "Bên trong một căn phòng (kitchen, bedroom) chúng ta sử dụng giới từ 'in'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_405",
@@ -1810,7 +1829,8 @@
           "are",
           "lanterns"
         ],
-        "grammarTip": "Dùng 'Where is + danh từ số ít' để hỏi vị trí của một đồ vật."
+        "grammarTip": "Dùng 'Where is + danh từ số ít' để hỏi vị trí của một đồ vật.",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -2231,7 +2251,8 @@
           "a",
           "mountains"
         ],
-        "grammarTip": "Kết hợp tính từ đứng trước danh từ (brave dragon, high mountain) và cấu trúc 'can + động từ nguyên mẫu' (can fly)."
+        "grammarTip": "Kết hợp tính từ đứng trước danh từ (brave dragon, high mountain) và cấu trúc 'can + động từ nguyên mẫu' (can fly).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_502",
@@ -2244,7 +2265,8 @@
           "crystals",
           "between"
         ],
-        "grammarTip": "Ôn tập cấu trúc chỉ vị trí: Chủ ngữ số ít + is + giới từ (behind) + cụm danh từ."
+        "grammarTip": "Ôn tập cấu trúc chỉ vị trí: Chủ ngữ số ít + is + giới từ (behind) + cụm danh từ.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_503",
@@ -2257,7 +2279,8 @@
           "snow",
           "are"
         ],
-        "grammarTip": "Chủ ngữ 'We' đi với động từ nguyên mẫu 'bring'; miêu tả thời tiết dùng 'it is snowy'."
+        "grammarTip": "Chủ ngữ 'We' đi với động từ nguyên mẫu 'bring'; miêu tả thời tiết dùng 'it is snowy'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_504",
@@ -2270,7 +2293,8 @@
           "protecting",
           "to"
         ],
-        "grammarTip": "Giống như 'can', sau động từ khuyết thiếu 'must' (phải), động từ chính giữ nguyên mẫu (must protect)."
+        "grammarTip": "Giống như 'can', sau động từ khuyết thiếu 'must' (phải), động từ chính giữ nguyên mẫu (must protect).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_505",
@@ -2283,7 +2307,8 @@
           "love",
           "wing"
         ],
-        "grammarTip": "Chủ ngữ ngôi thứ 3 số ít (My dragon) đi với 'has' và động từ thêm -s (loves)."
+        "grammarTip": "Chủ ngữ ngôi thứ 3 số ít (My dragon) đi với 'has' và động từ thêm -s (loves).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -2701,7 +2726,8 @@
           "exciting",
           "oceans"
         ],
-        "grammarTip": "Chủ ngữ 'I' đi với động từ 'feel' nguyên mẫu. Tính từ đuôi '-ed' (excited) dùng để tả cảm xúc của người hoặc linh thú."
+        "grammarTip": "Chủ ngữ 'I' đi với động từ 'feel' nguyên mẫu. Tính từ đuôi '-ed' (excited) dùng để tả cảm xúc của người hoặc linh thú.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_602",
@@ -2714,7 +2740,8 @@
           "has",
           "arm"
         ],
-        "grammarTip": "'How many' đi với danh từ đếm được số nhiều (arms). Khi đã mượn trợ động từ 'does', động từ chính trở về nguyên mẫu (have)."
+        "grammarTip": "'How many' đi với danh từ đếm được số nhiều (arms). Khi đã mượn trợ động từ 'does', động từ chính trở về nguyên mẫu (have).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_603",
@@ -2727,7 +2754,8 @@
           "more",
           "turtles"
         ],
-        "grammarTip": "So sánh hơn với tính từ ngắn: thêm '-er' + 'than' (big -> bigger than)."
+        "grammarTip": "So sánh hơn với tính từ ngắn: thêm '-er' + 'than' (big -> bigger than).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_604",
@@ -2740,7 +2768,8 @@
           "pearls",
           "between"
         ],
-        "grammarTip": "Giới từ 'inside' dùng để chỉ một vật nằm ở phía bên trong một vật được bao bọc kín."
+        "grammarTip": "Giới từ 'inside' dùng để chỉ một vật nằm ở phía bên trong một vật được bao bọc kín.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_605",
@@ -2753,7 +2782,8 @@
           "friend",
           "turtle"
         ],
-        "grammarTip": "'Friendly' tuy có đuôi '-ly' nhưng là một Tính từ (thân thiện), đi sau động từ to-be (are)."
+        "grammarTip": "'Friendly' tuy có đuôi '-ly' nhưng là một Tính từ (thân thiện), đi sau động từ to-be (are).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -3169,7 +3199,8 @@
           "homeworks",
           "after"
         ],
-        "grammarTip": "Trạng từ tần suất 'always' đứng trước động từ thường (always finish). 'Homework' không đếm được nên không thêm -s."
+        "grammarTip": "Trạng từ tần suất 'always' đứng trước động từ thường (always finish). 'Homework' không đếm được nên không thêm -s.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_702",
@@ -3182,7 +3213,8 @@
           "starts",
           "when"
         ],
-        "grammarTip": "Để hỏi giờ cụ thể của một sự việc, dùng 'What time + do/does + S + V (nguyên mẫu)?'."
+        "grammarTip": "Để hỏi giờ cụ thể của một sự việc, dùng 'What time + do/does + S + V (nguyên mẫu)?'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_703",
@@ -3195,7 +3227,8 @@
           "pencil",
           "on"
         ],
-        "grammarTip": "Một quyển vở dùng 'a notebook' (số ít), hai chiếc bút chì dùng 'two pencils' (số nhiều thêm -s)."
+        "grammarTip": "Một quyển vở dùng 'a notebook' (số ít), hai chiếc bút chì dùng 'two pencils' (số nhiều thêm -s).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_704",
@@ -3208,7 +3241,8 @@
           "quietly",
           "libraries"
         ],
-        "grammarTip": "Sau 'must' là động từ nguyên mẫu 'be' + tính từ 'quiet' (must be quiet: phải giữ yên lặng)."
+        "grammarTip": "Sau 'must' là động từ nguyên mẫu 'be' + tính từ 'quiet' (must be quiet: phải giữ yên lặng).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_705",
@@ -3221,7 +3255,8 @@
           "subjects",
           "scientific"
         ],
-        "grammarTip": "'My favorite subject' là chủ ngữ số ít nên đi với động từ to-be 'is'."
+        "grammarTip": "'My favorite subject' là chủ ngữ số ít nên đi với động từ to-be 'is'.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -3644,7 +3679,8 @@
           "plays",
           "a"
         ],
-        "grammarTip": "Sau động từ 'enjoy' (yêu thích), động từ theo sau luôn thêm '-ing' (playing). Trước tên nhạc cụ luôn có mạo từ 'the' (play the guitar/piano)."
+        "grammarTip": "Sau động từ 'enjoy' (yêu thích), động từ theo sau luôn thêm '-ing' (playing). Trước tên nhạc cụ luôn có mạo từ 'the' (play the guitar/piano).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_802",
@@ -3657,7 +3693,8 @@
           "a",
           "lemonades"
         ],
-        "grammarTip": "Cấu trúc mời lịch sự: 'Would you like + some + danh từ?'."
+        "grammarTip": "Cấu trúc mời lịch sự: 'Would you like + some + danh từ?'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_803",
@@ -3670,7 +3707,8 @@
           "tastes",
           "deliciously"
         ],
-        "grammarTip": "Sau động từ chỉ giác quan 'taste' (có vị), ta dùng Tính từ (delicious) chứ không dùng trạng từ."
+        "grammarTip": "Sau động từ chỉ giác quan 'taste' (có vị), ta dùng Tính từ (delicious) chứ không dùng trạng từ.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_804",
@@ -3683,7 +3721,8 @@
           "shares",
           "to"
         ],
-        "grammarTip": "Sau 'Let us' (hoặc 'Let's'), các động từ đều ở dạng nguyên mẫu (dance ... and share)."
+        "grammarTip": "Sau 'Let us' (hoặc 'Let's'), các động từ đều ở dạng nguyên mẫu (dance ... and share).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_805",
@@ -3696,7 +3735,8 @@
           "play",
           "pianos"
         ],
-        "grammarTip": "Động từ 'practice' đi kèm với 'V-ing' (practice playing the piano)."
+        "grammarTip": "Động từ 'practice' đi kèm với 'V-ing' (practice playing the piano).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -4115,7 +4155,8 @@
           "flew",
           "flying"
         ],
-        "grammarTip": "Thì Tương lai đơn: Dùng 'will + động từ nguyên mẫu' (will fly) để diễn tả hành động sẽ xảy ra vào ngày mai (tomorrow)."
+        "grammarTip": "Thì Tương lai đơn: Dùng 'will + động từ nguyên mẫu' (will fly) để diễn tả hành động sẽ xảy ra vào ngày mai (tomorrow).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_902",
@@ -4128,7 +4169,8 @@
           "looks",
           "for"
         ],
-        "grammarTip": "Cấu trúc 'use + đồ vật + to + V (nguyên mẫu)' dùng để nói mục đích sử dụng một công cụ."
+        "grammarTip": "Cấu trúc 'use + đồ vật + to + V (nguyên mẫu)' dùng để nói mục đích sử dụng một công cụ.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_903",
@@ -4141,7 +4183,8 @@
           "astronauts",
           "was"
         ],
-        "grammarTip": "Cấu trúc 'want to be + nghề nghiệp' dùng để nói về ước mơ của bạn."
+        "grammarTip": "Cấu trúc 'want to be + nghề nghiệp' dùng để nói về ước mơ của bạn.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_904",
@@ -4154,7 +4197,8 @@
           "explores",
           "explored"
         ],
-        "grammarTip": "Câu hỏi ở thì Tương lai đơn: Đưa 'Will' lên đầu câu + Chủ ngữ + Động từ nguyên mẫu (explore)."
+        "grammarTip": "Câu hỏi ở thì Tương lai đơn: Đưa 'Will' lên đầu câu + Chủ ngữ + Động từ nguyên mẫu (explore).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_905",
@@ -4167,7 +4211,8 @@
           "fastest",
           "more"
         ],
-        "grammarTip": "So sánh hơn với tính từ ngắn 'fast' -> 'faster than' (nhanh hơn)."
+        "grammarTip": "So sánh hơn với tính từ ngắn 'fast' -> 'faster than' (nhanh hơn).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -4597,7 +4642,8 @@
           "exploring",
           "universes"
         ],
-        "grammarTip": "Ôn tập thì Tương lai đơn: 'will + động từ nguyên mẫu' (will explore)."
+        "grammarTip": "Ôn tập thì Tương lai đơn: 'will + động từ nguyên mẫu' (will explore).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1002",
@@ -4610,7 +4656,8 @@
           "more",
           "galaxies"
         ],
-        "grammarTip": "So sánh nhất với tính từ ngắn: 'the + Adj-est' (brave -> the bravest: dũng cảm nhất)."
+        "grammarTip": "So sánh nhất với tính từ ngắn: 'the + Adj-est' (brave -> the bravest: dũng cảm nhất).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1003",
@@ -4623,7 +4670,8 @@
           "would",
           "champion"
         ],
-        "grammarTip": "Câu điều kiện loại 1: Mệnh đề 'If' dùng Hiện tại đơn (believe), mệnh đề chính dùng 'will + V' (will be)."
+        "grammarTip": "Câu điều kiện loại 1: Mệnh đề 'If' dùng Hiện tại đơn (believe), mệnh đề chính dùng 'will + V' (will be).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_k_1004",
@@ -4636,7 +4684,8 @@
           "learning",
           "adventures"
         ],
-        "grammarTip": "Động từ ở thì Quá khứ đơn (learned) diễn tả thành quả bạn đã gặt hái được qua chuyến hành trình."
+        "grammarTip": "Động từ ở thì Quá khứ đơn (learned) diễn tả thành quả bạn đã gặt hái được qua chuyến hành trình.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1005",
@@ -4649,7 +4698,8 @@
           "brightest",
           "more"
         ],
-        "grammarTip": "Kết hợp thì Tương lai đơn (will shine) và so sánh hơn (brighter than)."
+        "grammarTip": "Kết hợp thì Tương lai đơn (will shine) và so sánh hơn (brighter than).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -5070,7 +5120,8 @@
           "walking",
           "tomorrow"
         ],
-        "grammarTip": "Thì Quá khứ đơn: Với trạng từ 'yesterday' (hôm qua), động từ có quy tắc thêm đuôi '-ed' (walk -> walked)."
+        "grammarTip": "Thì Quá khứ đơn: Với trạng từ 'yesterday' (hôm qua), động từ có quy tắc thêm đuôi '-ed' (walk -> walked).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1102",
@@ -5083,7 +5134,8 @@
           "finds",
           "finding"
         ],
-        "grammarTip": "Động từ bất quy tắc ở thì Quá khứ đơn: 'find' (tìm thấy) đổi thành 'found'."
+        "grammarTip": "Động từ bất quy tắc ở thì Quá khứ đơn: 'find' (tìm thấy) đổi thành 'found'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1103",
@@ -5096,7 +5148,8 @@
           "seen",
           "do"
         ],
-        "grammarTip": "Trong câu hỏi Quá khứ đơn có trợ động từ 'Did' ở đầu câu, động từ chính giữ nguyên mẫu (see)."
+        "grammarTip": "Trong câu hỏi Quá khứ đơn có trợ động từ 'Did' ở đầu câu, động từ chính giữ nguyên mẫu (see).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_1104",
@@ -5109,7 +5162,8 @@
           "are",
           "dinosaur"
         ],
-        "grammarTip": "Ở quá khứ, 'There were' đi với danh từ số nhiều (many giant dinosaurs)."
+        "grammarTip": "Ở quá khứ, 'There were' đi với danh từ số nhiều (many giant dinosaurs).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1105",
@@ -5122,7 +5176,8 @@
           "hears",
           "roaring"
         ],
-        "grammarTip": "Quá khứ của 'hear' là 'heard'. Cấu trúc 'hear + ai/con gì + V nguyên mẫu' diễn tả nghe thấy toàn bộ âm thanh đó."
+        "grammarTip": "Quá khứ của 'hear' là 'heard'. Cấu trúc 'hear + ai/con gì + V nguyên mẫu' diễn tả nghe thấy toàn bộ âm thanh đó.",
+        "functionalCategory": "narrating"
       }
     ],
     "aiRoleplayMission": {
@@ -5544,7 +5599,8 @@
           "rescue",
           "heroes"
         ],
-        "grammarTip": "Dùng đại từ quan hệ 'who' để bổ nghĩa cho danh từ chỉ người (a hero who rescues...)."
+        "grammarTip": "Dùng đại từ quan hệ 'who' để bổ nghĩa cho danh từ chỉ người (a hero who rescues...).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_1202",
@@ -5557,7 +5613,8 @@
           "works",
           "working"
         ],
-        "grammarTip": "Chủ ngữ số ít 'a doctor' mượn trợ động từ 'does' trong câu hỏi và động từ chính 'work' giữ nguyên mẫu."
+        "grammarTip": "Chủ ngữ số ít 'a doctor' mượn trợ động từ 'does' trong câu hỏi và động từ chính 'work' giữ nguyên mẫu.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_1203",
@@ -5570,7 +5627,8 @@
           "bakeries",
           "on"
         ],
-        "grammarTip": "Chủ ngữ ngôi thứ 3 số ít (The chef) đi với động từ thêm '-s' (makes)."
+        "grammarTip": "Chủ ngữ ngôi thứ 3 số ít (The chef) đi với động từ thêm '-s' (makes).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1204",
@@ -5583,7 +5641,8 @@
           "an",
           "uniforms"
         ],
-        "grammarTip": "Mặc dù bắt đầu bằng chữ 'u', từ 'uniform' phát âm đầu là /juː/ (phụ âm) nên dùng mạo từ 'a' chứ không dùng 'an'."
+        "grammarTip": "Mặc dù bắt đầu bằng chữ 'u', từ 'uniform' phát âm đầu là /juː/ (phụ âm) nên dùng mạo từ 'a' chứ không dùng 'an'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1205",
@@ -5596,7 +5655,8 @@
           "wanting",
           "doctors"
         ],
-        "grammarTip": "Cấu trúc 'When I grow up, I want to be + nghề nghiệp' dùng để chia sẻ ước mơ nghề nghiệp tương lai."
+        "grammarTip": "Cấu trúc 'When I grow up, I want to be + nghề nghiệp' dùng để chia sẻ ước mơ nghề nghiệp tương lai.",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -6019,7 +6079,8 @@
           "resting",
           "fevers"
         ],
-        "grammarTip": "Động từ khuyết thiếu 'should' (nên) dùng để đưa ra lời khuyên: 'should + V (nguyên mẫu)'."
+        "grammarTip": "Động từ khuyết thiếu 'should' (nên) dùng để đưa ra lời khuyên: 'should + V (nguyên mẫu)'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_1302",
@@ -6032,7 +6093,8 @@
           "eating",
           "to"
         ],
-        "grammarTip": "Khuyên ai KHÔNG nên làm gì: dùng 'should not' (hoặc shouldn't) + động từ nguyên mẫu (eat)."
+        "grammarTip": "Khuyên ai KHÔNG nên làm gì: dùng 'should not' (hoặc shouldn't) + động từ nguyên mẫu (eat).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_k_1303",
@@ -6045,7 +6107,8 @@
           "matters",
           "who"
         ],
-        "grammarTip": "Mẫu câu hỏi thăm sức khỏe thông dụng: 'What is the matter with + [ai đó]?' (Ai đó bị làm sao thế?)."
+        "grammarTip": "Mẫu câu hỏi thăm sức khỏe thông dụng: 'What is the matter with + [ai đó]?' (Ai đó bị làm sao thế?).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_1304",
@@ -6058,7 +6121,8 @@
           "healthily",
           "vegetable"
         ],
-        "grammarTip": "Khi cụm danh động từ (Eating fresh vegetables) làm chủ ngữ, động từ chính chia ở ngôi thứ 3 số ít (helps)."
+        "grammarTip": "Khi cụm danh động từ (Eating fresh vegetables) làm chủ ngữ, động từ chính chia ở ngôi thứ 3 số ít (helps).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1305",
@@ -6071,7 +6135,8 @@
           "exercising",
           "strongly"
         ],
-        "grammarTip": "Sau 'to' chỉ mục đích là động từ nguyên mẫu (to stay strong)."
+        "grammarTip": "Sau 'to' chỉ mục đích là động từ nguyên mẫu (to stay strong).",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -6494,7 +6559,8 @@
           "scores",
           "scoring"
         ],
-        "grammarTip": "Trạng từ chỉ cách thức (quickly: một cách nhanh chóng) đứng sau động từ thường (ran) để miêu tả hành động diễn ra như thế nào."
+        "grammarTip": "Trạng từ chỉ cách thức (quickly: một cách nhanh chóng) đứng sau động từ thường (ran) để miêu tả hành động diễn ra như thế nào.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1402",
@@ -6507,7 +6573,8 @@
           "aims",
           "aiming"
         ],
-        "grammarTip": "Sau động từ 'aim' (ngắm bắn), ta dùng trạng từ 'carefully' (thêm đuôi -ly vào sau tính từ careful)."
+        "grammarTip": "Sau động từ 'aim' (ngắm bắn), ta dùng trạng từ 'carefully' (thêm đuôi -ly vào sau tính từ careful).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_1403",
@@ -6520,7 +6587,8 @@
           "medals",
           "teamworks"
         ],
-        "grammarTip": "Cụm 'Thanks to + Danh từ' có nghĩa là 'Nhờ có...'. Quá khứ của 'win' là 'won'."
+        "grammarTip": "Cụm 'Thanks to + Danh từ' có nghĩa là 'Nhờ có...'. Quá khứ của 'win' là 'won'.",
+        "functionalCategory": "thanking"
       },
       {
         "id": "g_k_1404",
@@ -6533,7 +6601,8 @@
           "plays",
           "stadiums"
         ],
-        "grammarTip": "Trạng từ của tính từ 'good' (giỏi/tốt) là 'well' (played soccer very well)."
+        "grammarTip": "Trạng từ của tính từ 'good' (giỏi/tốt) là 'well' (played soccer very well).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1405",
@@ -6546,7 +6615,8 @@
           "much",
           "goal"
         ],
-        "grammarTip": "'How many + danh từ số nhiều (goals) + did + S + V nguyên mẫu (score)?'."
+        "grammarTip": "'How many + danh từ số nhiều (goals) + did + S + V nguyên mẫu (score)?'.",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -6972,7 +7042,8 @@
           "gives",
           "feathers"
         ],
-        "grammarTip": "Quá khứ đơn của động từ bất quy tắc 'give' (trao/tặng) là 'gave'."
+        "grammarTip": "Quá khứ đơn của động từ bất quy tắc 'give' (trao/tặng) là 'gave'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1502",
@@ -6985,7 +7056,8 @@
           "protects",
           "protecting"
         ],
-        "grammarTip": "Kết hợp 'should + V nguyên mẫu' (should protect) và trạng từ chỉ cách thức ở cuối câu (carefully)."
+        "grammarTip": "Kết hợp 'should + V nguyên mẫu' (should protect) và trạng từ chỉ cách thức ở cuối câu (carefully).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_1503",
@@ -6998,7 +7070,8 @@
           "quick",
           "healing"
         ],
-        "grammarTip": "Trạng từ 'quickly' (nhanh chóng) bổ nghĩa cho động từ 'heal' (chữa lành)."
+        "grammarTip": "Trạng từ 'quickly' (nhanh chóng) bổ nghĩa cho động từ 'heal' (chữa lành).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1504",
@@ -7011,7 +7084,8 @@
           "pass",
           "passes"
         ],
-        "grammarTip": "Khi kể lại nguyên nhân - kết quả đã hoàn tất trong quá khứ, cả hai mệnh đề đều chia ở thì Quá khứ đơn (had ... passed)."
+        "grammarTip": "Khi kể lại nguyên nhân - kết quả đã hoàn tất trong quá khứ, cả hai mệnh đề đều chia ở thì Quá khứ đơn (had ... passed).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_k_1505",
@@ -7024,7 +7098,8 @@
           "memories",
           "wonderfully"
         ],
-        "grammarTip": "So sánh nhất với tính từ dài (wonderful): dùng 'most + tính từ' (most wonderful memory)."
+        "grammarTip": "So sánh nhất với tính từ dài (wonderful): dùng 'most + tính từ' (most wonderful memory).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -7450,7 +7525,8 @@
           "would",
           "cleanest"
         ],
-        "grammarTip": "Câu điều kiện loại 1: Mệnh đề 'If' chia ở Hiện tại đơn (we plant), mệnh đề kết quả dùng 'will + V nguyên mẫu' (will be)."
+        "grammarTip": "Câu điều kiện loại 1: Mệnh đề 'If' chia ở Hiện tại đơn (we plant), mệnh đề kết quả dùng 'will + V nguyên mẫu' (will be).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_k_1602",
@@ -7463,7 +7539,8 @@
           "recycling",
           "natures"
         ],
-        "grammarTip": "Sau 'must' (phải) và 'to' (để chỉ mục đích) đều là động từ nguyên mẫu (recycle ... to protect)."
+        "grammarTip": "Sau 'must' (phải) và 'to' (để chỉ mục đích) đều là động từ nguyên mẫu (recycle ... to protect).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_1603",
@@ -7476,7 +7553,8 @@
           "saves",
           "energies"
         ],
-        "grammarTip": "'Energy' (năng lượng) là danh từ không đếm được nên không thêm '-s'."
+        "grammarTip": "'Energy' (năng lượng) là danh từ không đếm được nên không thêm '-s'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_1604",
@@ -7489,7 +7567,8 @@
           "cleaning",
           "on"
         ],
-        "grammarTip": "Cụm động từ 'clean up' (dọn dẹp sạch sẽ) giữ nguyên mẫu sau 'Let us'."
+        "grammarTip": "Cụm động từ 'clean up' (dọn dẹp sạch sẽ) giữ nguyên mẫu sau 'Let us'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_1605",
@@ -7502,7 +7581,8 @@
           "making",
           "sunlights"
         ],
-        "grammarTip": "'Sunlight' (ánh sáng mặt trời) cũng là danh từ không đếm được, luôn ở dạng số ít."
+        "grammarTip": "'Sunlight' (ánh sáng mặt trời) cũng là danh từ không đếm được, luôn ở dạng số ít.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -7931,7 +8011,8 @@
           "make",
           "metals"
         ],
-        "grammarTip": "Cấu trúc 'is/are made of + chất liệu' dùng để nói một đồ vật được chế tạo từ vật liệu gì."
+        "grammarTip": "Cấu trúc 'is/are made of + chất liệu' dùng để nói một đồ vật được chế tạo từ vật liệu gì.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1702",
@@ -7944,7 +8025,8 @@
           "to",
           "inventions"
         ],
-        "grammarTip": "Cấu trúc nói về công dụng của thiết bị: 'is used for + V-ing' (hoặc 'is used to + V nguyên mẫu')."
+        "grammarTip": "Cấu trúc nói về công dụng của thiết bị: 'is used for + V-ing' (hoặc 'is used to + V nguyên mẫu').",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1703",
@@ -7957,7 +8039,8 @@
           "starting",
           "buttons"
         ],
-        "grammarTip": "Câu mệnh lệnh hướng dẫn sử dụng máy móc bắt đầu bằng động từ nguyên mẫu (Press)."
+        "grammarTip": "Câu mệnh lệnh hướng dẫn sử dụng máy móc bắt đầu bằng động từ nguyên mẫu (Press).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_1704",
@@ -7970,7 +8053,8 @@
           "repairing",
           "magnets"
         ],
-        "grammarTip": "Sau động từ 'help + tân ngữ', động từ theo sau có thể giữ nguyên mẫu (help someone repair something)."
+        "grammarTip": "Sau động từ 'help + tân ngữ', động từ theo sau có thể giữ nguyên mẫu (help someone repair something).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1705",
@@ -7983,7 +8067,8 @@
           "creatively",
           "ideas"
         ],
-        "grammarTip": "Câu cảm thán khen ngợi: 'What + a/an + Tính từ + Danh từ số ít!'."
+        "grammarTip": "Câu cảm thán khen ngợi: 'What + a/an + Tính từ + Danh từ số ít!'.",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -8413,7 +8498,8 @@
           "be",
           "went"
         ],
-        "grammarTip": "Thì Hiện tại hoàn thành dùng để hỏi về trải nghiệm từ trước đến nay: 'Have you ever been to + [địa điểm]?' (Bạn đã từng đến... chưa?)."
+        "grammarTip": "Thì Hiện tại hoàn thành dùng để hỏi về trải nghiệm từ trước đến nay: 'Have you ever been to + [địa điểm]?' (Bạn đã từng đến... chưa?).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_1802",
@@ -8426,7 +8512,8 @@
           "visit",
           "journeys"
         ],
-        "grammarTip": "Chủ ngữ 'We' đi với 'have + V3/ed' (have visited) để diễn tả hành động đã trải qua và còn lưu lại kết quả ở hiện tại."
+        "grammarTip": "Chủ ngữ 'We' đi với 'have + V3/ed' (have visited) để diễn tả hành động đã trải qua và còn lưu lại kết quả ở hiện tại.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1803",
@@ -8439,7 +8526,8 @@
           "took",
           "take"
         ],
-        "grammarTip": "Quá khứ phân từ (V3) của 'take' là 'taken'. Chủ ngữ số ít 'She' đi với 'has taken'."
+        "grammarTip": "Quá khứ phân từ (V3) của 'take' là 'taken'. Chủ ngữ số ít 'She' đi với 'has taken'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1804",
@@ -8452,7 +8540,8 @@
           "flying",
           "compasses"
         ],
-        "grammarTip": "Chủ ngữ ngôi thứ 3 số ít (The pilot) đi với động từ thêm '-s' (uses)."
+        "grammarTip": "Chủ ngữ ngôi thứ 3 số ít (The pilot) đi với động từ thêm '-s' (uses).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1805",
@@ -8465,7 +8554,8 @@
           "buys",
           "has"
         ],
-        "grammarTip": "Quá khứ phân từ (V3) của 'buy' (mua) là 'bought' (I have bought)."
+        "grammarTip": "Quá khứ phân từ (V3) của 'buy' (mua) là 'bought' (I have bought).",
+        "functionalCategory": "narrating"
       }
     ],
     "aiRoleplayMission": {
@@ -8889,7 +8979,8 @@
           "ride",
           "see"
         ],
-        "grammarTip": "Thì Quá khứ tiếp diễn (were riding) tả hành động đang diễn ra trong quá khứ thì có một hành động khác cắt ngang ở Quá khứ đơn (saw)."
+        "grammarTip": "Thì Quá khứ tiếp diễn (were riding) tả hành động đang diễn ra trong quá khứ thì có một hành động khác cắt ngang ở Quá khứ đơn (saw).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1902",
@@ -8902,7 +8993,8 @@
           "hold",
           "finds"
         ],
-        "grammarTip": "Chủ ngữ số ít 'I' đi với 'was + V-ing' (was holding) sau liên từ 'While' (Trong khi)."
+        "grammarTip": "Chủ ngữ số ít 'I' đi với 'was + V-ing' (was holding) sau liên từ 'While' (Trong khi).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_1903",
@@ -8915,7 +9007,8 @@
           "solving",
           "statues"
         ],
-        "grammarTip": "Sau 'Can + chủ ngữ', động từ chính giữ nguyên mẫu (solve)."
+        "grammarTip": "Sau 'Can + chủ ngữ', động từ chính giữ nguyên mẫu (solve).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_k_1904",
@@ -8928,7 +9021,8 @@
           "pyramids",
           "anything"
         ],
-        "grammarTip": "Đại từ bất định 'something' (một thứ gì đó) luôn đi với động từ chia số ít (There is)."
+        "grammarTip": "Đại từ bất định 'something' (một thứ gì đó) luôn đi với động từ chia số ít (There is).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_1905",
@@ -8941,7 +9035,8 @@
           "enter",
           "entering"
         ],
-        "grammarTip": "Hai hành động nối tiếp nhau trong quá khứ đều chia ở Quá khứ đơn (solved ... and entered)."
+        "grammarTip": "Hai hành động nối tiếp nhau trong quá khứ đều chia ở Quá khứ đơn (solved ... and entered).",
+        "functionalCategory": "narrating"
       }
     ],
     "aiRoleplayMission": {
@@ -9369,7 +9464,8 @@
           "became",
           "guardian"
         ],
-        "grammarTip": "Quá khứ phân từ (V3) của 'become' vẫn là 'become' (We have become)."
+        "grammarTip": "Quá khứ phân từ (V3) của 'become' vẫn là 'become' (We have become).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_k_2002",
@@ -9382,7 +9478,8 @@
           "promises",
           "peaceful"
         ],
-        "grammarTip": "Cấu trúc 'promise to + V (nguyên mẫu)' dùng để đưa ra lời thề hoặc lời hứa trang trọng."
+        "grammarTip": "Cấu trúc 'promise to + V (nguyên mẫu)' dùng để đưa ra lời thề hoặc lời hứa trang trọng.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_k_2003",
@@ -9395,7 +9492,8 @@
           "creating",
           "miracles"
         ],
-        "grammarTip": "'Courage' (lòng dũng cảm) và 'wisdom' (trí tuệ) đều là danh từ trừu tượng không đếm được."
+        "grammarTip": "'Courage' (lòng dũng cảm) và 'wisdom' (trí tuệ) đều là danh từ trừu tượng không đếm được.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_k_2004",
@@ -9408,7 +9506,8 @@
           "shines",
           "would"
         ],
-        "grammarTip": "Ôn tập Câu điều kiện loại 1 kết hợp trạng từ chỉ cách thức (will shine brightly)."
+        "grammarTip": "Ôn tập Câu điều kiện loại 1 kết hợp trạng từ chỉ cách thức (will shine brightly).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_k_2005",
@@ -9421,7 +9520,8 @@
           "raise",
           "shields"
         ],
-        "grammarTip": "Sự kết hợp hoàn hảo giữa Quá khứ tiếp diễn (was coming) và Quá khứ đơn (raised)."
+        "grammarTip": "Sự kết hợp hoàn hảo giữa Quá khứ tiếp diễn (was coming) và Quá khứ đơn (raised).",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {

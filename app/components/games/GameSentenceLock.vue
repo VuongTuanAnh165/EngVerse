@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onScopeDispose } from 'vue';
-import type { StageData, StageGrammarItem, RuneStone } from '~/types/game';
+import type { StageData, StageGrammarItem, RuneStone, FunctionalGrammarCategory } from '~/types/game';
 import { useGameSessionStore } from '~/stores/gameSession';
 import { useSoundEffects } from '~/composables/useSoundEffects';
 import { useSpeechEngine } from '~/composables/useSpeechEngine';
@@ -48,6 +48,25 @@ const progressPercent = computed<number>(() => {
 
 const currentSentenceString = computed<string>(() => {
   return placedRunes.value.map((r) => r.word).join(' ');
+});
+
+const FUNCTIONAL_CATEGORY_META: Record<FunctionalGrammarCategory, { icon: string; labelVi: string; intentVi: string }> = {
+  asking: { icon: '🙋‍♂️', labelVi: 'Hỏi Han & Nhờ Vả', intentVi: 'Yêu cầu, hỏi thăm hoặc nhờ hỗ trợ lịch sự' },
+  refusing: { icon: '🛡️', labelVi: 'Từ Chối & Ngăn Chặn', intentVi: 'Từ chối khéo, phản đối hoặc ngăn chặn' },
+  apologizing: { icon: '🙏', labelVi: 'Xin Lỗi & Cáo Lỗi', intentVi: 'Nhận lỗi và bày tỏ sự cáo lỗi chân thành' },
+  persuading: { icon: '💡', labelVi: 'Khuyên Nhủ & Thuyết Phục', intentVi: 'Đưa ra lời khuyên, đề xuất và thuyết phục' },
+  clarifying: { icon: '🔍', labelVi: 'Làm Rõ & Xác Nhận', intentVi: 'Thu thập chứng cứ, điều tra và làm sáng tỏ' },
+  describing: { icon: '🎨', labelVi: 'Miêu Tả & Nhận Định', intentVi: 'Trình bày đặc điểm, trạng thái hoặc vị trí' },
+  narrating: { icon: '📖', labelVi: 'Kể Chuyện & Diễn Biến', intentVi: 'Kể lại trải nghiệm, quá khứ và chuỗi sự kiện' },
+  negotiating: { icon: '🤝', labelVi: 'Đàm Phán & Thỏa Thuận', intentVi: 'Đàm phán điều kiện, thương thảo hợp đồng' },
+  complaining: { icon: '⚠️', labelVi: 'Khiếu Nại & Báo Sự Cố', intentVi: 'Báo cáo hỏng hóc, sự cố và yêu cầu giải quyết' },
+  thanking: { icon: '💐', labelVi: 'Cảm Ơn & Tri Ân', intentVi: 'Thể hiện lòng biết ơn và trân trọng' },
+};
+
+const currentFunctionalMeta = computed(() => {
+  const cat = currentPuzzle.value?.functionalCategory;
+  if (!cat || !FUNCTIONAL_CATEGORY_META[cat]) return null;
+  return FUNCTIONAL_CATEGORY_META[cat];
 });
 
 // -------------------------------------------------------------------------
@@ -280,10 +299,17 @@ onScopeDispose(() => {
         </span>
       </div>
 
-      <!-- Vietnamese Prompt -->
+      <!-- Vietnamese Prompt & Functional Intent -->
       <div class="vietnamese-prompt-box">
-        <span class="prompt-flag" aria-hidden="true">🇻🇳</span>
-        <p class="prompt-text">{{ currentPuzzle?.vietnamesePrompt }}</p>
+        <div v-if="currentFunctionalMeta" class="functional-intent-pill" :class="`cat-${currentPuzzle?.functionalCategory}`">
+          <span class="intent-icon" aria-hidden="true">{{ currentFunctionalMeta.icon }}</span>
+          <span class="intent-label">Mục Tiêu: {{ currentFunctionalMeta.labelVi }}</span>
+          <span class="intent-desc">— {{ currentFunctionalMeta.intentVi }}</span>
+        </div>
+        <div class="prompt-text-row">
+          <span class="prompt-flag" aria-hidden="true">🇻🇳</span>
+          <p class="prompt-text">{{ currentPuzzle?.vietnamesePrompt }}</p>
+        </div>
       </div>
 
       <!-- Placed Runes Sentence Construction Bar -->
@@ -478,12 +504,76 @@ onScopeDispose(() => {
 /* Vietnamese Prompt */
 .vietnamese-prompt-box {
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.625rem;
   background-color: var(--bg-primary);
   border: 1px solid var(--border-color);
   padding: 0.875rem 1.25rem;
   border-radius: var(--radius-md);
+}
+
+.prompt-text-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.functional-intent-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  align-self: flex-start;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+.functional-intent-pill.cat-complaining {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.functional-intent-pill.cat-negotiating {
+  background: rgba(245, 158, 11, 0.15);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+.functional-intent-pill.cat-persuading {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+}
+
+.functional-intent-pill.cat-refusing {
+  background: rgba(244, 63, 94, 0.15);
+  border-color: rgba(244, 63, 94, 0.4);
+  color: #fb7185;
+}
+
+.functional-intent-pill.cat-thanking,
+.functional-intent-pill.cat-apologizing {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.intent-desc {
+  font-weight: 500;
+  opacity: 0.85;
+  margin-left: 0.25rem;
+}
+
+@media (max-width: 640px) {
+  .intent-desc {
+    display: none;
+  }
 }
 
 .prompt-flag {

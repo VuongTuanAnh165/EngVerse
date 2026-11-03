@@ -373,7 +373,8 @@
           "luggages",
           "arrive"
         ],
-        "grammarTip": "'Luggage' và 'baggage' là danh từ KHÔNG đếm được, luôn chia động từ số ít (has not arrived) và không bao giờ thêm '-s'."
+        "grammarTip": "'Luggage' và 'baggage' là danh từ KHÔNG đếm được, luôn chia động từ số ít (has not arrived) và không bao giờ thêm '-s'.",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_102",
@@ -386,7 +387,8 @@
           "delivers",
           "at"
         ],
-        "grammarTip": "Cấu trúc yêu cầu lịch sự trong môi trường công sở/dịch vụ: 'Could you please + V (nguyên mẫu)'."
+        "grammarTip": "Cấu trúc yêu cầu lịch sự trong môi trường công sở/dịch vụ: 'Could you please + V (nguyên mẫu)'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_a_103",
@@ -399,7 +401,8 @@
           "because",
           "delay"
         ],
-        "grammarTip": "Sau 'due to' là một cụm danh từ (bad weather), còn sau 'because' phải là một mệnh đề (S + V)."
+        "grammarTip": "Sau 'due to' là một cụm danh từ (bad weather), còn sau 'because' phải là một mệnh đề (S + V).",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_104",
@@ -412,7 +415,8 @@
           "passes",
           "itineraries"
         ],
-        "grammarTip": "Cụm giao tiếp thực tế khi đưa giấy tờ tại quầy thủ tục: 'Here is my + danh từ số ít...'."
+        "grammarTip": "Cụm giao tiếp thực tế khi đưa giấy tờ tại quầy thủ tục: 'Here is my + danh từ số ít...'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_105",
@@ -425,7 +429,8 @@
           "item",
           "fragilely"
         ],
-        "grammarTip": "'There are' đi với danh từ đếm được số nhiều (fragile items)."
+        "grammarTip": "'There are' đi với danh từ đếm được số nhiều (fragile items).",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -861,7 +866,8 @@
           "for",
           "write"
         ],
-        "grammarTip": "Mẫu câu mở đầu Email công sở chuẩn mực: 'I am writing to follow up on + sự việc/cuộc họp'."
+        "grammarTip": "Mẫu câu mở đầu Email công sở chuẩn mực: 'I am writing to follow up on + sự việc/cuộc họp'.",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_202",
@@ -874,7 +880,8 @@
           "manage",
           "experiences"
         ],
-        "grammarTip": "Khi nói về kinh nghiệm tích lũy từ quá khứ đến hiện tại trong phỏng vấn, dùng Hiện tại hoàn thành (have gained) + giới từ 'in + V-ing'."
+        "grammarTip": "Khi nói về kinh nghiệm tích lũy từ quá khứ đến hiện tại trong phỏng vấn, dùng Hiện tại hoàn thành (have gained) + giới từ 'in + V-ing'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_203",
@@ -887,7 +894,8 @@
           "finds",
           "at"
         ],
-        "grammarTip": "Câu thông báo đính kèm file lịch sự trong Business Email: 'Please find [tên tài liệu] in the attachment'."
+        "grammarTip": "Câu thông báo đính kèm file lịch sự trong Business Email: 'Please find [tên tài liệu] in the attachment'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_204",
@@ -900,7 +908,8 @@
           "collaborated",
           "for"
         ],
-        "grammarTip": "Trong cấu trúc 'look forward to', chữ 'to' là giới từ nên động từ theo sau BẮT BUỘC phải ở dạng V-ing (collaborating)."
+        "grammarTip": "Trong cấu trúc 'look forward to', chữ 'to' là giới từ nên động từ theo sau BẮT BUỘC phải ở dạng V-ing (collaborating).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_205",
@@ -913,7 +922,8 @@
           "candidates",
           "to"
         ],
-        "grammarTip": "Khi đại từ nghi vấn 'What' làm chủ ngữ, động từ luôn chia ở ngôi thứ 3 số ít (makes)."
+        "grammarTip": "Khi đại từ nghi vấn 'What' làm chủ ngữ, động từ luôn chia ở ngôi thứ 3 số ít (makes).",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -1349,7 +1359,8 @@
           "reservations",
           "in"
         ],
-        "grammarTip": "Cấu trúc chuẩn khi nhận bàn tại nhà hàng cao cấp: 'I have a reservation for [số người] under [tên người đặt]'."
+        "grammarTip": "Cấu trúc chuẩn khi nhận bàn tại nhà hàng cao cấp: 'I have a reservation for [số người] under [tên người đặt]'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_302",
@@ -1362,7 +1373,8 @@
           "allergy",
           "are"
         ],
-        "grammarTip": "Tính từ 'allergic' luôn đi kèm với giới từ 'to' (be allergic to something: bị dị ứng với thứ gì)."
+        "grammarTip": "Tính từ 'allergic' luôn đi kèm với giới từ 'to' (be allergic to something: bị dị ứng với thứ gì).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_303",
@@ -1375,7 +1387,8 @@
           "recommending",
           "what"
         ],
-        "grammarTip": "Dùng 'Which/What ... would you recommend?' để hỏi ý kiến tư vấn của Bếp trưởng hoặc Sommelier một cách lịch thiệp."
+        "grammarTip": "Dùng 'Which/What ... would you recommend?' để hỏi ý kiến tư vấn của Bếp trưởng hoặc Sommelier một cách lịch thiệp.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_a_304",
@@ -1388,7 +1401,8 @@
           "starts",
           "an"
         ],
-        "grammarTip": "Trong nhà hàng sang trọng, luôn dùng 'We would like to...' thay vì 'We want to...' để thể hiện sự tinh tế."
+        "grammarTip": "Trong nhà hàng sang trọng, luôn dùng 'We would like to...' thay vì 'We want to...' để thể hiện sự tinh tế.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_305",
@@ -1401,7 +1415,8 @@
           "in",
           "having"
         ],
-        "grammarTip": "Cụm từ 'at your convenience' giúp câu yêu cầu thanh toán trở nên vô cùng trang nhã và chuyên nghiệp."
+        "grammarTip": "Cụm từ 'at your convenience' giúp câu yêu cầu thanh toán trở nên vô cùng trang nhã và chuyên nghiệp.",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -1842,7 +1857,8 @@
           "negotiating",
           "in"
         ],
-        "grammarTip": "Cụm mở đầu đàm phán lương cực kỳ thuyết phục: 'Based on my performance/contribution, I would like to negotiate...'."
+        "grammarTip": "Cụm mở đầu đàm phán lương cực kỳ thuyết phục: 'Based on my performance/contribution, I would like to negotiate...'.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_402",
@@ -1855,7 +1871,8 @@
           "exceed",
           "at"
         ],
-        "grammarTip": "Để diễn đạt vượt hoặc tăng/giảm một khoảng bao nhiêu phần trăm, luôn sử dụng giới từ 'by' (by twenty percent)."
+        "grammarTip": "Để diễn đạt vượt hoặc tăng/giảm một khoảng bao nhiêu phần trăm, luôn sử dụng giới từ 'by' (by twenty percent).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_403",
@@ -1868,7 +1885,8 @@
           "takes",
           "for"
         ],
-        "grammarTip": "Cụm động từ 'take on responsibility' nghĩa là gánh vác, nhận lấy trách nhiệm mới."
+        "grammarTip": "Cụm động từ 'take on responsibility' nghĩa là gánh vác, nhận lấy trách nhiệm mới.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_404",
@@ -1881,7 +1899,8 @@
           "met",
           "increasing"
         ],
-        "grammarTip": "Đảo ngữ nhấn mạnh thành tích ở cấp độ B2: 'Not only + did + S + V (nguyên mẫu), but S + also + V-ed'."
+        "grammarTip": "Đảo ngữ nhấn mạnh thành tích ở cấp độ B2: 'Not only + did + S + V (nguyên mẫu), but S + also + V-ed'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_405",
@@ -1894,7 +1913,8 @@
           "reviewed",
           "for"
         ],
-        "grammarTip": "Cấu trúc 'Would you be open to + V-ing?' là cách thăm dò ý kiến sếp/đối tác vừa mềm mỏng vừa chuyên nghiệp."
+        "grammarTip": "Cấu trúc 'Would you be open to + V-ing?' là cách thăm dò ý kiến sếp/đối tác vừa mềm mỏng vừa chuyên nghiệp.",
+        "functionalCategory": "asking"
       }
     ],
     "aiRoleplayMission": {
@@ -2330,7 +2350,8 @@
           "sustainably",
           "expand"
         ],
-        "grammarTip": "Chủ ngữ số ít 'Our core strategy' đi với động từ chia ngôi thứ 3 số ít 'focuses on + Cụm danh từ'."
+        "grammarTip": "Chủ ngữ số ít 'Our core strategy' đi với động từ chia ngôi thứ 3 số ít 'focuses on + Cụm danh từ'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_502",
@@ -2343,7 +2364,8 @@
           "generating",
           "revenues"
         ],
-        "grammarTip": "Sau 'every' luôn là danh từ đếm được số ít (every stakeholder)."
+        "grammarTip": "Sau 'every' luôn là danh từ đếm được số ít (every stakeholder).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_503",
@@ -2356,7 +2378,8 @@
           "achieve",
           "breakthroughs"
         ],
-        "grammarTip": "Cấu trúc 'By + V-ing' ở đầu câu dùng để chỉ phương thức giúp đạt được kết quả ở mệnh đề chính."
+        "grammarTip": "Cấu trúc 'By + V-ing' ở đầu câu dùng để chỉ phương thức giúp đạt được kết quả ở mệnh đề chính.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_504",
@@ -2369,7 +2392,8 @@
           "achieving",
           "leaders"
         ],
-        "grammarTip": "Cấu trúc bị động với động từ khuyết thiếu nhấn mạnh tầm quan trọng: 'could not be + V3/ed (achieved) + without + Noun Phrase'."
+        "grammarTip": "Cấu trúc bị động với động từ khuyết thiếu nhấn mạnh tầm quan trọng: 'could not be + V3/ed (achieved) + without + Noun Phrase'.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_505",
@@ -2382,7 +2406,8 @@
           "ensure",
           "sustain"
         ],
-        "grammarTip": "Cấu trúc song hành 'not only + V-s ... but also + V-s' theo chủ ngữ số ít 'This proposal'."
+        "grammarTip": "Cấu trúc song hành 'not only + V-s ... but also + V-s' theo chủ ngữ số ít 'This proposal'.",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -2820,7 +2845,8 @@
           "with",
           "delayed"
         ],
-        "grammarTip": "Động từ 'apologize' đi với giới từ 'for' (apologize for something: xin lỗi về việc gì)."
+        "grammarTip": "Động từ 'apologize' đi với giới từ 'for' (apologize for something: xin lỗi về việc gì).",
+        "functionalCategory": "apologizing"
       },
       {
         "id": "g_a_602",
@@ -2833,7 +2859,8 @@
           "waives",
           "on"
         ],
-        "grammarTip": "Cụm 'To compensate for...' đứng đầu câu dùng để nêu giải pháp đền bù thiệt hại cho khách hàng."
+        "grammarTip": "Cụm 'To compensate for...' đứng đầu câu dùng để nêu giải pháp đền bù thiệt hại cho khách hàng.",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_603",
@@ -2846,7 +2873,8 @@
           "protect",
           "priorities"
         ],
-        "grammarTip": "Khi danh động từ (V-ing: Protecting...) làm chủ ngữ, động từ to-be luôn chia ở số ít (is)."
+        "grammarTip": "Khi danh động từ (V-ing: Protecting...) làm chủ ngữ, động từ to-be luôn chia ở số ít (is).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_604",
@@ -2859,7 +2887,8 @@
           "commit",
           "for"
         ],
-        "grammarTip": "Cấu trúc 'be committed to + V-ing / Noun' (cam kết làm gì) rất hay xuất hiện trong tiếng Anh thương mại."
+        "grammarTip": "Cấu trúc 'be committed to + V-ing / Noun' (cam kết làm gì) rất hay xuất hiện trong tiếng Anh thương mại.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_605",
@@ -2872,7 +2901,8 @@
           "investigating",
           "investigated"
         ],
-        "grammarTip": "Dùng 'assign someone to + V (nguyên mẫu)' để diễn tả việc phân công ai thực hiện nhiệm vụ gì."
+        "grammarTip": "Dùng 'assign someone to + V (nguyên mẫu)' để diễn tả việc phân công ai thực hiện nhiệm vụ gì.",
+        "functionalCategory": "complaining"
       }
     ],
     "aiRoleplayMission": {
@@ -3306,7 +3336,8 @@
           "guaranteed",
           "are"
         ],
-        "grammarTip": "Cấu trúc 'Can you guarantee that + Mệnh đề?' dùng để yêu cầu đối tác cam kết một chỉ số cụ thể."
+        "grammarTip": "Cấu trúc 'Can you guarantee that + Mệnh đề?' dùng để yêu cầu đối tác cam kết một chỉ số cụ thể.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_a_702",
@@ -3319,7 +3350,8 @@
           "including",
           "on"
         ],
-        "grammarTip": "Sau động từ khuyết thiếu 'must', động từ chính giữ nguyên mẫu (include)."
+        "grammarTip": "Sau động từ khuyết thiếu 'must', động từ chính giữ nguyên mẫu (include).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_703",
@@ -3332,7 +3364,8 @@
           "streamlines",
           "at"
         ],
-        "grammarTip": "Động từ 'streamline' (tinh gọn/tối ưu hóa) là từ vựng điểm cộng rất lớn trong đàm phán vận hành."
+        "grammarTip": "Động từ 'streamline' (tinh gọn/tối ưu hóa) là từ vựng điểm cộng rất lớn trong đàm phán vận hành.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_704",
@@ -3345,7 +3378,8 @@
           "capacities",
           "enough of"
         ],
-        "grammarTip": "'Enough' đứng trước danh từ (enough capacity: đủ sức chứa)."
+        "grammarTip": "'Enough' đứng trước danh từ (enough capacity: đủ sức chứa).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_a_705",
@@ -3358,7 +3392,8 @@
           "signing",
           "unless"
         ],
-        "grammarTip": "'Provided that' (Miễn là / Với điều kiện là) được dùng thay cho 'If' trong đàm phán hợp đồng trang trọng."
+        "grammarTip": "'Provided that' (Miễn là / Với điều kiện là) được dùng thay cho 'If' trong đàm phán hợp đồng trang trọng.",
+        "functionalCategory": "negotiating"
       }
     ],
     "aiRoleplayMission": {
@@ -3793,7 +3828,8 @@
           "seamless",
           "platforming"
         ],
-        "grammarTip": "Cấu trúc 'help + Object + V (nguyên mẫu)' kết hợp trạng từ 'seamlessly' bổ nghĩa cho động từ."
+        "grammarTip": "Cấu trúc 'help + Object + V (nguyên mẫu)' kết hợp trạng từ 'seamlessly' bổ nghĩa cho động từ.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_802",
@@ -3806,7 +3842,8 @@
           "are",
           "scalably"
         ],
-        "grammarTip": "Mệnh đề danh ngữ bắt đầu bằng 'What...' làm chủ ngữ luôn đi với động từ chia số ít (gives / is)."
+        "grammarTip": "Mệnh đề danh ngữ bắt đầu bằng 'What...' làm chủ ngữ luôn đi với động từ chia số ít (gives / is).",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_a_803",
@@ -3819,7 +3856,8 @@
           "attended",
           "to"
         ],
-        "grammarTip": "Sau giới từ 'for' trong cụm 'Thank you for...', động từ luôn chia ở dạng V-ing (attending)."
+        "grammarTip": "Sau giới từ 'for' trong cụm 'Thank you for...', động từ luôn chia ở dạng V-ing (attending).",
+        "functionalCategory": "thanking"
       },
       {
         "id": "g_a_804",
@@ -3832,7 +3870,8 @@
           "a feedback",
           "basing"
         ],
-        "grammarTip": "'Feedback' là danh từ KHÔNG đếm được, tuyệt đối không thêm '-s' hay dùng 'a feedback'."
+        "grammarTip": "'Feedback' là danh từ KHÔNG đếm được, tuyệt đối không thêm '-s' hay dùng 'a feedback'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_805",
@@ -3845,7 +3884,8 @@
           "seamlessly",
           "are"
         ],
-        "grammarTip": "Cấu trúc 'both + Tính từ 1 + and + Tính từ 2' giúp câu thuyết trình sản phẩm cân xứng và thuyết phục."
+        "grammarTip": "Cấu trúc 'both + Tính từ 1 + and + Tính từ 2' giúp câu thuyết trình sản phẩm cân xứng và thuyết phục.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -4283,7 +4323,8 @@
           "conducted",
           "acquisitions"
         ],
-        "grammarTip": "Sau giới từ 'Before', động từ chia ở dạng V-ing (Before finalizing...). Cụm cố định là 'conduct due diligence'."
+        "grammarTip": "Sau giới từ 'Before', động từ chia ở dạng V-ing (Before finalizing...). Cụm cố định là 'conduct due diligence'.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_902",
@@ -4296,7 +4337,8 @@
           "reflecting",
           "valuations"
         ],
-        "grammarTip": "Sau động từ khuyết thiếu 'should', động từ chính giữ nguyên mẫu (reflect)."
+        "grammarTip": "Sau động từ khuyết thiếu 'should', động từ chính giữ nguyên mẫu (reflect).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_a_903",
@@ -4309,7 +4351,8 @@
           "among",
           "company"
         ],
-        "grammarTip": "Khi nói về mối quan hệ giữa 2 đối tượng (both companies), luôn dùng giới từ 'between'."
+        "grammarTip": "Khi nói về mối quan hệ giữa 2 đối tượng (both companies), luôn dùng giới từ 'between'.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_904",
@@ -4322,7 +4365,8 @@
           "remains",
           "term"
         ],
-        "grammarTip": "Sau liên động từ 'remain' (duy trì trạng thái), ta dùng Tính từ (confidential), còn trạng từ 'strictly' đứng trước để bổ nghĩa cho tính từ đó."
+        "grammarTip": "Sau liên động từ 'remain' (duy trì trạng thái), ta dùng Tính từ (confidential), còn trạng từ 'strictly' đứng trước để bổ nghĩa cho tính từ đó.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_905",
@@ -4335,7 +4379,8 @@
           "including",
           "properties"
         ],
-        "grammarTip": "Trong câu hỏi với trợ động từ 'Does', động từ chính trở về dạng nguyên mẫu (include)."
+        "grammarTip": "Trong câu hỏi với trợ động từ 'Does', động từ chính trở về dạng nguyên mẫu (include).",
+        "functionalCategory": "negotiating"
       }
     ],
     "aiRoleplayMission": {
@@ -4776,7 +4821,8 @@
           "publicly",
           "records"
         ],
-        "grammarTip": "Cụm cố định 'a proven track record' (bề dày thành tích đã được kiểm chứng) và 'go public' (lên sàn IPO)."
+        "grammarTip": "Cụm cố định 'a proven track record' (bề dày thành tích đã được kiểm chứng) và 'go public' (lên sàn IPO).",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_a_1002",
@@ -4789,7 +4835,8 @@
           "resilience",
           "models"
         ],
-        "grammarTip": "Cấu trúc 'By + V-ing' (Bằng cách làm gì...) dùng để tóm tắt giải pháp dẫn đến thành công."
+        "grammarTip": "Cấu trúc 'By + V-ing' (Bằng cách làm gì...) dùng để tóm tắt giải pháp dẫn đến thành công.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_1003",
@@ -4802,7 +4849,8 @@
           "transparent",
           "maintaining"
         ],
-        "grammarTip": "Cấu trúc song hành 'not only + V1 ... but also + V2' giúp câu trả lời trước nhà đầu tư cực kỳ đanh thép."
+        "grammarTip": "Cấu trúc song hành 'not only + V1 ... but also + V2' giúp câu trả lời trước nhà đầu tư cực kỳ đanh thép.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1004",
@@ -4815,7 +4863,8 @@
           "strengthen",
           "dominant"
         ],
-        "grammarTip": "Chủ ngữ số nhiều (Strategic acquisitions) đi với 'have + V3/ed' (have strengthened)."
+        "grammarTip": "Chủ ngữ số nhiều (Strategic acquisitions) đi với 'have + V3/ed' (have strengthened).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_1005",
@@ -4828,7 +4877,8 @@
           "paying",
           "quarter"
         ],
-        "grammarTip": "'Earnings' (lợi nhuận/thu nhập) luôn ở dạng số nhiều nên động từ 'allow' giữ nguyên mẫu."
+        "grammarTip": "'Earnings' (lợi nhuận/thu nhập) luôn ở dạng số nhiều nên động từ 'allow' giữ nguyên mẫu.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -5260,7 +5310,8 @@
           "retentions",
           "implements"
         ],
-        "grammarTip": "Cấu trúc chỉ mục đích trang trọng trong quản trị: 'In order to + V (nguyên mẫu), S + should + V'."
+        "grammarTip": "Cấu trúc chỉ mục đích trang trọng trong quản trị: 'In order to + V (nguyên mẫu), S + should + V'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_a_1102",
@@ -5273,7 +5324,8 @@
           "burnouts",
           "rising"
         ],
-        "grammarTip": "'Burnout' và 'turnover' trong ngữ cảnh quản trị nhân sự là danh từ không đếm được, đi với động từ số ít."
+        "grammarTip": "'Burnout' và 'turnover' trong ngữ cảnh quản trị nhân sự là danh từ không đếm được, đi với động từ số ít.",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_1103",
@@ -5286,7 +5338,8 @@
           "boost",
           "morales"
         ],
-        "grammarTip": "Cụm danh động từ 'Empowering team leaders...' làm chủ ngữ số ít nên động từ chính thêm '-s' (boosts)."
+        "grammarTip": "Cụm danh động từ 'Empowering team leaders...' làm chủ ngữ số ít nên động từ chính thêm '-s' (boosts).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1104",
@@ -5299,7 +5352,8 @@
           "mentoring",
           "mentored"
         ],
-        "grammarTip": "Cấu trúc 'assign someone to + V (nguyên mẫu)' (phân công ai làm nhiệm vụ gì)."
+        "grammarTip": "Cấu trúc 'assign someone to + V (nguyên mẫu)' (phân công ai làm nhiệm vụ gì).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_1105",
@@ -5312,7 +5366,8 @@
           "restructures",
           "restructuring"
         ],
-        "grammarTip": "Cấu trúc 'It is (high) time + S + V2/ed (Quá khứ giả định)' dùng để nhấn mạnh một việc cần làm ngay lập tức."
+        "grammarTip": "Cấu trúc 'It is (high) time + S + V2/ed (Quá khứ giả định)' dùng để nhấn mạnh một việc cần làm ngay lập tức.",
+        "functionalCategory": "narrating"
       }
     ],
     "aiRoleplayMission": {
@@ -5743,7 +5798,8 @@
           "compliant",
           "on"
         ],
-        "grammarTip": "Cụm danh từ chuẩn mực trong pháp chế: 'be in (full) compliance with + quy định/luật lệ' (= comply with)."
+        "grammarTip": "Cụm danh từ chuẩn mực trong pháp chế: 'be in (full) compliance with + quy định/luật lệ' (= comply with).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1202",
@@ -5756,7 +5812,8 @@
           "for",
           "exempted"
         ],
-        "grammarTip": "Tính từ 'exempt' luôn đi với giới từ 'from' (be exempt from something: được miễn trừ khỏi cái gì)."
+        "grammarTip": "Tính từ 'exempt' luôn đi với giới từ 'from' (be exempt from something: được miễn trừ khỏi cái gì).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_1203",
@@ -5769,7 +5826,8 @@
           "increasing",
           "quotas"
         ],
-        "grammarTip": "Dùng giới từ 'Under + tên hiệp định/luật' để mở đầu câu viện dẫn căn cứ pháp lý."
+        "grammarTip": "Dùng giới từ 'Under + tên hiệp định/luật' để mở đầu câu viện dẫn căn cứ pháp lý.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_1204",
@@ -5782,7 +5840,8 @@
           "to",
           "subsidies"
         ],
-        "grammarTip": "Cấu trúc 'qualify for + Danh từ' có nghĩa là hội đủ tiêu chuẩn/điều kiện để nhận quyền lợi gì."
+        "grammarTip": "Cấu trúc 'qualify for + Danh từ' có nghĩa là hội đủ tiêu chuẩn/điều kiện để nhận quyền lợi gì.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_1205",
@@ -5795,7 +5854,8 @@
           "custom",
           "speeding"
         ],
-        "grammarTip": "Luôn viết 'customs clearance' (có chữ -s ở customs) khi nói về thủ tục thông quan hàng hóa."
+        "grammarTip": "Luôn viết 'customs clearance' (có chữ -s ở customs) khi nói về thủ tục thông quan hàng hóa.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -6230,7 +6290,8 @@
           "commercializing",
           "prototypes"
         ],
-        "grammarTip": "Cấu trúc 'allocate [ngân sách] to + Danh từ' hoặc 'allocate [ngân sách] to + V nguyên mẫu' (để làm gì)."
+        "grammarTip": "Cấu trúc 'allocate [ngân sách] to + Danh từ' hoặc 'allocate [ngân sách] to + V nguyên mẫu' (để làm gì).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_1302",
@@ -6243,7 +6304,8 @@
           "files",
           "secret"
         ],
-        "grammarTip": "Cụm từ chuyên ngành sở hữu trí tuệ: 'file a patent' (nộp đơn đăng ký bằng sáng chế)."
+        "grammarTip": "Cụm từ chuyên ngành sở hữu trí tuệ: 'file a patent' (nộp đơn đăng ký bằng sáng chế).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_a_1303",
@@ -6256,7 +6318,8 @@
           "making",
           "chip"
         ],
-        "grammarTip": "Cấu trúc 'make + Tân ngữ + Tính từ (obsolete)' (khiến cái gì trở nên như thế nào)."
+        "grammarTip": "Cấu trúc 'make + Tân ngữ + Tính từ (obsolete)' (khiến cái gì trở nên như thế nào).",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_1304",
@@ -6269,7 +6332,8 @@
           "feasibly",
           "prototypes"
         ],
-        "grammarTip": "Chủ ngữ là cụm danh động từ 'mass-producing this prototype' luôn chia động từ số ít (is)."
+        "grammarTip": "Chủ ngữ là cụm danh động từ 'mass-producing this prototype' luôn chia động từ số ít (is).",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_a_1305",
@@ -6282,7 +6346,8 @@
           "commercializing",
           "global"
         ],
-        "grammarTip": "Bị động ở mệnh đề thời gian hiện tại: 'Once + S + is/are + V3/ed (is granted)'."
+        "grammarTip": "Bị động ở mệnh đề thời gian hiện tại: 'Once + S + is/are + V3/ed (is granted)'.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -6717,7 +6782,8 @@
           "for",
           "volatilities"
         ],
-        "grammarTip": "Cụm động từ tài chính C1: 'hedge against + [rủi ro/lạm phát/biến động]' (phòng vệ trước rủi ro gì)."
+        "grammarTip": "Cụm động từ tài chính C1: 'hedge against + [rủi ro/lạm phát/biến động]' (phòng vệ trước rủi ro gì).",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_a_1402",
@@ -6730,7 +6796,8 @@
           "resolves",
           "a"
         ],
-        "grammarTip": "'Independent' bắt đầu bằng nguyên âm nên đi với mạo từ 'an' (an independent audit)."
+        "grammarTip": "'Independent' bắt đầu bằng nguyên âm nên đi với mạo từ 'an' (an independent audit).",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_1403",
@@ -6743,7 +6810,8 @@
           "remains",
           "strongly"
         ],
-        "grammarTip": "'Despite' đi với cụm danh từ (rising inflation). Chủ ngữ ghép 'our cash liquidity and balance sheet' chia động từ số nhiều (remain)."
+        "grammarTip": "'Despite' đi với cụm danh từ (rising inflation). Chủ ngữ ghép 'our cash liquidity and balance sheet' chia động từ số nhiều (remain).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1404",
@@ -6756,7 +6824,8 @@
           "with",
           "solvencies"
         ],
-        "grammarTip": "Cấu trúc 'reassure someone of something' (trấn an/khẳng định lại cho ai yên tâm về điều gì)."
+        "grammarTip": "Cấu trúc 'reassure someone of something' (trấn an/khẳng định lại cho ai yên tâm về điều gì).",
+        "functionalCategory": "clarifying"
       },
       {
         "id": "g_a_1405",
@@ -6769,7 +6838,8 @@
           "maintain",
           "hurting"
         ],
-        "grammarTip": "Đảo ngữ Câu điều kiện loại 3 ở cấp độ C1: 'Had + S + (not) + V3/ed, S + would have + V3/ed'."
+        "grammarTip": "Đảo ngữ Câu điều kiện loại 3 ở cấp độ C1: 'Had + S + (not) + V3/ed, S + would have + V3/ed'.",
+        "functionalCategory": "negotiating"
       }
     ],
     "aiRoleplayMission": {
@@ -7208,7 +7278,8 @@
           "surrenders",
           "surrendering"
         ],
-        "grammarTip": "Đảo ngữ C1 cực mạnh trong đàm phán: 'Under no circumstances + will/can + S + V (nguyên mẫu)'."
+        "grammarTip": "Đảo ngữ C1 cực mạnh trong đàm phán: 'Under no circumstances + will/can + S + V (nguyên mẫu)'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1502",
@@ -7221,7 +7292,8 @@
           "rejects",
           "shareholder"
         ],
-        "grammarTip": "Mệnh đề phân từ quá khứ rút gọn ở đầu câu: 'Backed by...' (= Because we are backed by...)."
+        "grammarTip": "Mệnh đề phân từ quá khứ rút gọn ở đầu câu: 'Backed by...' (= Because we are backed by...).",
+        "functionalCategory": "refusing"
       },
       {
         "id": "g_a_1503",
@@ -7234,7 +7306,8 @@
           "counteroffers",
           "using"
         ],
-        "grammarTip": "Cấu trúc 'use A as leverage for B' (sử dụng A làm đòn bẩy thương lượng cho B)."
+        "grammarTip": "Cấu trúc 'use A as leverage for B' (sử dụng A làm đòn bẩy thương lượng cho B).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_1504",
@@ -7247,7 +7320,8 @@
           "fiduciaries",
           "conglomerates"
         ],
-        "grammarTip": "Sau 'be committed to', chữ 'to' là giới từ nên động từ theo sau chia dạng V-ing (fulfilling)."
+        "grammarTip": "Sau 'be committed to', chữ 'to' là giới từ nên động từ theo sau chia dạng V-ing (fulfilling).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1505",
@@ -7260,7 +7334,8 @@
           "win",
           "unanimously"
         ],
-        "grammarTip": "Ôn tập đảo ngữ 'Not only + did + S + V nguyên mẫu (retain), but S + also + V2/ed (won)'."
+        "grammarTip": "Ôn tập đảo ngữ 'Not only + did + S + V nguyên mẫu (retain), but S + also + V2/ed (won)'.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -7700,7 +7775,8 @@
           "funding",
           "transitions"
         ],
-        "grammarTip": "'Proceeds' (tiền thu được từ một đợt phát hành/bán hàng) luôn có '-s' ở cuối trong tiếng Anh tài chính."
+        "grammarTip": "'Proceeds' (tiền thu được từ một đợt phát hành/bán hàng) luôn có '-s' ở cuối trong tiếng Anh tài chính.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1602",
@@ -7713,7 +7789,8 @@
           "benchmarks",
           "accountable"
         ],
-        "grammarTip": "Cụm từ cố định 'set a benchmark for + Danh từ' (thiết lập chuẩn mực mới cho lĩnh vực gì)."
+        "grammarTip": "Cụm từ cố định 'set a benchmark for + Danh từ' (thiết lập chuẩn mực mới cho lĩnh vực gì).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1603",
@@ -7726,7 +7803,8 @@
           "commercial",
           "viably"
         ],
-        "grammarTip": "Trạng từ (ethically / commercially) đứng trước tính từ (sound / viable) để bổ nghĩa mức độ/phương diện."
+        "grammarTip": "Trạng từ (ethically / commercially) đứng trước tính từ (sound / viable) để bổ nghĩa mức độ/phương diện.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1604",
@@ -7739,7 +7817,8 @@
           "offsetting",
           "footprints"
         ],
-        "grammarTip": "Hai động từ nguyên mẫu 'reduce ... and offset ...' song hành sau trợ động từ 'will'."
+        "grammarTip": "Hai động từ nguyên mẫu 'reduce ... and offset ...' song hành sau trợ động từ 'will'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1605",
@@ -7752,7 +7831,8 @@
           "ethically",
           "attracts"
         ],
-        "grammarTip": "Cấu trúc 'By + V-ing' ở đầu câu chỉ phương thức thực hiện."
+        "grammarTip": "Cấu trúc 'By + V-ing' ở đầu câu chỉ phương thức thực hiện.",
+        "functionalCategory": "describing"
       }
     ],
     "aiRoleplayMission": {
@@ -8193,7 +8273,8 @@
           "minimizing",
           "downtimes"
         ],
-        "grammarTip": "'Downtime' và 'maintenance' đều là danh từ không đếm được trong tiếng Anh công nghiệp/sản xuất."
+        "grammarTip": "'Downtime' và 'maintenance' đều là danh từ không đếm được trong tiếng Anh công nghiệp/sản xuất.",
+        "functionalCategory": "refusing"
       },
       {
         "id": "g_a_1702",
@@ -8206,7 +8287,8 @@
           "boosts",
           "productivities"
         ],
-        "grammarTip": "Sau động từ khuyết thiếu 'will', động từ chính giữ nguyên mẫu (boost)."
+        "grammarTip": "Sau động từ khuyết thiếu 'will', động từ chính giữ nguyên mẫu (boost).",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_1703",
@@ -8219,7 +8301,8 @@
           "specification",
           "defective"
         ],
-        "grammarTip": "Cụm từ 'meet specifications' (đạt chuẩn thông số kỹ thuật) và 'zero defects' (không có lỗi hỏng)."
+        "grammarTip": "Cụm từ 'meet specifications' (đạt chuẩn thông số kỹ thuật) và 'zero defects' (không có lỗi hỏng).",
+        "functionalCategory": "complaining"
       },
       {
         "id": "g_a_1704",
@@ -8232,7 +8315,8 @@
           "optimizing",
           "run"
         ],
-        "grammarTip": "Cấu trúc 'keep + Object + V-ing (running)' có nghĩa là duy trì cho cái gì hoạt động liên tục."
+        "grammarTip": "Cấu trúc 'keep + Object + V-ing (running)' có nghĩa là duy trì cho cái gì hoạt động liên tục.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_1705",
@@ -8245,7 +8329,8 @@
           "high",
           "become"
         ],
-        "grammarTip": "So sánh kép (Càng ... càng ...): 'The + So sánh hơn + S + V, the + So sánh hơn + S + V'."
+        "grammarTip": "So sánh kép (Càng ... càng ...): 'The + So sánh hơn + S + V, the + So sánh hơn + S + V'.",
+        "functionalCategory": "refusing"
       }
     ],
     "aiRoleplayMission": {
@@ -8683,7 +8768,8 @@
           "mitigates",
           "ventures"
         ],
-        "grammarTip": "Hai động từ nguyên mẫu 'share ... and mitigate ...' nối song song sau 'allow someone to + V'."
+        "grammarTip": "Hai động từ nguyên mẫu 'share ... and mitigate ...' nối song song sau 'allow someone to + V'.",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_1802",
@@ -8696,7 +8782,8 @@
           "limited",
           "liabilities"
         ],
-        "grammarTip": "Rút gọn mệnh đề quan hệ chủ động bằng V-ing: 'a clause limiting...' (= a clause which limits...)."
+        "grammarTip": "Rút gọn mệnh đề quan hệ chủ động bằng V-ing: 'a clause limiting...' (= a clause which limits...).",
+        "functionalCategory": "negotiating"
       },
       {
         "id": "g_a_1803",
@@ -8709,7 +8796,8 @@
           "winning",
           "infrastructures"
         ],
-        "grammarTip": "'Infrastructure' (cơ sở hạ tầng) thường được dùng như danh từ không đếm được."
+        "grammarTip": "'Infrastructure' (cơ sở hạ tầng) thường được dùng như danh từ không đếm được.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1804",
@@ -8722,7 +8810,8 @@
           "endorse",
           "endorsing"
         ],
-        "grammarTip": "Bị động thì Hiện tại hoàn thành với trạng từ đứng giữa 'been' và 'V3/ed': 'has been officially endorsed'."
+        "grammarTip": "Bị động thì Hiện tại hoàn thành với trạng từ đứng giữa 'been' và 'V3/ed': 'has been officially endorsed'.",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_1805",
@@ -8735,7 +8824,8 @@
           "sharing",
           "equal"
         ],
-        "grammarTip": "Cụm từ pháp lý trang trọng 'In the event of + Danh từ' (= In case of: Trong trường hợp xảy ra...)."
+        "grammarTip": "Cụm từ pháp lý trang trọng 'In the event of + Danh từ' (= In case of: Trong trường hợp xảy ra...).",
+        "functionalCategory": "complaining"
       }
     ],
     "aiRoleplayMission": {
@@ -9175,7 +9265,8 @@
           "establishing",
           "governances"
         ],
-        "grammarTip": "'Governance' (quản trị) là danh từ không đếm được, không bao giờ thêm '-s'."
+        "grammarTip": "'Governance' (quản trị) là danh từ không đếm được, không bao giờ thêm '-s'.",
+        "functionalCategory": "persuading"
       },
       {
         "id": "g_a_1902",
@@ -9188,7 +9279,8 @@
           "autonomously",
           "remain"
         ],
-        "grammarTip": "Cấu trúc nhượng bộ 'No matter how + Tính từ (autonomous) + S + be'. 'Human oversight' là chủ ngữ số ít nên đi với 'remains'."
+        "grammarTip": "Cấu trúc nhượng bộ 'No matter how + Tính từ (autonomous) + S + be'. 'Human oversight' là chủ ngữ số ít nên đi với 'remains'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1903",
@@ -9201,7 +9293,8 @@
           "eliminating",
           "privacies"
         ],
-        "grammarTip": "'Privacy' (quyền riêng tư) là danh từ không đếm được."
+        "grammarTip": "'Privacy' (quyền riêng tư) là danh từ không đếm được.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_1904",
@@ -9214,7 +9307,8 @@
           "unprecedentedly",
           "advance"
         ],
-        "grammarTip": "Cụm từ cố định C1+: 'at an unprecedented pace/scale' (với tốc độ/quy mô chưa từng có tiền lệ)."
+        "grammarTip": "Cụm từ cố định C1+: 'at an unprecedented pace/scale' (với tốc độ/quy mô chưa từng có tiền lệ).",
+        "functionalCategory": "narrating"
       },
       {
         "id": "g_a_1905",
@@ -9227,7 +9321,8 @@
           "safeguarding",
           "to safeguard"
         ],
-        "grammarTip": "Thức giả định cấp độ C1+: 'It is imperative/essential that + S + V (nguyên mẫu không chia: safeguard)'."
+        "grammarTip": "Thức giả định cấp độ C1+: 'It is imperative/essential that + S + V (nguyên mẫu không chia: safeguard)'.",
+        "functionalCategory": "persuading"
       }
     ],
     "aiRoleplayMission": {
@@ -9666,7 +9761,8 @@
           "catalysts",
           "shifting"
         ],
-        "grammarTip": "Cấu trúc học thuật/diễn thuyết C2: 'serve as a catalyst for + Danh từ' (đóng vai trò là chất xúc tác thúc đẩy điều gì)."
+        "grammarTip": "Cấu trúc học thuật/diễn thuyết C2: 'serve as a catalyst for + Danh từ' (đóng vai trò là chất xúc tác thúc đẩy điều gì).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_2002",
@@ -9679,7 +9775,8 @@
           "require",
           "visionaries"
         ],
-        "grammarTip": "Danh động từ 'Navigating...' làm chủ ngữ số ít nên động từ chính là 'requires'."
+        "grammarTip": "Danh động từ 'Navigating...' làm chủ ngữ số ít nên động từ chính là 'requires'.",
+        "functionalCategory": "asking"
       },
       {
         "id": "g_a_2003",
@@ -9692,7 +9789,8 @@
           "achieving",
           "prosperities"
         ],
-        "grammarTip": "Đảo ngữ C2 với 'Only through + Cụm danh từ' ở đầu câu: trợ động từ 'can' đảo lên trước chủ ngữ 'we'."
+        "grammarTip": "Đảo ngữ C2 với 'Only through + Cụm danh từ' ở đầu câu: trợ động từ 'can' đảo lên trước chủ ngữ 'we'.",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_2004",
@@ -9705,7 +9803,8 @@
           "pioneers",
           "economies"
         ],
-        "grammarTip": "'Pioneer' vừa là danh từ vừa là động từ (to pioneer something: đi tiên phong mở đường cho cái gì)."
+        "grammarTip": "'Pioneer' vừa là danh từ vừa là động từ (to pioneer something: đi tiên phong mở đường cho cái gì).",
+        "functionalCategory": "describing"
       },
       {
         "id": "g_a_2005",
@@ -9718,7 +9817,8 @@
           "build",
           "driving"
         ],
-        "grammarTip": "Đảo ngữ thì Hiện tại hoàn thành: 'Not only + have/has + S + V3/ed (built)...'."
+        "grammarTip": "Đảo ngữ thì Hiện tại hoàn thành: 'Not only + have/has + S + V3/ed (built)...'.",
+        "functionalCategory": "narrating"
       }
     ],
     "aiRoleplayMission": {

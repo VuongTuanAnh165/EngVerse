@@ -240,6 +240,12 @@ export function createDefaultUserProfile(
       totalClears: 0,
     },
     claimedMilestones: [],
+    freeSimulator: {
+      dailySessionsCount: 0,
+      lastPlayedDate: today,
+      totalSessionsCompleted: 0,
+      history: [],
+    },
     unlockedAvatarFrames: ['default'],
     isGuest: true,
   };

@@ -193,6 +193,18 @@ export default defineEventHandler(async (event): Promise<AuthInitResponse> => {
     }
 
     // Atomically write new profile to Firestore (1 doc per user rule)
+    // Merge freeSimulator progress safely from guest session (Task 4.5)
+    if (body.guestProgress?.freeSimulator && typeof body.guestProgress.freeSimulator === 'object') {
+      const guestSim = body.guestProgress.freeSimulator;
+      const hist = Array.isArray(guestSim.history) ? guestSim.history.slice(0, 5) : [];
+      newProfile.freeSimulator = {
+        dailySessionsCount: Math.min(5, Math.max(0, guestSim.dailySessionsCount || 0)),
+        lastPlayedDate: guestSim.lastPlayedDate || '',
+        totalSessionsCompleted: Math.max(0, guestSim.totalSessionsCompleted || 0),
+        history: hist,
+      };
+    }
+
     await userRef.set(newProfile);
 
     return {

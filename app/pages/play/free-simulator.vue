@@ -543,11 +543,144 @@ async function evaluateSessionScorecard(): Promise<void> {
 }
 
 // ---------------------------------------------------------------------------
-// History & Scorecard Inspection
+// History & Progress Tracking (Task 4.5)
 // ---------------------------------------------------------------------------
 const historyRecords = computed<FreeSimSessionRecord[]>(() => {
   return userStore.freeSimulator?.history || [];
 });
+
+const totalCompletedCount = computed<number>(() => {
+  return userStore.freeSimulator?.totalSessionsCompleted || historyRecords.value.length;
+});
+
+const CEFR_LEVEL_RANKS: Record<CEFRLevel, number> = {
+  A1: 1,
+  A2: 2,
+  B1: 3,
+  B2: 4,
+  C1: 5,
+  C2: 6,
+};
+
+const latestCefrLevel = computed<CEFRLevel>(() => {
+  return historyRecords.value[0]?.achievedCefr || 'B1';
+});
+
+const highestCefrLevel = computed<CEFRLevel>(() => {
+  if (historyRecords.value.length === 0) return 'A1';
+  let best: CEFRLevel = historyRecords.value[0]?.achievedCefr || 'A1';
+  for (const r of historyRecords.value) {
+    if (CEFR_LEVEL_RANKS[r.achievedCefr] > CEFR_LEVEL_RANKS[best]) {
+      best = r.achievedCefr;
+    }
+  }
+  return best;
+});
+
+interface CefrLadderStep {
+  level: CEFRLevel;
+  nameVi: string;
+  nameEn: string;
+  descriptionVi: string;
+  isAchieved: boolean;
+  isCurrent: boolean;
+}
+
+const cefrLadder = computed<CefrLadderStep[]>(() => {
+  const steps: Array<{ level: CEFRLevel; nameVi: string; nameEn: string; desc: string }> = [
+    { level: 'A1', nameVi: 'Sơ Cấp', nameEn: 'Beginner', desc: 'Chào hỏi, giới thiệu bản thân đơn giản' },
+    { level: 'A2', nameVi: 'Cơ Bản', nameEn: 'Elementary', desc: 'Mua sắm, hỏi đường, trao đổi sinh hoạt quen thuộc' },
+    { level: 'B1', nameVi: 'Trung Cấp', nameEn: 'Intermediate', desc: 'Du lịch độc lập, ứng phó hầu hết tình huống đời sống' },
+    { level: 'B2', nameVi: 'Trung Cấp Trên', nameEn: 'Upper-Int', desc: 'Tranh luận, đàm phán công việc & thuyết trình lưu loát' },
+    { level: 'C1', nameVi: 'Cao Cấp', nameEn: 'Advanced', desc: 'Biểu đạt tinh tế, tham gia hội thảo & đàm phán quốc tế' },
+    { level: 'C2', nameVi: 'Thông Thạo', nameEn: 'Mastery', desc: 'Làm chủ ngôn ngữ tự nhiên, chuẩn xác như người bản xứ' },
+  ];
+
+  const currentLvl = latestCefrLevel.value;
+  const highestRank = CEFR_LEVEL_RANKS[highestCefrLevel.value] || 1;
+
+  return steps.map((s) => ({
+    level: s.level,
+    nameVi: s.nameVi,
+    nameEn: s.nameEn,
+    descriptionVi: s.desc,
+    isAchieved: historyRecords.value.length > 0 && CEFR_LEVEL_RANKS[s.level] <= highestRank,
+    isCurrent: historyRecords.value.length > 0 && s.level === currentLvl,
+  }));
+});
+
+const competencyAverages = computed(() => {
+  if (historyRecords.value.length === 0) {
+    return {
+      avgLexical: 0,
+      avgGrammar: 0,
+      avgPronunciation: 0,
+      avgCommunication: 0,
+      overallAvg: 0,
+    };
+  }
+
+  const count = historyRecords.value.length;
+  let sumLex = 0;
+  let sumGram = 0;
+  let sumPron = 0;
+  let sumComm = 0;
+
+  for (const r of historyRecords.value) {
+    sumLex += r.scorecard.lexicalResource.score || 0;
+    sumGram += r.scorecard.grammaticalAccuracy.score || 0;
+    sumPron += r.scorecard.pronunciation.score || 0;
+    sumComm += r.scorecard.communicativeCompetence.score || 0;
+  }
+
+  const avgLexical = Math.round(sumLex / count);
+  const avgGrammar = Math.round(sumGram / count);
+  const avgPronunciation = Math.round(sumPron / count);
+  const avgCommunication = Math.round(sumComm / count);
+  const overallAvg = Math.round((avgLexical + avgGrammar + avgPronunciation + avgCommunication) / 4);
+
+  return {
+    avgLexical,
+    avgGrammar,
+    avgPronunciation,
+    avgCommunication,
+    overallAvg,
+  };
+});
+
+const accumulatedVocabUpgrades = computed(() => {
+  const seen = new Set<string>();
+  const upgrades: Array<{ original: string; upgraded: string; contextVi: string }> = [];
+
+  for (const r of historyRecords.value) {
+    const list = r.scorecard.lexicalResource.suggestedUpgrades || [];
+    for (const item of list) {
+      const key = `${item.original.toLowerCase()}->${item.upgraded.toLowerCase()}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        upgrades.push(item);
+        if (upgrades.length >= 8) break;
+      }
+    }
+    if (upgrades.length >= 8) break;
+  }
+
+  return upgrades;
+});
+
+const historyFilterCategory = ref<SimulatorCategory | 'custom' | 'all'>('all');
+
+const filteredHistoryRecords = computed<FreeSimSessionRecord[]>(() => {
+  if (historyFilterCategory.value === 'all') {
+    return historyRecords.value;
+  }
+  return historyRecords.value.filter((r) => r.category === historyFilterCategory.value);
+});
+
+function setHistoryFilter(cat: SimulatorCategory | 'custom' | 'all'): void {
+  playClick();
+  historyFilterCategory.value = cat;
+}
 
 const isScorecardOpen = ref<boolean>(false);
 const inspectedRecord = ref<FreeSimSessionRecord | null>(null);
@@ -1385,42 +1518,230 @@ onUnmounted(() => {
           </div>
         </section>
 
-        <!-- TAB 3: HISTORY & PROGRESS -->
+        <!-- TAB 3: HISTORY & PROGRESS (Task 4.5) -->
         <section v-else-if="activeTab === 'history'" class="history-section">
           <div v-if="historyRecords.length > 0" class="history-container">
+            <!-- 1. Top Statistics Dashboard Banner -->
             <div class="history-stats-banner theme-card">
               <div class="history-stat-box">
-                <span class="stat-big-val">{{ historyRecords.length }}</span>
-                <span class="stat-label">Phiên Giả Lập Gần Nhất</span>
+                <span class="stat-emoji">🎓</span>
+                <div class="stat-meta">
+                  <span class="stat-big-val text-gold">{{ totalCompletedCount }}</span>
+                  <span class="stat-label">Tổng Số Buổi Giả Lập</span>
+                </div>
               </div>
+
               <div class="history-stat-box">
-                <span class="stat-big-val text-accent">
-                  {{ historyRecords[0]?.achievedCefr || 'B1' }}
-                </span>
-                <span class="stat-label">Cấp Độ CEFR Gần Nhất</span>
+                <span class="stat-emoji">🌟</span>
+                <div class="stat-meta">
+                  <span class="stat-big-val text-accent">{{ latestCefrLevel }}</span>
+                  <span class="stat-label">Cấp Độ CEFR Gần Nhất</span>
+                </div>
               </div>
+
               <div class="history-stat-box">
-                <span class="stat-big-val text-gold">
-                  {{ userStore.user.freeSimulator?.totalSessionsCompleted || historyRecords.length }}
-                </span>
-                <span class="stat-label">Tổng Số Buổi Luyện Tập</span>
+                <span class="stat-emoji">🏆</span>
+                <div class="stat-meta">
+                  <span class="stat-big-val text-cyan">{{ highestCefrLevel }}</span>
+                  <span class="stat-label">Cấp Độ Cao Nhất Đạt Được</span>
+                </div>
+              </div>
+
+              <div class="history-stat-box">
+                <span class="stat-emoji">📈</span>
+                <div class="stat-meta">
+                  <span class="stat-big-val text-emerald">{{ competencyAverages.overallAvg }}%</span>
+                  <span class="stat-label">Điểm Kỹ Năng Trung Bình</span>
+                </div>
               </div>
             </div>
 
-            <!-- Recent Sessions List -->
-            <div class="sessions-list">
+            <!-- 2. CEFR Progression Ladder -->
+            <div class="cefr-ladder-pod theme-card">
+              <div class="ladder-header">
+                <div class="ladder-title-row">
+                  <span class="ladder-icon">🪜</span>
+                  <h3 class="ladder-title">Thang Năng Lực Quốc Tế CEFR (A1 ➔ C2)</h3>
+                </div>
+                <span class="ladder-sub">
+                  Mục tiêu cuối cùng: Tự tin giao tiếp và làm chủ mọi tình huống đời thực chuẩn C2
+                </span>
+              </div>
+
+              <div class="ladder-steps-grid">
+                <div
+                  v-for="step in cefrLadder"
+                  :key="step.level"
+                  class="ladder-step-card"
+                  :class="{
+                    'step-current': step.isCurrent,
+                    'step-achieved': step.isAchieved,
+                    'step-locked': !step.isAchieved && !step.isCurrent,
+                  }"
+                >
+                  <div class="step-top-row">
+                    <span class="step-level-tag">{{ step.level }}</span>
+                    <span v-if="step.isCurrent" class="current-indicator-badge">HIỆN TẠI</span>
+                    <span v-else-if="step.isAchieved" class="achieved-check">✓ ĐÃ ĐẠT</span>
+                  </div>
+                  <h4 class="step-name">{{ step.nameVi }}</h4>
+                  <span class="step-en">{{ step.nameEn }}</span>
+                  <p class="step-desc">{{ step.descriptionVi }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. Four-Dimension Competency Radar Overview -->
+            <div class="competencies-grid theme-card">
+              <div class="competency-card">
+                <div class="comp-head">
+                  <span class="comp-icon">📚</span>
+                  <div>
+                    <h4 class="comp-title">Vốn Từ Vựng (Lexical Resource)</h4>
+                    <span class="comp-sub">Độ phong phú & linh hoạt của từ</span>
+                  </div>
+                </div>
+                <div class="comp-val-row">
+                  <span class="comp-percent text-cyan">{{ competencyAverages.avgLexical }}%</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill fill-cyan" :style="{ width: `${competencyAverages.avgLexical}%` }" />
+                </div>
+              </div>
+
+              <div class="competency-card">
+                <div class="comp-head">
+                  <span class="comp-icon">📝</span>
+                  <div>
+                    <h4 class="comp-title">Độ Chuẩn Ngữ Pháp (Grammar)</h4>
+                    <span class="comp-sub">Cấu trúc câu & thì thời gian</span>
+                  </div>
+                </div>
+                <div class="comp-val-row">
+                  <span class="comp-percent text-purple">{{ competencyAverages.avgGrammar }}%</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill fill-purple" :style="{ width: `${competencyAverages.avgGrammar}%` }" />
+                </div>
+              </div>
+
+              <div class="competency-card">
+                <div class="comp-head">
+                  <span class="comp-icon">🗣️</span>
+                  <div>
+                    <h4 class="comp-title">Phát Âm & Lưu Loát (Pronunciation)</h4>
+                    <span class="comp-sub">Ngữ điệu, nối âm & phản xạ nói</span>
+                  </div>
+                </div>
+                <div class="comp-val-row">
+                  <span class="comp-percent text-emerald">{{ competencyAverages.avgPronunciation }}%</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill fill-emerald" :style="{ width: `${competencyAverages.avgPronunciation}%` }" />
+                </div>
+              </div>
+
+              <div class="competency-card">
+                <div class="comp-head">
+                  <span class="comp-icon">🎯</span>
+                  <div>
+                    <h4 class="comp-title">Năng Lực Tương Tác (Competence)</h4>
+                    <span class="comp-sub">Đạt mục tiêu giao tiếp đời thực</span>
+                  </div>
+                </div>
+                <div class="comp-val-row">
+                  <span class="comp-percent text-amber">{{ competencyAverages.avgCommunication }}%</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill fill-amber" :style="{ width: `${competencyAverages.avgCommunication}%` }" />
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Accumulated Lexical Upgrades (Vocabulary Insights) -->
+            <div v-if="accumulatedVocabUpgrades.length > 0" class="accumulated-upgrades-pod theme-card">
+              <div class="upgrades-pod-header">
+                <div class="upgrades-title-row">
+                  <span class="upgrades-icon">💡</span>
+                  <h4 class="upgrades-title">Kho Cụm Từ Nâng Cấp Gợi Ý (Tích Lũy Từ Các Phiên)</h4>
+                </div>
+                <span class="upgrades-sub">
+                  Ôn tập lại các cụm từ bản xứ đắt giá mà AI đã gợi ý để thay thế từ thông thường
+                </span>
+              </div>
+              <div class="upgrades-chips-grid">
+                <div
+                  v-for="(item, uIdx) in accumulatedVocabUpgrades"
+                  :key="uIdx"
+                  class="accumulated-chip-item"
+                >
+                  <div class="chip-words-row">
+                    <span class="chip-orig">{{ item.original }}</span>
+                    <span class="chip-arrow">➔</span>
+                    <strong class="chip-target">{{ item.upgraded }}</strong>
+                  </div>
+                  <span class="chip-context">{{ item.contextVi }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. History Filter Pills Bar -->
+            <div class="history-filter-bar theme-card">
+              <div class="filter-label-col">
+                <span class="filter-label">Bộ Lọc Danh Mục:</span>
+              </div>
+              <div class="filter-pills-row">
+                <button
+                  type="button"
+                  class="filter-pill-btn"
+                  :class="{ 'filter-pill-active': historyFilterCategory === 'all' }"
+                  @click="setHistoryFilter('all')"
+                >
+                  Tất Cả ({{ historyRecords.length }})
+                </button>
+                <button
+                  v-for="cat in CATEGORY_METAS"
+                  :key="cat.id"
+                  type="button"
+                  class="filter-pill-btn"
+                  :class="{ 'filter-pill-active': historyFilterCategory === cat.id }"
+                  @click="setHistoryFilter(cat.id)"
+                >
+                  {{ cat.emoji }} {{ cat.name }}
+                </button>
+                <button
+                  type="button"
+                  class="filter-pill-btn"
+                  :class="{ 'filter-pill-active': historyFilterCategory === 'custom' }"
+                  @click="setHistoryFilter('custom')"
+                >
+                  ✨ Tùy Biến
+                </button>
+              </div>
+            </div>
+
+            <!-- 6. Filtered Sessions List -->
+            <div v-if="filteredHistoryRecords.length > 0" class="sessions-list">
               <article
-                v-for="record in historyRecords"
+                v-for="record in filteredHistoryRecords"
                 :key="record.sessionId"
                 class="history-card theme-card"
               >
                 <div class="history-card-header">
-                  <div>
-                    <div class="history-date">{{ formatSessionDate(record.completedAt) }}</div>
+                  <div class="card-header-left">
+                    <div class="history-date">
+                      📅 {{ formatSessionDate(record.completedAt) }} • {{ record.turnsCount }} Lượt đàm thoại
+                    </div>
                     <h3 class="history-title">{{ record.scenarioTitle }}</h3>
+                    <span class="history-cat-chip">
+                      {{ record.category === 'custom' ? '✨ Tùy biến' : record.category.toUpperCase() }}
+                    </span>
                   </div>
-                  <div class="history-cefr-badge" :class="getCefrBadgeClass(record.achievedCefr)">
-                    {{ record.achievedCefr }}
+                  <div class="history-cefr-pod">
+                    <span class="target-sub">Mục tiêu: {{ record.targetCefr }}</span>
+                    <div class="history-cefr-badge" :class="getCefrBadgeClass(record.achievedCefr)">
+                      {{ record.achievedCefr }}
+                    </div>
                   </div>
                 </div>
 
@@ -1428,7 +1749,7 @@ onUnmounted(() => {
                 <div class="history-scores-grid">
                   <div class="score-bar-item">
                     <div class="score-label-row">
-                      <span>📚 Vốn từ (Lexical)</span>
+                      <span>📚 Vốn từ</span>
                       <strong>{{ record.scorecard.lexicalResource.score }}%</strong>
                     </div>
                     <div class="progress-track">
@@ -1441,7 +1762,7 @@ onUnmounted(() => {
 
                   <div class="score-bar-item">
                     <div class="score-label-row">
-                      <span>📝 Ngữ pháp (Grammar)</span>
+                      <span>📝 Ngữ pháp</span>
                       <strong>{{ record.scorecard.grammaticalAccuracy.score }}%</strong>
                     </div>
                     <div class="progress-track">
@@ -1454,7 +1775,7 @@ onUnmounted(() => {
 
                   <div class="score-bar-item">
                     <div class="score-label-row">
-                      <span>🗣️ Phát âm (Pronunciation)</span>
+                      <span>🗣️ Phát âm</span>
                       <strong>{{ record.scorecard.pronunciation.score }}%</strong>
                     </div>
                     <div class="progress-track">
@@ -1467,7 +1788,7 @@ onUnmounted(() => {
 
                   <div class="score-bar-item">
                     <div class="score-label-row">
-                      <span>🎯 Năng lực giao tiếp</span>
+                      <span>🎯 Giao tiếp</span>
                       <strong>{{ record.scorecard.communicativeCompetence.score }}%</strong>
                     </div>
                     <div class="progress-track">
@@ -1497,9 +1818,23 @@ onUnmounted(() => {
                 </div>
               </article>
             </div>
+
+            <!-- Empty Filter Records State -->
+            <div v-else class="empty-filter-state theme-card">
+              <p class="empty-filter-text">
+                Chưa có phiên giả lập nào thuộc danh mục này trong 5 phiên gần nhất.
+              </p>
+              <button
+                type="button"
+                class="btn-secondary-sm"
+                @click="setHistoryFilter('all')"
+              >
+                Xem Tất Cả Các Phiên
+              </button>
+            </div>
           </div>
 
-          <!-- Empty State for History -->
+          <!-- Empty State for History (No Sessions yet) -->
           <div v-else class="empty-state theme-card">
             <div class="empty-emoji">🎓</div>
             <h3 class="empty-title">Chưa Có Phiên Giả Lập Nào</h3>
@@ -1712,8 +2047,68 @@ onUnmounted(() => {
                 {{ inspectedRecord.achievedCefr }}
               </div>
               <div class="cefr-hero-text">
-                <h3 class="cefr-hero-title">Đạt Cấp Độ CEFR: {{ inspectedRecord.achievedCefr }}</h3>
+                <h3 class="cefr-hero-title">Đạt Cấp Độ CEFR: {{ inspectedRecord.achievedCefr }} (Điểm Tổng: {{ inspectedRecord.scorecard.overallScore }}%)</h3>
                 <p class="cefr-hero-summary">{{ inspectedRecord.scorecard.summary }}</p>
+              </div>
+            </div>
+
+            <!-- Modal 4-Dimension Scores Overview -->
+            <div class="modal-scores-grid">
+              <div class="modal-score-item">
+                <span class="m-score-title">📚 Vốn Từ</span>
+                <span class="m-score-val text-cyan">{{ inspectedRecord.scorecard.lexicalResource.score }}%</span>
+                <div class="progress-track">
+                  <div class="progress-fill fill-cyan" :style="{ width: `${inspectedRecord.scorecard.lexicalResource.score}%` }" />
+                </div>
+              </div>
+              <div class="modal-score-item">
+                <span class="m-score-title">📝 Ngữ Pháp</span>
+                <span class="m-score-val text-purple">{{ inspectedRecord.scorecard.grammaticalAccuracy.score }}%</span>
+                <div class="progress-track">
+                  <div class="progress-fill fill-purple" :style="{ width: `${inspectedRecord.scorecard.grammaticalAccuracy.score}%` }" />
+                </div>
+              </div>
+              <div class="modal-score-item">
+                <span class="m-score-title">🗣️ Phát Âm</span>
+                <span class="m-score-val text-emerald">{{ inspectedRecord.scorecard.pronunciation.score }}%</span>
+                <div class="progress-track">
+                  <div class="progress-fill fill-emerald" :style="{ width: `${inspectedRecord.scorecard.pronunciation.score}%` }" />
+                </div>
+              </div>
+              <div class="modal-score-item">
+                <span class="m-score-title">🎯 Giao Tiếp</span>
+                <span class="m-score-val text-amber">{{ inspectedRecord.scorecard.communicativeCompetence.score }}%</span>
+                <div class="progress-track">
+                  <div class="progress-fill fill-amber" :style="{ width: `${inspectedRecord.scorecard.communicativeCompetence.score}%` }" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Communicative Competence Insights (Strengths & Areas to Improve) -->
+            <div class="scorecard-section">
+              <h4 class="scorecard-subhead">
+                🎯 Đánh Giá Năng Lực Tương Tác & Phản Xạ Đời Thực:
+              </h4>
+              <div class="competence-insights-grid">
+                <div class="insight-box strengths-box">
+                  <span class="insight-heading">🌟 Điểm mạnh nổi bật:</span>
+                  <ul v-if="inspectedRecord.scorecard.communicativeCompetence.strengths?.length" class="insight-list">
+                    <li v-for="(st, sIdx) in inspectedRecord.scorecard.communicativeCompetence.strengths" :key="sIdx">
+                      ✓ {{ st }}
+                    </li>
+                  </ul>
+                  <p v-else class="insight-empty">Giao tiếp đúng trọng tâm kịch bản.</p>
+                </div>
+
+                <div class="insight-box improvements-box">
+                  <span class="insight-heading">⚡ Cần rèn luyện thêm:</span>
+                  <ul v-if="inspectedRecord.scorecard.communicativeCompetence.areasToImprove?.length" class="insight-list">
+                    <li v-for="(im, iIdx) in inspectedRecord.scorecard.communicativeCompetence.areasToImprove" :key="iIdx">
+                      ➔ {{ im }}
+                    </li>
+                  </ul>
+                  <p v-else class="insight-empty">Tiếp tục duy trì phong độ giao tiếp tự nhiên.</p>
+                </div>
               </div>
             </div>
 
@@ -3264,26 +3659,36 @@ onUnmounted(() => {
   box-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
 }
 
-/* 6. History Tab */
+/* 6. History Tab & Progress Tracking (Task 4.5) */
 .history-stats-banner {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
   background: var(--bg-card, #131d31);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg, 14px);
-  text-align: center;
 }
 .history-stat-box {
   display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+.stat-emoji {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+}
+.stat-meta {
+  display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.2rem;
 }
 .stat-big-val {
-  font-size: 2.2rem;
+  font-size: 1.85rem;
   font-weight: 800;
+  line-height: 1.1;
 }
 .text-accent {
   color: #38bdf8;
@@ -3291,10 +3696,369 @@ onUnmounted(() => {
 .text-gold {
   color: #f59e0b;
 }
+.text-cyan {
+  color: #22d3ee;
+}
+.text-emerald {
+  color: #34d399;
+}
 .stat-label {
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   color: var(--text-secondary, #94a3b8);
   font-weight: 600;
+}
+
+/* CEFR Competency Ladder */
+.cefr-ladder-pod {
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-card, #131d31);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg, 14px);
+}
+.ladder-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.ladder-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.ladder-icon {
+  font-size: 1.4rem;
+}
+.ladder-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+.ladder-sub {
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+.ladder-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+}
+.ladder-step-card {
+  padding: 1rem 0.85rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-md, 10px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+.ladder-step-card.step-locked {
+  opacity: 0.45;
+}
+.ladder-step-card.step-achieved {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.06);
+}
+.ladder-step-card.step-current {
+  border-color: #06b6d4;
+  background: rgba(6, 182, 212, 0.15);
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.3);
+  transform: translateY(-2px);
+}
+.step-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.2rem;
+}
+.step-level-tag {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+.current-indicator-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 0.12rem 0.4rem;
+  background: #06b6d4;
+  color: #04101c;
+  border-radius: var(--radius-pill, 9999px);
+  letter-spacing: 0.04em;
+}
+.achieved-check {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #34d399;
+}
+.step-name {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary, #ffffff);
+}
+.step-en {
+  font-size: 0.72rem;
+  color: #38bdf8;
+  font-weight: 600;
+}
+.step-desc {
+  margin: 0.25rem 0 0;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+/* Four-Dimension Competency Grid */
+.competencies-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-card, #131d31);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg, 14px);
+}
+.competency-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md, 10px);
+}
+.comp-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+.comp-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.comp-title {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+}
+.comp-sub {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+.comp-val-row {
+  display: flex;
+  justify-content: flex-end;
+}
+.comp-percent {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+/* Accumulated Upgrades Pod */
+.accumulated-upgrades-pod {
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-card, #131d31);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg, 14px);
+}
+.upgrades-pod-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.upgrades-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
+}
+.upgrades-icon {
+  font-size: 1.3rem;
+}
+.upgrades-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+.upgrades-sub {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+.upgrades-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+.accumulated-chip-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.65rem 0.85rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+  border-radius: var(--radius-md, 8px);
+}
+.chip-words-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+}
+.chip-orig {
+  color: #94a3b8;
+}
+.chip-arrow {
+  color: #38bdf8;
+  font-size: 0.75rem;
+}
+.chip-target {
+  color: #38bdf8;
+}
+.chip-context {
+  font-size: 0.72rem;
+  color: #cbd5e1;
+}
+
+/* History Filter Bar */
+.history-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-card, #131d31);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg, 12px);
+  overflow-x: auto;
+}
+.filter-label-col {
+  white-space: nowrap;
+}
+.filter-pills-row {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+}
+.filter-pill-btn {
+  padding: 0.35rem 0.8rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill, 9999px);
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+.filter-pill-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+.filter-pill-btn.filter-pill-active {
+  background: #06b6d4;
+  border-color: #06b6d4;
+  color: #04101c;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.35);
+}
+
+/* Empty Filter Records */
+.empty-filter-state {
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: var(--bg-card, #131d31);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg, 14px);
+}
+.empty-filter-text {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  margin: 0 0 1rem;
+}
+
+/* Modal 4-Dimension Scores Overview */
+.modal-scores-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.85rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md, 10px);
+}
+.modal-score-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.m-score-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-secondary, #94a3b8);
+}
+.m-score-val {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+/* Competence Insights Grid in Modal */
+.competence-insights-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+.insight-box {
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md, 8px);
+}
+.insight-box.strengths-box {
+  border-left: 3px solid #10b981;
+}
+.insight-box.improvements-box {
+  border-left: 3px solid #f59e0b;
+}
+.insight-heading {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.strengths-box .insight-heading {
+  color: #34d399;
+}
+.improvements-box .insight-heading {
+  color: #fbbf24;
+}
+.insight-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: #e2e8f0;
+}
+.insight-empty {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  font-style: italic;
+  margin: 0;
 }
 
 .sessions-list {
@@ -3315,6 +4079,32 @@ onUnmounted(() => {
   align-items: flex-start;
   justify-content: space-between;
   margin-bottom: 1.25rem;
+}
+.card-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.history-cat-chip {
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.15rem 0.5rem;
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: var(--radius-pill, 9999px);
+  color: #38bdf8;
+  letter-spacing: 0.04em;
+}
+.history-cefr-pod {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+.target-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted, #64748b);
 }
 .history-date {
   font-size: 0.78rem;
@@ -3870,6 +4660,21 @@ onUnmounted(() => {
     grid-template-columns: 1fr;
   }
   .history-stats-banner {
+    grid-template-columns: 1fr;
+  }
+  .ladder-steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .competencies-grid {
+    grid-template-columns: 1fr;
+  }
+  .upgrades-chips-grid {
+    grid-template-columns: 1fr;
+  }
+  .modal-scores-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .competence-insights-grid {
     grid-template-columns: 1fr;
   }
   .vocab-chips-wrap {

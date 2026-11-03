@@ -211,6 +211,41 @@ export interface FreeSimChatResponse {
   message?: string;
 }
 
+/**
+ * Payload sent to POST /api/game/free-simulator/evaluate
+ */
+export interface FreeSimEvaluatePayload {
+  sessionId: string;
+  scenarioId?: string;
+  scenarioTitle: string;
+  category: SimulatorCategory | 'custom';
+  userRole: string;
+  npcRole: string;
+  targetCefr: CEFRLevel | 'auto';
+  turnsCount: number;
+  conversationHistory: FreeSimChatMessage[];
+  recommendedVocab?: ScenarioVocabHint[];
+  objectives?: string[];
+  idToken?: string;
+  guestId?: string;
+}
+
+/**
+ * Server response from POST /api/game/free-simulator/evaluate
+ */
+export interface FreeSimEvaluateResponse {
+  success: boolean;
+  record: FreeSimSessionRecord;
+  earnedExp: number;
+  earnedGold: number;
+  completionProof?: string;
+  remainingSessionsToday: number;
+  usedFallback: boolean;
+  providerUsed: string;
+  latencyMs: number;
+  message?: string;
+}
+
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 

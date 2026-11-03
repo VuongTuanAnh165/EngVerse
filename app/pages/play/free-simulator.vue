@@ -23,6 +23,8 @@ import {
   type FreeSimChatMessage,
   type FreeSimChatPayload,
   type FreeSimChatResponse,
+  type FreeSimEvaluatePayload,
+  type FreeSimEvaluateResponse,
   CATEGORY_METAS,
   PRESET_SCENARIOS,
   CUSTOM_PROMPT_SUGGESTIONS,
@@ -440,6 +442,68 @@ function exitSimulationArena(): void {
   activeMessages.value = [];
 }
 
+const isEvaluating = ref<boolean>(false);
+const earnedExpDisplay = ref<number>(0);
+const earnedGoldDisplay = ref<number>(0);
+
+async function evaluateSessionScorecard(): Promise<void> {
+  if (isEvaluating.value) return;
+  playClick();
+  isEvaluating.value = true;
+  simErrorMessage.value = '';
+
+  try {
+    const payload: FreeSimEvaluatePayload = {
+      sessionId: `sim_${Date.now()}`,
+      scenarioId: activeScenarioBrief.value?.id,
+      scenarioTitle: simTitle.value,
+      category: simCategory.value,
+      userRole: simUserRole.value,
+      npcRole: simNpcRole.value,
+      targetCefr: simTargetCefr.value,
+      turnsCount: maxSimTurns.value,
+      conversationHistory: activeMessages.value,
+      recommendedVocab: simRecommendedVocab.value,
+      objectives: simObjectives.value,
+      idToken: userStore.user.isGuest ? undefined : undefined,
+      guestId: userStore.user.uid,
+    };
+
+    const res = await $fetch<FreeSimEvaluateResponse>('/api/game/free-simulator/evaluate', {
+      method: 'POST',
+      body: payload,
+    });
+
+    if (res && res.success && res.record) {
+      // Award guest EXP and Gold locally
+      userStore.user.exp = (userStore.user.exp || 0) + res.earnedExp;
+      userStore.user.gold = (userStore.user.gold || 0) + res.earnedGold;
+      userStore.user.level = Math.max(1, Math.floor(userStore.user.exp / 300) + 1);
+
+      // Record session in userStore
+      userStore.recordFreeSimSession(res.record);
+
+      earnedExpDisplay.value = res.earnedExp;
+      earnedGoldDisplay.value = res.earnedGold;
+
+      // Close simulation arena & open the detailed scorecard modal
+      inspectedRecord.value = res.record;
+      isSimulating.value = false;
+      isScorecardOpen.value = true;
+      activeTab.value = 'history';
+      playVictoryFanfare();
+    } else {
+      simErrorMessage.value = 'Không thể phân tích Scorecard. Vui lòng thử lại!';
+    }
+  } catch (err: unknown) {
+    console.error('[FreeSimulator] Evaluation error:', err);
+    simErrorMessage.value = 'Lỗi kết nối đánh giá CEFR. Vui lòng thử lại!';
+    playSound('wrong');
+  } finally {
+    isEvaluating.value = false;
+  }
+}
+
 // ---------------------------------------------------------------------------
 // History & Scorecard Inspection
 // ---------------------------------------------------------------------------
@@ -668,17 +732,26 @@ onUnmounted(() => {
             <div>
               <h3 class="completed-title">Phiên Giả Lập Hoàn Tất!</h3>
               <p class="completed-desc">
-                Bạn đã hoàn thành trọn vẹn {{ maxSimTurns }} lượt hội thoại tình huống "{{ simTitle }}".
+                Bạn đã hoàn thành trọn vẹn {{ maxSimTurns }} lượt hội thoại tình huống "{{ simTitle }}". Hãy bấm để nhận Báo Cáo Năng Lực CEFR và phần thưởng kinh nghiệm!
               </p>
             </div>
           </div>
           <div class="completed-actions">
             <button
               type="button"
-              class="theme-btn-primary completed-btn"
+              class="theme-btn-primary completed-btn pulse-glow"
+              :disabled="isEvaluating"
+              @click="evaluateSessionScorecard"
+            >
+              <span v-if="isEvaluating">⏳ Đang Phân Tích CEFR Quốc Tế...</span>
+              <span v-else>📊 Nhận Báo Cáo CEFR & Phần Thưởng 🌟</span>
+            </button>
+            <button
+              type="button"
+              class="theme-btn-secondary"
               @click="exitSimulationArena"
             >
-              ← Về Danh Sách Kịch Bản
+              ← Về Danh Sách
             </button>
           </div>
         </div>
@@ -1485,6 +1558,18 @@ onUnmounted(() => {
 
           <!-- Body -->
           <div class="modal-body">
+            <!-- Reward Banner if just earned -->
+            <div v-if="earnedExpDisplay > 0 || earnedGoldDisplay > 0" class="eval-reward-banner">
+              <span class="reward-icon">🎁</span>
+              <div class="reward-content">
+                <span class="reward-title">Phần Thưởng Hoàn Thành Phiên Giả Lập!</span>
+                <div class="reward-badges">
+                  <span class="reward-pill">+{{ earnedExpDisplay }} EXP ⭐</span>
+                  <span class="reward-pill">+{{ earnedGoldDisplay }} Vàng 💰</span>
+                </div>
+              </div>
+            </div>
+
             <!-- Overall Level Hero -->
             <div class="cefr-hero-card">
               <div class="cefr-hero-badge" :class="getCefrBadgeClass(inspectedRecord.achievedCefr)">
@@ -3224,6 +3309,55 @@ onUnmounted(() => {
 .launch-sim-btn {
   padding: 0.75rem 1.5rem;
   font-weight: 700;
+}
+
+.pulse-glow {
+  animation: pulse-glow-anim 2s infinite ease-in-out;
+}
+@keyframes pulse-glow-anim {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.8), 0 0 10px rgba(139, 92, 246, 0.6);
+    transform: scale(1.02);
+  }
+}
+
+.eval-reward-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(16, 185, 129, 0.15) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-md, 12px);
+}
+.reward-icon {
+  font-size: 2rem;
+}
+.reward-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.reward-title {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: #fbbf24;
+}
+.reward-badges {
+  display: flex;
+  gap: 0.5rem;
+}
+.reward-pill {
+  padding: 0.2rem 0.6rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-pill, 9999px);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #f8fafc;
 }
 
 /* Scorecard Modal Specific */

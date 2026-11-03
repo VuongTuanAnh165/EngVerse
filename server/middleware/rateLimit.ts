@@ -16,6 +16,8 @@ interface RateLimitEntry {
 const ROUTE_RULES: Array<{ prefix: string; rule: RateLimitRule }> = [
   { prefix: '/api/ai/', rule: { limit: 15, windowMs: 60_000 } }, // 15 req/min for AI
   { prefix: '/api/auth/', rule: { limit: 20, windowMs: 60_000 } }, // 20 req/min for Auth
+  { prefix: '/api/game/free-simulator/chat', rule: { limit: 12, windowMs: 60_000 } }, // 12 req/min for Free Sim LLM (Task 4.6)
+  { prefix: '/api/game/free-simulator/evaluate', rule: { limit: 6, windowMs: 60_000 } }, // 6 req/min for CEFR evaluation (Task 4.6)
   { prefix: '/api/game/', rule: { limit: 30, windowMs: 60_000 } }, // 30 req/min for Game validation
   { prefix: '/api/shop/', rule: { limit: 20, windowMs: 60_000 } }, // 20 req/min for Transactions
 ];

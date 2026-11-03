@@ -52,9 +52,10 @@ export default defineEventHandler(async (event): Promise<FreeSimChatResponse> =>
   const todayStr = getTodayDateString();
   const config = useRuntimeConfig();
 
-  // 2. Authentication & 5 Sessions/Day Quota Enforcement
+  // 2. Authentication & 5 Sessions/Day Quota Enforcement (Task 4.6: Premium Gating)
   let uid = '';
   let isGuest = false;
+  let isPremium = false;
   let dailySessionsUsed = 0;
 
   const authHeader = getRequestHeader(event, 'authorization');
@@ -71,6 +72,12 @@ export default defineEventHandler(async (event): Promise<FreeSimChatResponse> =>
 
       if (userDoc.exists) {
         const data = userDoc.data();
+        const tier = data?.subscriptionTier;
+        const expiresAt = data?.subscriptionExpiresAt;
+        if ((tier === 'premium' || tier === 'vip') && (!expiresAt || expiresAt > Date.now())) {
+          isPremium = true;
+        }
+
         const freeSimProgress = data?.freeSimulator;
         if (freeSimProgress && freeSimProgress.lastPlayedDate === todayStr) {
           dailySessionsUsed = freeSimProgress.dailySessionsCount || 0;
@@ -78,12 +85,12 @@ export default defineEventHandler(async (event): Promise<FreeSimChatResponse> =>
           dailySessionsUsed = 0;
         }
 
-        // Only enforce session quota when starting a new session (turn 1)
-        if (body.currentTurn === 1 && dailySessionsUsed >= MAX_DAILY_FREE_SIM_SESSIONS) {
+        // Only enforce session quota when starting a new session (turn 1) for non-premium users
+        if (!isPremium && body.currentTurn === 1 && dailySessionsUsed >= MAX_DAILY_FREE_SIM_SESSIONS) {
           throw createError({
             statusCode: 429,
             statusMessage: 'Too Many Requests',
-            message: 'Bạn đã đạt giới hạn 5 phiên giả lập miễn phí hôm nay! Hãy quay lại vào ngày mai (00:00 GMT+7).',
+            message: 'Bạn đã đạt giới hạn 5 phiên giả lập miễn phí hôm nay! Nâng cấp gói Premium để mở khóa không giới hạn lượt.',
           });
         }
       }
@@ -163,7 +170,8 @@ export default defineEventHandler(async (event): Promise<FreeSimChatResponse> =>
     quickStarterChips: rawModel.quickStarterChips,
     suggestedVocabUsed: rawModel.suggestedVocabUsed,
     turnScore: rawModel.turnScore,
-    remainingSessionsToday: Math.max(0, MAX_DAILY_FREE_SIM_SESSIONS - dailySessionsUsed),
+    isPremium,
+    remainingSessionsToday: isPremium ? -1 : Math.max(0, MAX_DAILY_FREE_SIM_SESSIONS - dailySessionsUsed),
     usedFallback: dispatchResult.usedFallback,
     providerUsed: dispatchResult.providerUsed,
     latencyMs: dispatchResult.latencyMs,

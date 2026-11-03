@@ -101,7 +101,9 @@ export interface UserProfile {
   expBoostUntil?: number; // Unix timestamp for active x2 EXP buff (Milestone 7)
   avatarFrame?: string; // Equipped avatar frame e.g. 'avatar_frame_gold' (Milestone 60)
   unlockedAvatarFrames?: string[]; // List of unlocked avatar frames
-  claimedMilestones?: number[]; // List of claimed streak milestone days e.g. [3, 7]
+  claimedMilestones?: number[];
+  subscriptionTier?: 'free' | 'premium' | 'vip'; // Task 4.6: Rate limiting & premium gating
+  subscriptionExpiresAt?: number; // Unix timestamp in milliseconds // List of claimed streak milestone days e.g. [3, 7]
 }
 
 /**
@@ -161,6 +163,19 @@ export interface LeaderboardEntry {
 export interface LeaderboardResponse {
   updatedAt: number;
   entries: LeaderboardEntry[];
+}
+
+/**
+ * Helper to determine whether a user possesses an active Premium/VIP subscription
+ */
+export function isUserPremium(user?: UserProfile | null): boolean {
+  if (!user) return false;
+  if (user.subscriptionTier === 'premium' || user.subscriptionTier === 'vip') {
+    if (!user.subscriptionExpiresAt || user.subscriptionExpiresAt > Date.now()) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -247,6 +262,7 @@ export function createDefaultUserProfile(
       history: [],
     },
     unlockedAvatarFrames: ['default'],
+    subscriptionTier: 'free',
     isGuest: true,
   };
 }

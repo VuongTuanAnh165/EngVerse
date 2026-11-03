@@ -87,6 +87,7 @@ export default defineEventHandler(async (event): Promise<FreeSimEvaluateResponse
   // 4. Authentication Check
   let uid = '';
   let isGuest = false;
+  let isPremium = false;
 
   const authHeader = getRequestHeader(event, 'authorization');
   const token = body.idToken || (authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null);
@@ -114,6 +115,14 @@ export default defineEventHandler(async (event): Promise<FreeSimEvaluateResponse
 
       if (userDocSnap.exists) {
         const userDoc = userDocSnap.data() as UserProfile;
+        const tier = userDoc.subscriptionTier;
+        const expiresAt = userDoc.subscriptionExpiresAt;
+        if ((tier === 'premium' || tier === 'vip') && (!expiresAt || expiresAt > Date.now())) {
+          isPremium = true;
+          earnedExp = Math.round(earnedExp * 1.2); // +20% EXP for Premium/VIP (Task 4.6)
+          earnedGold = Math.round(earnedGold * 1.2); // +20% Gold for Premium/VIP (Task 4.6)
+        }
+
         const existingSim = userDoc.freeSimulator;
 
         let dailySessionsCount = 1;
@@ -145,7 +154,7 @@ export default defineEventHandler(async (event): Promise<FreeSimEvaluateResponse
           updatedAt: Date.now(),
         });
 
-        remainingSessionsToday = Math.max(0, MAX_DAILY_FREE_SIM_SESSIONS - dailySessionsCount);
+        remainingSessionsToday = isPremium ? -1 : Math.max(0, MAX_DAILY_FREE_SIM_SESSIONS - dailySessionsCount);
       }
     } catch (dbErr) {
       console.error('[FreeSimEvaluate] Failed to update user Firestore document:', dbErr);
@@ -169,6 +178,7 @@ export default defineEventHandler(async (event): Promise<FreeSimEvaluateResponse
     record: completedRecord,
     earnedExp,
     earnedGold,
+    isPremium,
     completionProof,
     remainingSessionsToday,
     usedFallback: evalResult.usedFallback,

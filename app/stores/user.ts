@@ -9,6 +9,7 @@ import {
   type BuyItemPayload,
   type BuyItemResponse,
   createDefaultUserProfile,
+  isUserPremium,
 } from '~/types/user';
 import {
   type UserDailyChallenge,
@@ -43,6 +44,7 @@ export const useUserStore = defineStore('user', () => {
   const isAuthenticated = computed<boolean>(
     () => !user.value.isGuest && !!user.value.uid && user.value.uid !== 'guest_user'
   );
+  const isPremium = computed<boolean>(() => isUserPremium(user.value));
   const currentTrack = computed<WorldTrack>(() => user.value.worldTrack);
   const currentTrackProgress = computed(() => {
     const track = user.value.worldTrack;
@@ -770,6 +772,7 @@ export const useUserStore = defineStore('user', () => {
   const freeSimulator = computed(() => user.value.freeSimulator);
 
   function getFreeSimDailyRemaining(): number {
+    if (isPremium.value) return 999; // Unlimited for Premium users (Task 4.6)
     if (!user.value.freeSimulator) return MAX_DAILY_FREE_SIM_SESSIONS;
     const today = getDailyDateString();
     if (user.value.freeSimulator.lastPlayedDate !== today) {
@@ -813,6 +816,13 @@ export const useUserStore = defineStore('user', () => {
   }
 
   // ---------------------------------------------------------------------------
+  function activateTrialPremium(days: number = 7): void {
+    user.value.subscriptionTier = 'premium';
+    user.value.subscriptionExpiresAt = Date.now() + days * 24 * 60 * 60 * 1000;
+    user.value.updatedAt = Date.now();
+    saveGuestState();
+  }
+
   // Cosmetics & Rewards Customization (Task 3.5)
   // ---------------------------------------------------------------------------
   const equippedTitleDisplayName = computed<string>(() => {
@@ -931,7 +941,9 @@ export const useUserStore = defineStore('user', () => {
     recordBossRushRun,
     // AI Free Simulator (Task 4.1 & 4.5)
     freeSimulator,
+    isPremium,
     getFreeSimDailyRemaining,
+    activateTrialPremium,
     recordFreeSimSession,
     // Cosmetics & Rewards (Task 3.5)
     equippedTitleDisplayName,

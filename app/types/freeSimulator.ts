@@ -204,6 +204,7 @@ export interface FreeSimChatResponse {
   quickStarterChips: string[];
   suggestedVocabUsed: string[];
   turnScore: number;
+  isPremium?: boolean;
   remainingSessionsToday: number;
   usedFallback: boolean;
   providerUsed: string;
@@ -238,6 +239,7 @@ export interface FreeSimEvaluateResponse {
   record: FreeSimSessionRecord;
   earnedExp: number;
   earnedGold: number;
+  isPremium?: boolean;
   completionProof?: string;
   remainingSessionsToday: number;
   usedFallback: boolean;

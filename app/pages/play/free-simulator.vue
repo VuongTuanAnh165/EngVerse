@@ -89,15 +89,35 @@ function setTab(tab: ActiveTab): void {
 }
 
 // ---------------------------------------------------------------------------
-// Daily Quota Tracking
+// Daily Quota Tracking & Premium Gating (Task 4.6)
 // ---------------------------------------------------------------------------
+const isPremium = computed<boolean>(() => userStore.isPremium);
+
 const dailyQuotaRemaining = computed<number>(() => {
   return userStore.getFreeSimDailyRemaining();
 });
 
 const isQuotaExhausted = computed<boolean>(() => {
-  return dailyQuotaRemaining.value <= 0;
+  return !isPremium.value && dailyQuotaRemaining.value <= 0;
 });
+
+const isPremiumModalOpen = ref<boolean>(false);
+
+function openPremiumModal(): void {
+  playClick();
+  isPremiumModalOpen.value = true;
+}
+
+function closePremiumModal(): void {
+  playClick();
+  isPremiumModalOpen.value = false;
+}
+
+function claimTrialPremium(): void {
+  userStore.activateTrialPremium(7);
+  playVictoryFanfare();
+  closePremiumModal();
+}
 
 // ---------------------------------------------------------------------------
 // Filter & Search State for Presets
@@ -285,7 +305,7 @@ function selectStarterChip(chip: string): void {
 function startSimulationSession(): void {
   if (isQuotaExhausted.value) {
     playSound('wrong');
-    alert('Bạn đã dùng hết 5 lượt giả lập miễn phí hôm nay. Vui lòng quay lại vào ngày mai (00:00 GMT+7)!');
+    openPremiumModal();
     return;
   }
 
@@ -1111,8 +1131,23 @@ onUnmounted(() => {
           </div>
 
           <div class="sim-header-right">
-            <!-- Daily Quota Counter Pill -->
+            <!-- Daily Quota / Premium Status Pill (Task 4.6) -->
             <div
+              v-if="isPremium"
+              class="quota-pill premium-quota-pill"
+              title="Đặc quyền Premium: Không giới hạn số phiên giả lập mỗi ngày"
+            >
+              <div class="quota-icon">👑</div>
+              <div class="quota-text">
+                <div class="quota-label">TÀI KHOẢN PREMIUM VIP</div>
+                <div class="quota-val">
+                  <strong class="text-gold">VÔ HẠN</strong> PHIÊN MỖI NGÀY
+                </div>
+              </div>
+            </div>
+
+            <div
+              v-else
               class="quota-pill"
               :class="{ 'quota-empty': isQuotaExhausted }"
               title="Giới hạn 5 phiên giả lập mỗi ngày (Reset 00:00 GMT+7)"
@@ -1124,6 +1159,14 @@ onUnmounted(() => {
                   <strong>{{ dailyQuotaRemaining }}</strong> / {{ MAX_DAILY_FREE_SIM_SESSIONS }} phiên
                 </div>
               </div>
+              <button
+                type="button"
+                class="upgrade-vip-mini-btn"
+                title="Xem đặc quyền hội viên Premium"
+                @click="openPremiumModal"
+              >
+                VIP ⚡
+              </button>
             </div>
           </div>
         </header>
@@ -1251,6 +1294,13 @@ onUnmounted(() => {
                   <span class="card-emoji">{{ scenario.emoji }}</span>
                 </div>
                 <div class="card-badges">
+                  <span
+                    v-if="scenario.category === 'advanced'"
+                    class="pro-vip-badge"
+                    title="Kịch bản nâng cao dành cho hội viên VIP/Premium"
+                  >
+                    👑 VIP
+                  </span>
                   <span
                     class="cefr-level-badge"
                     :class="getCefrBadgeClass(scenario.targetCefr)"
@@ -1430,7 +1480,7 @@ onUnmounted(() => {
                     :class="{ 'pill-selected': customTurnsCount === 15 }"
                     @click="customTurnsCount = 15; playClick()"
                   >
-                    🏆 15 lượt (Chuyên sâu - 12 phút)
+                    👑 15 lượt (Chuyên sâu VIP - 12 phút)
                   </button>
                 </div>
               </div>
@@ -2200,6 +2250,106 @@ onUnmounted(() => {
               @click="replayFromRecord(inspectedRecord)"
             >
               🔄 Luyện Tập Lại Tình Huống Này
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
+
+    <!-- ======================================================================= -->
+    <!-- MODAL 3: PREMIUM VIP UPGRADE & PERKS (Task 4.6) -->
+    <!-- ======================================================================= -->
+    <Teleport to="body">
+      <div
+        v-if="isPremiumModalOpen"
+        class="modal-backdrop"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="premium-modal-title"
+        @click.self="closePremiumModal"
+      >
+        <div class="premium-modal-sheet theme-card">
+          <!-- Header -->
+          <div class="modal-header premium-header">
+            <div class="modal-header-left">
+              <span class="modal-emoji">👑</span>
+              <div>
+                <h2 id="premium-modal-title" class="modal-title text-gold">Đặc Quyền Hội Viên Premium VIP</h2>
+                <div class="modal-sub">Mở Khóa Toàn Diện Năng Lực Giao Tiếp Trọn Đời Không Giới Hạn</div>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="modal-close-btn"
+              aria-label="Đóng"
+              @click="closePremiumModal"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Body -->
+          <div class="modal-body">
+            <div class="premium-hero-card">
+              <div class="hero-gold-glow">💎</div>
+              <div>
+                <h3 class="hero-gold-title">Trải Nghiệm Đàm Thoại AI Không Giới Hạn</h3>
+                <p class="hero-gold-desc">
+                  Phá vỡ mọi rào cản 5 phiên/ngày. Tự tin giao tiếp và chuẩn bị trước mọi phỏng vấn, visa, đàm phán quốc tế với trợ lý Gemini 2.0.
+                </p>
+              </div>
+            </div>
+
+            <div class="premium-perks-list">
+              <div class="perk-item">
+                <span class="perk-icon">⚡</span>
+                <div class="perk-text">
+                  <strong>Vô Hạn Phiên Giả Lập Mỗi Ngày</strong>
+                  <p>Luyện tập không giới hạn số lượt, xóa bỏ rào cản 5 phiên/ngày của gói miễn phí.</p>
+                </div>
+              </div>
+
+              <div class="perk-item">
+                <span class="perk-icon">🌐</span>
+                <div class="perk-text">
+                  <strong>Mở Khóa Toàn Bộ Kịch Bản Nâng Cao (Advanced)</strong>
+                  <p>Thực chiến đàm phán hợp đồng M&A, phỏng vấn Visa Lãnh sự quán, họp báo quốc tế.</p>
+                </div>
+              </div>
+
+              <div class="perk-item">
+                <span class="perk-icon">⏱️</span>
+                <div class="perk-text">
+                  <strong>Đàm Thoại Chuyên Sâu 15 Lượt (Deep Conversation)</strong>
+                  <p>Giao tiếp liên tục 15 lượt đối thoại sâu sắc, rèn luyện phản xạ ngữ điệu tự nhiên như người bản xứ.</p>
+                </div>
+              </div>
+
+              <div class="perk-item">
+                <span class="perk-icon">📊</span>
+                <div class="perk-text">
+                  <strong>Báo Cáo CEFR Đa Chiều & Nhận Thêm +20% EXP / Vàng</strong>
+                  <p>Tăng tốc độ thăng cấp hồ sơ và mở rộng bộ sưu tập danh hiệu Hoàng Kim.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="modal-footer premium-footer">
+            <button
+              type="button"
+              class="theme-btn-secondary"
+              @click="closePremiumModal"
+            >
+              Để Sau
+            </button>
+            <button
+              type="button"
+              class="theme-btn-primary premium-action-btn pulse-glow"
+              @click="claimTrialPremium"
+            >
+              🚀 Kích Hoạt 7 Ngày Trải Nghiệm Premium
             </button>
           </div>
         </div>
@@ -3030,6 +3180,41 @@ onUnmounted(() => {
   border-radius: var(--radius-lg, 14px);
   box-shadow: 0 0 15px rgba(6, 182, 212, 0.15);
 }
+.quota-pill.premium-quota-pill {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+  border-color: rgba(245, 158, 11, 0.45);
+  box-shadow: 0 0 18px rgba(245, 158, 11, 0.25);
+}
+.upgrade-vip-mini-btn {
+  margin-left: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  background: linear-gradient(135deg, #f59e0b, #ec4899);
+  border: none;
+  border-radius: var(--radius-pill, 9999px);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+  transition: all 0.2s ease;
+}
+.upgrade-vip-mini-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.6);
+}
+.pro-vip-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  border-radius: var(--radius-sm, 6px);
+  color: #fbbf24;
+  letter-spacing: 0.05em;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+}
+
 .quota-pill.quota-empty {
   background: rgba(239, 68, 68, 0.1);
   border-color: rgba(239, 68, 68, 0.35);
@@ -4634,6 +4819,88 @@ onUnmounted(() => {
   font-size: 0.88rem;
   color: #34d399;
   font-weight: 600;
+}
+
+/* Premium Modal Styles (Task 4.6) */
+.premium-modal-sheet {
+  width: 100%;
+  max-width: 640px;
+  background: var(--bg-card, #131d31);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: var(--radius-xl, 20px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(245, 158, 11, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.premium-header {
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+}
+.premium-hero-card {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(6, 182, 212, 0.08) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-lg, 14px);
+  margin-bottom: 1.5rem;
+}
+.hero-gold-glow {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+.hero-gold-title {
+  margin: 0 0 0.35rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fbbf24;
+}
+.hero-gold-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  line-height: 1.45;
+}
+.premium-perks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.perk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-md, 10px);
+}
+.perk-icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.perk-text strong {
+  display: block;
+  font-size: 0.92rem;
+  color: #ffffff;
+  margin-bottom: 0.2rem;
+}
+.perk-text p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+.premium-action-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border: none;
+  color: #000000;
+  font-weight: 800;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4);
+}
+.premium-action-btn:hover {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
 }
 
 /* Responsiveness */

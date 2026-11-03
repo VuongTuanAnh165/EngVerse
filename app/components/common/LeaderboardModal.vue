@@ -50,7 +50,7 @@ const currentModalTheme = computed<WorldTrack>(() => {
   if (selectedFilter.value === 'kids') return 'kids';
   if (selectedFilter.value === 'teens') return 'teens';
   if (selectedFilter.value === 'adults') return 'adults';
-  return userStore.user.worldTrack || 'kids';
+  return userStore.currentTrack || 'kids';
 });
 
 const topFirst = computed<LeaderboardEntry | undefined>(() => filteredEntries.value[0]);
@@ -86,7 +86,7 @@ watch(
   (isOpen) => {
     if (isOpen) {
       playSound('click');
-      selectedFilter.value = userStore.user.worldTrack || 'all';
+      selectedFilter.value = userStore.currentTrack || 'all';
       avatarErrors.value = {};
       void loadLeaderboard();
     }
@@ -680,10 +680,11 @@ function formatTitle(titleKey?: string): string {
 .empty-state-card {
   text-align: center;
   padding: 2.5rem 1.5rem;
-  background: rgba(148, 163, 184, 0.05);
+  background: var(--bg-surface);
   border-radius: 16px;
   border: 1.5px dashed var(--border-color);
   margin: 0.5rem 0;
+  transition: all 0.25s ease;
 }
 
 .empty-trophy-orb {
@@ -694,6 +695,10 @@ function formatTitle(titleKey?: string): string {
   align-items: center;
   justify-content: center;
   margin: 0 auto 1rem;
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-primary);
+  color: var(--accent-primary);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
 }
 
 .empty-state-title {
@@ -1289,11 +1294,37 @@ function formatTitle(titleKey?: string): string {
 
 /* ==========================================================================
    THEME 1: ĐẢO THẦN THOẠI (KIDS MODE) - Warm Golden Amber Glory
+   Hermetically isolated scoped CSS variables and explicit rules
    ========================================================================== */
 .modal-theme-kids {
+  --color-scheme: light;
+  --bg-primary: #fffdf5;
+  --bg-secondary: #fef3c7;
+  --bg-surface: #ffffff;
+  --bg-surface-translucent: rgba(255, 255, 255, 0.95);
+  --bg-card: #ffffff;
+  --bg-card-hover: #fffbeb;
+  --text-primary: #3b1d07;
+  --text-secondary: #63330f;
+  --text-muted: #854d0e;
+  --border-color: #fde68a;
+  --border-focus: #f59e0b;
+  --accent-primary: #f59e0b;
+  --accent-primary-hover: #d97706;
+  --accent-secondary: #10b981;
+  --accent-tertiary: #ec4899;
+  --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #fbbf24 50%, #f59e0b 100%);
+  --accent-text: #ffffff;
+  --shadow-sm: 0 2px 6px rgba(245, 158, 11, 0.08);
+  --shadow-md: 0 8px 24px -2px rgba(245, 158, 11, 0.14);
+  --shadow-lg: 0 16px 36px -4px rgba(245, 158, 11, 0.18);
+  --btn-3d-shadow: 0 4px 0 #b45309;
+  --btn-3d-active: 0 1px 0 #b45309;
+
   background-color: #ffffff !important;
   border: 3px solid #f59e0b !important;
   box-shadow: 0 25px 60px rgba(217, 119, 6, 0.3) !important;
+  color: #3b1d07 !important;
 }
 
 .modal-theme-kids .ambient-glow {
@@ -1305,7 +1336,6 @@ function formatTitle(titleKey?: string): string {
   border-bottom: 2px solid #fde68a !important;
 }
 
-/* FIX: Chữ tiêu đề màu nâu hổ phách đậm siêu nét trên nền vàng (Không bị trắng mờ) */
 .modal-theme-kids .modal-title {
   color: #78350f !important;
   font-weight: 900 !important;
@@ -1318,32 +1348,37 @@ function formatTitle(titleKey?: string): string {
 }
 
 .modal-theme-kids .trophy-orb {
-  background: #fef3c7;
-  border: 1.5px solid #f59e0b;
-  color: #d97706;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+  background: #fef3c7 !important;
+  border: 1.5px solid #f59e0b !important;
+  color: #d97706 !important;
+  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3) !important;
 }
 
 .modal-theme-kids .close-modal-btn {
-  background: #fef3c7;
-  border: 1px solid #fde68a;
-  color: #78350f;
+  background: #fef3c7 !important;
+  border: 1px solid #fde68a !important;
+  color: #78350f !important;
 }
 
 .modal-theme-kids .close-modal-btn:hover {
-  background: #fee2e2;
-  color: #ef4444;
+  background: #fee2e2 !important;
+  color: #ef4444 !important;
 }
 
 .modal-theme-kids .track-filter-tabs {
-  background: #fffbeb;
-  border-bottom: 2px solid #fde68a;
+  background: #fffbeb !important;
+  border-bottom: 2px solid #fde68a !important;
 }
 
 .modal-theme-kids .filter-tab-btn {
-  background: #ffffff;
-  border: 1.5px solid #fde68a;
-  color: #78350f;
+  background: #ffffff !important;
+  border: 1.5px solid #fde68a !important;
+  color: #78350f !important;
+}
+
+.modal-theme-kids .filter-tab-btn:hover {
+  border-color: #f59e0b !important;
+  color: #b45309 !important;
 }
 
 .modal-theme-kids .filter-active {
@@ -1354,39 +1389,184 @@ function formatTitle(titleKey?: string): string {
 }
 
 .modal-theme-kids .modal-body-content {
-  background: #fffdf5;
+  background: #fffdf5 !important;
+}
+
+/* Kids Empty State */
+.modal-theme-kids .empty-state-card {
+  background: #fffbeb !important;
+  border: 2px dashed #fde68a !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.08) !important;
+}
+
+.modal-theme-kids .empty-trophy-orb {
+  background: #fef3c7 !important;
+  border: 2px solid #f59e0b !important;
+  color: #d97706 !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.25) !important;
+}
+
+.modal-theme-kids .empty-state-title {
+  color: #78350f !important;
+  font-weight: 900 !important;
+}
+
+.modal-theme-kids .empty-state-desc {
+  color: #92400e !important;
+}
+
+.modal-theme-kids .empty-state-desc strong {
+  color: #b45309 !important;
+  font-weight: 800 !important;
+}
+
+.modal-theme-kids .empty-action-btn {
+  background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4) !important;
+}
+
+/* Kids Podium & Rows */
+.modal-theme-kids .podium-player-name {
+  color: #3b1d07 !important;
+}
+
+.modal-theme-kids .podium-title-tag {
+  color: #92400e !important;
+}
+
+.modal-theme-kids .podium-score-pill {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #b45309 !important;
+}
+
+.modal-theme-kids .gold-text {
+  color: #d97706 !important;
+}
+
+.modal-theme-kids .gold-pill {
+  background: rgba(245, 158, 11, 0.25) !important;
+  color: #b45309 !important;
+}
+
+.modal-theme-kids .empty-slot-text {
+  color: #92400e !important;
+}
+
+.modal-theme-kids .pedestal-gold {
+  background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%) !important;
+}
+
+.modal-theme-kids .pedestal-silver {
+  background: linear-gradient(180deg, #94a3b8 0%, #475569 100%) !important;
+}
+
+.modal-theme-kids .pedestal-bronze {
+  background: linear-gradient(180deg, #d97706 0%, #78350f 100%) !important;
+}
+
+.modal-theme-kids .entries-list-header {
+  color: #92400e !important;
 }
 
 .modal-theme-kids .leaderboard-row {
-  background: #ffffff;
-  border: 1.5px solid #fde68a;
+  background: #ffffff !important;
+  border: 1.5px solid #fde68a !important;
+}
+
+.modal-theme-kids .leaderboard-row:hover {
+  border-color: #f59e0b !important;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15) !important;
+}
+
+.modal-theme-kids .rank-number {
+  color: #92400e !important;
 }
 
 .modal-theme-kids .player-display-name {
-  color: #3b1d07;
+  color: #3b1d07 !important;
+}
+
+.modal-theme-kids .player-title-badge {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+}
+
+.modal-theme-kids .track-tag-pill {
+  color: #92400e !important;
 }
 
 .modal-theme-kids .score-val {
-  color: #b45309;
+  color: #b45309 !important;
 }
 
+.modal-theme-kids .score-label {
+  color: #92400e !important;
+}
+
+/* Kids User Standing Card */
 .modal-theme-kids .user-standing-card {
-  background: #fffdf5;
-  border-top: 2px solid #fde68a;
+  background: #fffdf5 !important;
+  border-top: 2px solid #fde68a !important;
 }
 
 .modal-theme-kids .standing-rank-badge {
-  background: #fef3c7;
-  border-color: #fde68a;
+  background: #fef3c7 !important;
+  border: 1.5px solid #fde68a !important;
+}
+
+.modal-theme-kids .standing-rank-label {
+  color: #92400e !important;
+}
+
+.modal-theme-kids .standing-rank-val {
+  color: #78350f !important;
+}
+
+.modal-theme-kids .top-three-rank .standing-rank-val {
+  color: #d97706 !important;
+}
+
+.modal-theme-kids .standing-avatar-box {
+  border-color: #f59e0b !important;
+  background: #ffffff !important;
 }
 
 .modal-theme-kids .standing-name {
-  color: #3b1d07;
+  color: #3b1d07 !important;
+}
+
+.modal-theme-kids .standing-title-pill {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  border: 1px solid #fde68a !important;
+}
+
+.modal-theme-kids .standing-hint {
+  color: #854d0e !important;
+}
+
+.modal-theme-kids .standing-exp-num {
+  color: #b45309 !important;
+}
+
+.modal-theme-kids .standing-exp-label {
+  color: #92400e !important;
 }
 
 .modal-theme-kids .modal-footer {
-  background: #fffbeb;
-  border-top: 2px solid #fde68a;
+  background: #fffbeb !important;
+  border-top: 2px solid #fde68a !important;
+}
+
+.modal-theme-kids .footer-note {
+  color: #92400e !important;
+}
+
+.modal-theme-kids .cdn-dot {
+  background-color: #10b981 !important;
+  box-shadow: 0 0 6px #10b981 !important;
 }
 
 .modal-theme-kids .close-action-btn {
@@ -1398,11 +1578,38 @@ function formatTitle(titleKey?: string): string {
 
 /* ==========================================================================
    THEME 2: CYBER CITY (TEENS MODE) - Neon Cyber Hologram Dark Arena
+   Hermetically isolated scoped CSS variables and explicit rules
+   Fix: Khắc phục triệt để lỗi màu chữ đen/tối trên nền đen khi bên ngoài chọn theme khác
    ========================================================================== */
 .modal-theme-teens {
+  --color-scheme: dark;
+  --bg-primary: #0b0f19;
+  --bg-secondary: #0f172a;
+  --bg-surface: #141e33;
+  --bg-surface-translucent: rgba(20, 30, 51, 0.95);
+  --bg-card: #131d31;
+  --bg-card-hover: #1c2742;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --border-color: rgba(6, 182, 212, 0.3);
+  --border-focus: #06b6d4;
+  --accent-primary: #06b6d4;
+  --accent-primary-hover: #22d3ee;
+  --accent-secondary: #a855f7;
+  --accent-tertiary: #f43f5e;
+  --accent-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #a855f7 100%);
+  --accent-text: #ffffff;
+  --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 4px 18px rgba(6, 182, 212, 0.2);
+  --shadow-lg: 0 10px 32px rgba(0, 0, 0, 0.8);
+  --btn-3d-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+  --btn-3d-active: 0 0 8px rgba(6, 182, 212, 0.7);
+
   background-color: #0b0f19 !important;
   border: 1.5px solid rgba(6, 182, 212, 0.45) !important;
   box-shadow: 0 0 40px rgba(6, 182, 212, 0.25), 0 25px 60px rgba(0, 0, 0, 0.7) !important;
+  color: #f8fafc !important;
 }
 
 .modal-theme-teens .ambient-glow {
@@ -1415,45 +1622,50 @@ function formatTitle(titleKey?: string): string {
 }
 
 .modal-theme-teens .trophy-orb {
-  background: rgba(6, 182, 212, 0.15);
-  border: 1px solid #06b6d4;
-  color: #06b6d4;
-  box-shadow: 0 0 16px rgba(6, 182, 212, 0.5);
+  background: rgba(6, 182, 212, 0.15) !important;
+  border: 1px solid #06b6d4 !important;
+  color: #06b6d4 !important;
+  box-shadow: 0 0 16px rgba(6, 182, 212, 0.5) !important;
 }
 
 .modal-theme-teens .modal-title {
-  background: linear-gradient(135deg, #38bdf8, #c084fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: linear-gradient(135deg, #38bdf8, #c084fc) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
   font-weight: 900 !important;
   font-size: 1.3rem !important;
 }
 
 .modal-theme-teens .modal-subtitle {
-  color: #94a3b8;
+  color: #94a3b8 !important;
 }
 
 .modal-theme-teens .close-modal-btn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #94a3b8 !important;
 }
 
 .modal-theme-teens .close-modal-btn:hover {
-  background: rgba(239, 68, 68, 0.2);
-  color: #f87171;
-  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.2) !important;
+  color: #f87171 !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
 }
 
 .modal-theme-teens .track-filter-tabs {
-  background: rgba(16, 23, 38, 0.7);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(16, 23, 38, 0.85) !important;
+  border-bottom: 1px solid rgba(6, 182, 212, 0.2) !important;
 }
 
 .modal-theme-teens .filter-tab-btn {
-  background: rgba(30, 41, 59, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #94a3b8;
+  background: #141e33 !important;
+  border: 1px solid rgba(6, 182, 212, 0.25) !important;
+  color: #cbd5e1 !important;
+}
+
+.modal-theme-teens .filter-tab-btn:hover {
+  border-color: #06b6d4 !important;
+  color: #ffffff !important;
 }
 
 .modal-theme-teens .filter-active {
@@ -1464,35 +1676,188 @@ function formatTitle(titleKey?: string): string {
 }
 
 .modal-theme-teens .modal-body-content {
-  background: #0b0f19;
+  background: #0b0f19 !important;
+}
+
+/* Teens Empty State (Fixed 100% Contrast) */
+.modal-theme-teens .empty-state-card {
+  background: rgba(20, 30, 51, 0.6) !important;
+  border: 1.5px dashed rgba(6, 182, 212, 0.45) !important;
+  box-shadow: inset 0 0 25px rgba(6, 182, 212, 0.08) !important;
+}
+
+.modal-theme-teens .empty-trophy-orb {
+  background: rgba(6, 182, 212, 0.15) !important;
+  border: 2px solid #06b6d4 !important;
+  color: #22d3ee !important;
+  box-shadow: 0 0 24px rgba(6, 182, 212, 0.5) !important;
+}
+
+.modal-theme-teens .empty-state-title {
+  color: #f8fafc !important;
+  font-weight: 900 !important;
+}
+
+.modal-theme-teens .empty-state-desc {
+  color: #cbd5e1 !important;
+  font-weight: 500 !important;
+}
+
+.modal-theme-teens .empty-state-desc strong {
+  color: #22d3ee !important;
+  font-weight: 800 !important;
+}
+
+.modal-theme-teens .empty-action-btn {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #a855f7 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.5) !important;
+}
+
+/* Teens Podium & Rows */
+.modal-theme-teens .podium-player-name {
+  color: #f8fafc !important;
+}
+
+.modal-theme-teens .podium-title-tag {
+  color: #94a3b8 !important;
+}
+
+.modal-theme-teens .podium-score-pill {
+  background: rgba(6, 182, 212, 0.15) !important;
+  color: #38bdf8 !important;
+}
+
+.modal-theme-teens .gold-text {
+  color: #fbbf24 !important;
+}
+
+.modal-theme-teens .gold-pill {
+  background: rgba(245, 158, 11, 0.25) !important;
+  color: #fbbf24 !important;
+}
+
+.modal-theme-teens .empty-slot-text {
+  color: #94a3b8 !important;
+}
+
+.modal-theme-teens .pedestal-gold {
+  background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%) !important;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.4) !important;
+}
+
+.modal-theme-teens .pedestal-silver {
+  background: linear-gradient(180deg, #06b6d4 0%, #0369a1 100%) !important;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.35) !important;
+}
+
+.modal-theme-teens .pedestal-bronze {
+  background: linear-gradient(180deg, #a855f7 0%, #6b21a8 100%) !important;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35) !important;
+}
+
+.modal-theme-teens .entries-list-header {
+  color: #94a3b8 !important;
 }
 
 .modal-theme-teens .leaderboard-row {
-  background: rgba(16, 23, 38, 0.75);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(19, 29, 49, 0.85) !important;
+  border: 1px solid rgba(6, 182, 212, 0.2) !important;
 }
 
 .modal-theme-teens .leaderboard-row:hover {
-  border-color: #06b6d4;
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 15px rgba(6, 182, 212, 0.25) !important;
+}
+
+.modal-theme-teens .rank-number {
+  color: #94a3b8 !important;
+}
+
+.modal-theme-teens .player-display-name {
+  color: #f8fafc !important;
+}
+
+.modal-theme-teens .player-title-badge {
+  background: rgba(6, 182, 212, 0.15) !important;
+  color: #38bdf8 !important;
+}
+
+.modal-theme-teens .track-tag-pill {
+  color: #94a3b8 !important;
 }
 
 .modal-theme-teens .score-val {
-  color: #38bdf8;
+  color: #38bdf8 !important;
 }
 
+.modal-theme-teens .score-label {
+  color: #94a3b8 !important;
+}
+
+/* Teens User Standing Card */
 .modal-theme-teens .user-standing-card {
-  background: #0d1527;
-  border-top: 1.5px solid rgba(6, 182, 212, 0.3);
+  background: #0d1527 !important;
+  border-top: 1.5px solid rgba(6, 182, 212, 0.35) !important;
+}
+
+.modal-theme-teens .standing-rank-badge {
+  background: rgba(6, 182, 212, 0.15) !important;
+  border: 1px solid rgba(6, 182, 212, 0.35) !important;
+}
+
+.modal-theme-teens .standing-rank-label {
+  color: #94a3b8 !important;
+}
+
+.modal-theme-teens .standing-rank-val {
+  color: #f8fafc !important;
+}
+
+.modal-theme-teens .top-three-rank .standing-rank-val {
+  color: #38bdf8 !important;
+}
+
+.modal-theme-teens .standing-avatar-box {
+  border-color: #06b6d4 !important;
+  background: #141e33 !important;
 }
 
 .modal-theme-teens .standing-name {
-  color: #f8fafc;
+  color: #f8fafc !important;
+}
+
+.modal-theme-teens .standing-title-pill {
+  background: rgba(6, 182, 212, 0.15) !important;
+  color: #38bdf8 !important;
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+}
+
+.modal-theme-teens .standing-hint {
+  color: #cbd5e1 !important;
+}
+
+.modal-theme-teens .standing-exp-num {
+  color: #38bdf8 !important;
+}
+
+.modal-theme-teens .standing-exp-label {
+  color: #94a3b8 !important;
 }
 
 .modal-theme-teens .modal-footer {
-  background: #0d1527;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #0d1527 !important;
+  border-top: 1px solid rgba(6, 182, 212, 0.2) !important;
+}
+
+.modal-theme-teens .footer-note {
+  color: #94a3b8 !important;
+}
+
+.modal-theme-teens .cdn-dot {
+  background-color: #06b6d4 !important;
+  box-shadow: 0 0 6px #06b6d4 !important;
 }
 
 .modal-theme-teens .close-action-btn {
@@ -1504,19 +1869,43 @@ function formatTitle(titleKey?: string): string {
 
 /* ==========================================================================
    THEME 3: SIMLIFE GLOBAL (ADULTS MODE) - Executive Pearl Luxury (Forbes Hall of Fame)
-   Fix: Đồng bộ 100% màu sắc thanh lịch, bỏ header đen lệch tông, bục kim loại sang trọng
+   Hermetically isolated scoped CSS variables and explicit rules
    ========================================================================== */
 .modal-theme-adults {
+  --color-scheme: light;
+  --bg-primary: #f8fafc;
+  --bg-secondary: #eef2f6;
+  --bg-surface: #ffffff;
+  --bg-surface-translucent: rgba(255, 255, 255, 0.95);
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  --border-color: #cbd5e1;
+  --border-focus: #059669;
+  --accent-primary: #059669;
+  --accent-primary-hover: #047857;
+  --accent-secondary: #0284c7;
+  --accent-tertiary: #d97706;
+  --accent-gradient: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  --accent-text: #ffffff;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 14px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 10px 25px rgba(15, 23, 42, 0.1);
+  --btn-3d-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+  --btn-3d-active: 0 1px 2px rgba(5, 150, 105, 0.4);
+
   background-color: #ffffff !important;
   border: 1.5px solid #cbd5e1 !important;
   box-shadow: 0 25px 60px rgba(15, 23, 42, 0.18) !important;
+  color: #0f172a !important;
 }
 
 .modal-theme-adults .ambient-glow {
   background: radial-gradient(circle, rgba(5, 150, 105, 0.12) 0%, transparent 70%);
 }
 
-/* FIX: Header đồng bộ tone màu ngọc trai sang trọng, KHÔNG bị đen kịt chắp vá */
 .modal-theme-adults .modal-header {
   background: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%) !important;
   border-bottom: 1.5px solid #cbd5e1 !important;
@@ -1535,42 +1924,41 @@ function formatTitle(titleKey?: string): string {
 }
 
 .modal-theme-adults .trophy-orb {
-  background: rgba(5, 150, 105, 0.12);
-  border: 1.5px solid #059669;
-  color: #059669;
-  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.25);
+  background: rgba(5, 150, 105, 0.12) !important;
+  border: 1.5px solid #059669 !important;
+  color: #059669 !important;
+  box-shadow: 0 4px 15px rgba(5, 150, 105, 0.25) !important;
 }
 
 .modal-theme-adults .close-modal-btn {
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  color: #475569;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
 }
 
 .modal-theme-adults .close-modal-btn:hover {
-  background: #fee2e2;
-  color: #ef4444;
-  border-color: #fca5a5;
+  background: #fee2e2 !important;
+  color: #ef4444 !important;
+  border-color: #fca5a5 !important;
 }
 
 .modal-theme-adults .track-filter-tabs {
-  background: #f8fafc;
-  border-bottom: 1.5px solid #cbd5e1;
+  background: #f8fafc !important;
+  border-bottom: 1.5px solid #cbd5e1 !important;
 }
 
 .modal-theme-adults .filter-tab-btn {
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  color: #475569;
-  font-weight: 700;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #475569 !important;
+  font-weight: 700 !important;
 }
 
 .modal-theme-adults .filter-tab-btn:hover {
-  border-color: #059669;
-  color: #0f172a;
+  border-color: #059669 !important;
+  color: #0f172a !important;
 }
 
-/* Tab active màu Emerald ngọc lục bảo danh giá của SimLife Global */
 .modal-theme-adults .filter-active {
   background: #059669 !important;
   color: #ffffff !important;
@@ -1579,10 +1967,45 @@ function formatTitle(titleKey?: string): string {
 }
 
 .modal-theme-adults .modal-body-content {
-  background: #ffffff;
+  background: #ffffff !important;
 }
 
-/* FIX: Bục vinh quang phong cách Kim loại Titan & Vàng Hoàng Gia cho người lớn */
+/* Adults Empty State */
+.modal-theme-adults .empty-state-card {
+  background: #f8fafc !important;
+  border: 1.5px dashed #cbd5e1 !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+}
+
+.modal-theme-adults .empty-trophy-orb {
+  background: rgba(5, 150, 105, 0.12) !important;
+  border: 2px solid #059669 !important;
+  color: #059669 !important;
+  box-shadow: 0 4px 16px rgba(5, 150, 105, 0.2) !important;
+}
+
+.modal-theme-adults .empty-state-title {
+  color: #0f172a !important;
+  font-weight: 900 !important;
+}
+
+.modal-theme-adults .empty-state-desc {
+  color: #475569 !important;
+}
+
+.modal-theme-adults .empty-state-desc strong {
+  color: #059669 !important;
+  font-weight: 800 !important;
+}
+
+.modal-theme-adults .empty-action-btn {
+  background: #059669 !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.35) !important;
+}
+
+/* Adults Podium & Rows */
 .modal-theme-adults .pedestal-gold {
   background: linear-gradient(180deg, #d97706 0%, #92400e 100%) !important;
 }
@@ -1595,6 +2018,20 @@ function formatTitle(titleKey?: string): string {
   background: linear-gradient(180deg, #b45309 0%, #78350f 100%) !important;
 }
 
+.modal-theme-adults .podium-player-name {
+  color: #0f172a !important;
+}
+
+.modal-theme-adults .podium-title-tag {
+  color: #64748b !important;
+}
+
+.modal-theme-adults .podium-score-pill {
+  background: rgba(5, 150, 105, 0.12) !important;
+  color: #059669 !important;
+  font-weight: 800 !important;
+}
+
 .modal-theme-adults .gold-text {
   color: #d97706 !important;
 }
@@ -1604,64 +2041,111 @@ function formatTitle(titleKey?: string): string {
   color: #b45309 !important;
 }
 
-.modal-theme-adults .podium-score-pill {
-  background: rgba(5, 150, 105, 0.12) !important;
-  color: #059669 !important;
-  font-weight: 800;
+.modal-theme-adults .empty-slot-text {
+  color: #64748b !important;
+}
+
+.modal-theme-adults .entries-list-header {
+  color: #64748b !important;
 }
 
 .modal-theme-adults .leaderboard-row {
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  background: #ffffff !important;
+  border: 1.5px solid #e2e8f0 !important;
 }
 
 .modal-theme-adults .leaderboard-row:hover {
-  border-color: #059669;
-  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.1);
+  border-color: #059669 !important;
+  box-shadow: 0 4px 14px rgba(5, 150, 105, 0.1) !important;
+}
+
+.modal-theme-adults .rank-number {
+  color: #64748b !important;
 }
 
 .modal-theme-adults .player-display-name {
-  color: #0f172a;
+  color: #0f172a !important;
+}
+
+.modal-theme-adults .player-title-badge {
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+}
+
+.modal-theme-adults .track-tag-pill {
+  color: #64748b !important;
 }
 
 .modal-theme-adults .score-val {
-  color: #059669;
+  color: #059669 !important;
 }
 
+.modal-theme-adults .score-label {
+  color: #64748b !important;
+}
+
+/* Adults User Standing Card */
 .modal-theme-adults .user-standing-card {
-  background: #f8fafc;
-  border-top: 2px solid #cbd5e1;
+  background: #f8fafc !important;
+  border-top: 2px solid #cbd5e1 !important;
 }
 
 .modal-theme-adults .standing-rank-badge {
-  background: #ffffff;
-  border-color: #cbd5e1;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+}
+
+.modal-theme-adults .standing-rank-label {
+  color: #64748b !important;
 }
 
 .modal-theme-adults .standing-rank-val {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 .modal-theme-adults .top-three-rank .standing-rank-val {
-  color: #d97706;
+  color: #d97706 !important;
 }
 
 .modal-theme-adults .standing-avatar-box {
-  border-color: #059669;
-  background: #ffffff;
+  border-color: #059669 !important;
+  background: #ffffff !important;
 }
 
 .modal-theme-adults .standing-name {
-  color: #0f172a;
+  color: #0f172a !important;
+}
+
+.modal-theme-adults .standing-title-pill {
+  background: #e2e8f0 !important;
+  color: #334155 !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+.modal-theme-adults .standing-hint {
+  color: #64748b !important;
 }
 
 .modal-theme-adults .standing-exp-num {
-  color: #059669;
+  color: #059669 !important;
+}
+
+.modal-theme-adults .standing-exp-label {
+  color: #64748b !important;
 }
 
 .modal-theme-adults .modal-footer {
-  background: #f8fafc;
-  border-top: 1.5px solid #cbd5e1;
+  background: #f8fafc !important;
+  border-top: 1.5px solid #cbd5e1 !important;
+}
+
+.modal-theme-adults .footer-note {
+  color: #64748b !important;
+}
+
+.modal-theme-adults .cdn-dot {
+  background-color: #059669 !important;
+  box-shadow: 0 0 6px #059669 !important;
 }
 
 .modal-theme-adults .close-action-btn {

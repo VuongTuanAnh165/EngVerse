@@ -799,4 +799,163 @@ function isTitleUnlocked(id: TitleBadgeId): boolean {
     box-shadow: 0 0 18px rgba(168, 85, 247, 0.9), inset 0 0 10px rgba(236, 72, 153, 0.7);
   }
 }
+
+/* ==========================================================================
+   Universe-specific Theme Customizations for Kids & Adults ONLY
+   Cyber City (Teens) retains 100% of its original cyberpunk dark aesthetics
+   ========================================================================== */
+
+/* 1. ĐẢO THẦN THOẠI (Kids) */
+html[data-theme="kids"] .reward-modal-card {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 25px 60px rgba(245, 158, 11, 0.25);
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .modal-top-bar {
+  border-bottom: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .modal-headline {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .modal-sub {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .modal-close-icon {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .modal-close-icon:hover {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .live-avatar-preview-box {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .preview-name {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .preview-title-pill {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+html[data-theme="kids"] .tab-btn {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .tab-btn.active {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #ffffff;
+  border-color: #d97706;
+}
+
+html[data-theme="kids"] .frame-item-card,
+html[data-theme="kids"] .title-item-card {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .frame-name,
+html[data-theme="kids"] .title-name {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .frame-desc,
+html[data-theme="kids"] .title-desc {
+  color: #63330f;
+}
+
+html[data-theme="kids"] .btn-done {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  color: #ffffff;
+}
+
+/* 2. SIMLIFE GLOBAL (Adults) */
+html[data-theme="adults"] .reward-modal-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.15);
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .modal-top-bar {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .modal-headline {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .modal-sub {
+  color: #475569;
+}
+
+html[data-theme="adults"] .modal-close-icon {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .modal-close-icon:hover {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .live-avatar-preview-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .preview-name {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .preview-title-pill {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .tab-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .tab-btn.active {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+html[data-theme="adults"] .frame-item-card,
+html[data-theme="adults"] .title-item-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .frame-name,
+html[data-theme="adults"] .title-name {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .frame-desc,
+html[data-theme="adults"] .title-desc {
+  color: #475569;
+}
+
+html[data-theme="adults"] .btn-done {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+}
 </style>

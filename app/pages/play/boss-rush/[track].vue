@@ -2257,14 +2257,16 @@ html[data-theme="kids"] .boss-preview-stage {
 }
 
 html[data-theme="kids"] .modal-card,
-html[data-theme="kids"] .leaderboard-card {
+html[data-theme="kids"] .leaderboard-card,
+html[data-theme="kids"] .leaderboard-modal-card {
   background: #ffffff;
   border: 2px solid #fde68a;
   box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
 }
 
 html[data-theme="kids"] .modal-title,
-html[data-theme="kids"] .leaderboard-title {
+html[data-theme="kids"] .leaderboard-title,
+html[data-theme="kids"] .leaderboard-modal-title {
   color: #b45309;
 }
 
@@ -2537,14 +2539,16 @@ html[data-theme="adults"] .boss-preview-stage {
 }
 
 html[data-theme="adults"] .modal-card,
-html[data-theme="adults"] .leaderboard-card {
+html[data-theme="adults"] .leaderboard-card,
+html[data-theme="adults"] .leaderboard-modal-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
 }
 
 html[data-theme="adults"] .modal-title,
-html[data-theme="adults"] .leaderboard-title {
+html[data-theme="adults"] .leaderboard-title,
+html[data-theme="adults"] .leaderboard-modal-title {
   color: #0f172a;
 }
 

@@ -5218,6 +5218,171 @@ html[data-theme="kids"] .start-card-btn:hover {
   filter: brightness(1.05);
 }
 
+/* ==========================================================================
+   BRIEFING MODAL SHEET (CLICK VÀO GIẢ LẬP) - KIDS MODE
+   ========================================================================== */
+html[data-theme="kids"] .briefing-modal-sheet,
+html[data-theme="kids"] .scorecard-modal-sheet,
+html[data-theme="kids"] .premium-modal-sheet {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 25px 60px rgba(245, 158, 11, 0.25), 0 8px 25px rgba(0, 0, 0, 0.1);
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .modal-header {
+  border-bottom: 1.5px solid #fde68a;
+  background: #fffdf5;
+}
+
+html[data-theme="kids"] .modal-title {
+  color: #3b1d07;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .modal-sub {
+  color: #b45309;
+  font-weight: 700;
+}
+
+html[data-theme="kids"] .modal-close-btn {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .modal-close-btn:hover {
+  color: #3b1d07;
+  background: #fef3c7;
+  border-radius: 50%;
+}
+
+html[data-theme="kids"] .modal-body {
+  background: #ffffff;
+}
+
+html[data-theme="kids"] .persona-tag {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #b45309;
+  font-weight: 700;
+}
+
+html[data-theme="kids"] .briefing-roles-box {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+  border-radius: 14px;
+}
+
+html[data-theme="kids"] .role-badge-pill {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .role-badge-pill.role-ai {
+  background: #fdf2f8;
+  color: #be185d;
+  border: 1px solid #fbcfe8;
+}
+
+html[data-theme="kids"] .role-name {
+  color: #3b1d07;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .role-name small {
+  color: #854d0e;
+  font-weight: 600;
+}
+
+html[data-theme="kids"] .role-vs-divider {
+  color: #b45309;
+  font-weight: 900;
+}
+
+html[data-theme="kids"] .box-heading {
+  color: #b45309;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .desc-text {
+  color: #63330f;
+  font-weight: 500;
+}
+
+html[data-theme="kids"] .objective-item {
+  color: #3b1d07;
+  font-weight: 600;
+}
+
+html[data-theme="kids"] .obj-check {
+  color: #10b981;
+  font-weight: 900;
+}
+
+html[data-theme="kids"] .vocab-chip-item {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+  border-radius: 10px;
+}
+
+html[data-theme="kids"] .vocab-word {
+  color: #92400e;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .vocab-meaning {
+  color: #b45309;
+  font-weight: 600;
+}
+
+html[data-theme="kids"] .opening-preview-box {
+  background: #fffdf5;
+  border: 1px solid #fde68a;
+  border-left: 4px solid #f59e0b;
+  border-radius: 0 10px 10px 0;
+}
+
+html[data-theme="kids"] .opening-badge {
+  color: #b45309;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .opening-text {
+  color: #3b1d07;
+  font-weight: 600;
+}
+
+html[data-theme="kids"] .modal-footer {
+  border-top: 1.5px solid #fde68a;
+  background: #fffdf5;
+}
+
+html[data-theme="kids"] .btn-cancel-modal {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #854d0e;
+  font-weight: 700;
+  border-radius: 9999px;
+  padding: 0.65rem 1.4rem;
+}
+
+html[data-theme="kids"] .btn-cancel-modal:hover {
+  background: #fef3c7;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .launch-sim-btn,
+html[data-theme="kids"] .btn-start-sim {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #ffffff;
+  border: none;
+  font-weight: 800;
+  border-radius: 9999px;
+  padding: 0.75rem 1.75rem;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+}
+
 /* Custom Builder Tab */
 html[data-theme="kids"] .custom-builder-card {
   background: #ffffff;
@@ -5432,40 +5597,6 @@ html[data-theme="kids"] .send-message-btn {
   background: linear-gradient(135deg, #f59e0b, #fbbf24);
   color: #ffffff;
   border: none;
-}
-
-/* Modals & CEFR Report */
-html[data-theme="kids"] .modal-card,
-html[data-theme="kids"] .report-card {
-  background: #ffffff;
-  border: 2px solid #fde68a;
-  box-shadow: 0 15px 40px rgba(245, 158, 11, 0.2);
-  color: #3b1d07;
-}
-
-html[data-theme="kids"] .modal-title,
-html[data-theme="kids"] .report-title {
-  color: #3b1d07;
-}
-
-html[data-theme="kids"] .modal-subtitle,
-html[data-theme="kids"] .report-subtitle {
-  color: #854d0e;
-}
-
-html[data-theme="kids"] .modal-scores-grid {
-  background: #fffdf5;
-  border: 1.5px solid #fde68a;
-}
-
-html[data-theme="kids"] .m-score-title {
-  color: #854d0e;
-}
-
-html[data-theme="kids"] .btn-cancel-modal {
-  background: #fef3c7;
-  color: #854d0e;
-  border: 1px solid #fde68a;
 }
 
 
@@ -5722,6 +5853,171 @@ html[data-theme="adults"] .start-card-btn:hover {
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
 }
 
+/* ==========================================================================
+   BRIEFING MODAL SHEET (CLICK VÀO GIẢ LẬP) - ADULTS MODE
+   ========================================================================== */
+html[data-theme="adults"] .briefing-modal-sheet,
+html[data-theme="adults"] .scorecard-modal-sheet,
+html[data-theme="adults"] .premium-modal-sheet {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.15), 0 10px 20px rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .modal-header {
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+html[data-theme="adults"] .modal-title {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .modal-sub {
+  color: #0369a1;
+  font-weight: 600;
+}
+
+html[data-theme="adults"] .modal-close-btn {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .modal-close-btn:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+  border-radius: 50%;
+}
+
+html[data-theme="adults"] .modal-body {
+  background: #ffffff;
+}
+
+html[data-theme="adults"] .persona-tag {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-weight: 600;
+}
+
+html[data-theme="adults"] .briefing-roles-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+html[data-theme="adults"] .role-badge-pill {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .role-badge-pill.role-ai {
+  background: #f5f3ff;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+}
+
+html[data-theme="adults"] .role-name {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .role-name small {
+  color: #475569;
+  font-weight: 500;
+}
+
+html[data-theme="adults"] .role-vs-divider {
+  color: #64748b;
+  font-weight: 800;
+}
+
+html[data-theme="adults"] .box-heading {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .desc-text {
+  color: #334155;
+  line-height: 1.5;
+}
+
+html[data-theme="adults"] .objective-item {
+  color: #0f172a;
+  font-weight: 500;
+}
+
+html[data-theme="adults"] .obj-check {
+  color: #059669;
+  font-weight: 800;
+}
+
+html[data-theme="adults"] .vocab-chip-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+html[data-theme="adults"] .vocab-word {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .vocab-meaning {
+  color: #475569;
+  font-weight: 500;
+}
+
+html[data-theme="adults"] .opening-preview-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #0f172a;
+  border-radius: 0 8px 8px 0;
+}
+
+html[data-theme="adults"] .opening-badge {
+  color: #0369a1;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .opening-text {
+  color: #0f172a;
+  font-weight: 500;
+}
+
+html[data-theme="adults"] .modal-footer {
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+}
+
+html[data-theme="adults"] .btn-cancel-modal {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 0.65rem 1.4rem;
+}
+
+html[data-theme="adults"] .btn-cancel-modal:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .launch-sim-btn,
+html[data-theme="adults"] .btn-start-sim {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 0.75rem 1.75rem;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+}
+
 /* Custom Builder Tab */
 html[data-theme="adults"] .custom-builder-card {
   background: #ffffff;
@@ -5932,40 +6228,6 @@ html[data-theme="adults"] .mic-pill-btn,
 html[data-theme="adults"] .send-message-btn {
   background: linear-gradient(135deg, #0f172a, #1e3a8a);
   color: #ffffff;
-}
-
-/* Modals & CEFR Report */
-html[data-theme="adults"] .modal-card,
-html[data-theme="adults"] .report-card {
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  box-shadow: 0 15px 40px rgba(15, 23, 42, 0.12);
-  color: #0f172a;
-}
-
-html[data-theme="adults"] .modal-title,
-html[data-theme="adults"] .report-title {
-  color: #0f172a;
-}
-
-html[data-theme="adults"] .modal-subtitle,
-html[data-theme="adults"] .report-subtitle {
-  color: #475569;
-}
-
-html[data-theme="adults"] .modal-scores-grid {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-}
-
-html[data-theme="adults"] .m-score-title {
-  color: #475569;
-}
-
-html[data-theme="adults"] .btn-cancel-modal {
-  background: #f1f5f9;
-  color: #334155;
-  border: 1px solid #cbd5e1;
 }
 
 </style>

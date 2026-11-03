@@ -358,7 +358,7 @@ useHead({
 /* Daily Challenge Banner */
 .daily-challenge-callout-section {
   max-width: 900px;
-  margin: 0.25rem auto 1.5rem;
+  margin: 1.25rem auto 1.5rem;
   padding: 0 1rem;
 }
 

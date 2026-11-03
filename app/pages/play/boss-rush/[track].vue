@@ -832,8 +832,8 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--color-bg-primary, #0f172a);
-  color: var(--color-text-primary, #f8fafc);
+  background-color: var(--bg-primary, #0f172a);
+  color: var(--text-primary, #f8fafc);
   font-family: inherit;
 }
 
@@ -916,19 +916,26 @@ onUnmounted(() => {
 }
 
 .back-link-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #94a3b8;
-  padding: 0.4rem 0.85rem;
-  border-radius: 0.5rem;
+  background: var(--bg-surface, rgba(255, 255, 255, 0.06));
+  border: 1.5px solid var(--border-color, rgba(255, 255, 255, 0.2));
+  color: var(--text-primary, #94a3b8);
+  padding: 0.45rem 0.95rem;
+  border-radius: var(--radius-md, 0.5rem);
   font-size: 0.9rem;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
   transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .back-link-btn:hover {
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.5);
+  background: var(--bg-card-hover, rgba(255, 255, 255, 0.12));
+  border-color: var(--border-focus, rgba(255, 255, 255, 0.5));
+  color: var(--text-primary, #ffffff);
+  transform: translateY(-1px);
 }
 
 .track-switcher-pills {
@@ -2101,5 +2108,445 @@ onUnmounted(() => {
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   justify-content: flex-end;
+}
+
+
+/* ==========================================================================
+   Universe-specific Theme Customizations for Kids & Adults ONLY
+   Cyber City (Teens) retains 100% of its original cyberpunk dark aesthetics
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ĐẢO THẦN THOẠI (Kids)
+   -------------------------------------------------------------------------- */
+html[data-theme="kids"] .portal-hero-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+  border: 2px solid #fde68a;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.12);
+}
+
+html[data-theme="kids"] .colosseum-title {
+  background: linear-gradient(135deg, #b45309 0%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-theme="kids"] .colosseum-lore {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .best-record-bar {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.08);
+}
+
+html[data-theme="kids"] .record-item .lbl {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .record-item .val {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .section-title {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .modifier-card {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.06);
+}
+
+html[data-theme="kids"] .mod-text strong {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .mod-text span {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .boss-card-preview {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.08);
+}
+
+html[data-theme="kids"] .boss-preview-badge {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fde68a;
+}
+
+html[data-theme="kids"] .boss-preview-name {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .boss-preview-stage {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .track-nav-pill {
+  background: #ffffff;
+  color: #854d0e;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .track-nav-pill.active {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #ffffff;
+  border-color: #d97706;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+}
+
+html[data-theme="kids"] .modal-card,
+html[data-theme="kids"] .leaderboard-card {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+}
+
+html[data-theme="kids"] .modal-title,
+html[data-theme="kids"] .leaderboard-title {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .modal-desc {
+  color: #63330f;
+}
+
+html[data-theme="kids"] .btn-cancel {
+  background: #fef3c7;
+  color: #854d0e;
+  border: 1px solid #fde68a;
+}
+
+html[data-theme="kids"] .intro-dialog-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+  border: 2.5px solid #f59e0b;
+  box-shadow: 0 10px 35px rgba(245, 158, 11, 0.25);
+}
+
+html[data-theme="kids"] .intro-boss-name {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .intro-boss-title {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .intro-quote-box {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .intro-quote {
+  color: #63330f;
+}
+
+html[data-theme="kids"] .arena-hud-bar {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.1);
+}
+
+html[data-theme="kids"] .hud-track-name {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .exit-btn {
+  background: #fef3c7;
+  color: #854d0e;
+  border: 1px solid #fde68a;
+}
+
+html[data-theme="kids"] .intermission-card {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.15);
+}
+
+html[data-theme="kids"] .victory-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+  border: 2px solid #f59e0b;
+  box-shadow: 0 10px 35px rgba(245, 158, 11, 0.2);
+}
+
+html[data-theme="kids"] .victory-headline {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .victory-subtext {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .rewards-showcase {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .reward-item {
+  background: #ffffff;
+  border: 1px solid #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .defeat-card {
+  background: #ffffff;
+  border: 2px solid #fecaca;
+  box-shadow: 0 8px 25px rgba(239, 68, 68, 0.15);
+}
+
+html[data-theme="kids"] .defeat-headline {
+  color: #991b1b;
+}
+
+html[data-theme="kids"] .defeat-subtext {
+  color: #7f1d1d;
+}
+
+html[data-theme="kids"] .defeat-stats-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+html[data-theme="kids"] .stat-row {
+  color: #7f1d1d;
+}
+
+html[data-theme="kids"] .stat-row strong {
+  color: #991b1b;
+}
+
+html[data-theme="kids"] .rank-item {
+  background: #ffffff;
+  border: 1px solid #fde68a;
+}
+
+html[data-theme="kids"] .player-name {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .stat-cell {
+  background: #fef3c7;
+  color: #854d0e;
+}
+
+/* --------------------------------------------------------------------------
+   2. SIMLIFE GLOBAL (Adults)
+   -------------------------------------------------------------------------- */
+html[data-theme="adults"] .portal-hero-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme="adults"] .colosseum-title {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-theme="adults"] .colosseum-lore {
+  color: #475569;
+}
+
+html[data-theme="adults"] .best-record-bar {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .record-item .lbl {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .record-item .val {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .section-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .modifier-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .mod-text strong {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .mod-text span {
+  color: #475569;
+}
+
+html[data-theme="adults"] .boss-card-preview {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .boss-preview-badge {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .boss-preview-name {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .boss-preview-stage {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .track-nav-pill {
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .track-nav-pill.active {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  border-color: #0f172a;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+}
+
+html[data-theme="adults"] .modal-card,
+html[data-theme="adults"] .leaderboard-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+}
+
+html[data-theme="adults"] .modal-title,
+html[data-theme="adults"] .leaderboard-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .modal-desc {
+  color: #334155;
+}
+
+html[data-theme="adults"] .btn-cancel {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .intro-dialog-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .intro-boss-name {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .intro-boss-title {
+  color: #334155;
+}
+
+html[data-theme="adults"] .intro-quote-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .intro-quote {
+  color: #334155;
+}
+
+html[data-theme="adults"] .arena-hud-bar {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme="adults"] .hud-track-name {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .exit-btn {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .intermission-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme="adults"] .victory-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .victory-headline {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .victory-subtext {
+  color: #475569;
+}
+
+html[data-theme="adults"] .rewards-showcase {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .reward-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .defeat-card {
+  background: #ffffff;
+  border: 1.5px solid #fecdd3;
+  box-shadow: 0 8px 25px rgba(225, 29, 72, 0.08);
+}
+
+html[data-theme="adults"] .defeat-headline {
+  color: #9f1239;
+}
+
+html[data-theme="adults"] .defeat-subtext {
+  color: #475569;
+}
+
+html[data-theme="adults"] .defeat-stats-box {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+}
+
+html[data-theme="adults"] .stat-row {
+  color: #475569;
+}
+
+html[data-theme="adults"] .stat-row strong {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .rank-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .player-name {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .stat-cell {
+  background: #f1f5f9;
+  color: #334155;
 }
 </style>

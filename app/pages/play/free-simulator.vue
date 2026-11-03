@@ -3098,19 +3098,21 @@ onUnmounted(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.5rem 0.9rem;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.5rem 0.95rem;
+  background: var(--bg-surface, rgba(255, 255, 255, 0.06));
+  border: 1.5px solid var(--border-color, rgba(255, 255, 255, 0.12));
   border-radius: var(--radius-md, 10px);
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-primary, #94a3b8);
   font-size: 0.875rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
   white-space: nowrap;
 }
 .back-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--bg-card-hover, rgba(255, 255, 255, 0.12));
+  border-color: var(--border-focus, #06b6d4);
   color: var(--text-primary, #ffffff);
   transform: translateX(-2px);
 }
@@ -4952,5 +4954,391 @@ onUnmounted(() => {
     gap: 0.75rem;
     text-align: center;
   }
+}
+
+
+/* ==========================================================================
+   Universe-specific Theme Customizations for Kids & Adults ONLY
+   Cyber City (Teens) retains 100% of its original cyberpunk dark aesthetics
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ĐẢO THẦN THOẠI (Kids)
+   -------------------------------------------------------------------------- */
+html[data-theme="kids"] .sim-header {
+  background: #ffffff;
+  border: 2px solid #bae6fd;
+  box-shadow: 0 6px 20px rgba(6, 182, 212, 0.08);
+}
+
+html[data-theme="kids"] .sim-title {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-theme="kids"] .sim-subtitle {
+  color: #0369a1;
+}
+
+html[data-theme="kids"] .quota-pill {
+  background: #f0f9ff;
+  border: 1.5px solid #bae6fd;
+  box-shadow: 0 2px 8px rgba(6, 182, 212, 0.1);
+}
+
+html[data-theme="kids"] .filter-bar {
+  background: #ffffff;
+  border: 1.5px solid #e0f2fe;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.05);
+}
+
+html[data-theme="kids"] .cat-pill {
+  background: #f0f9ff;
+  border: 1.5px solid #bae6fd;
+  color: #0369a1;
+}
+
+html[data-theme="kids"] .cat-pill:hover {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+html[data-theme="kids"] .cat-pill.cat-active {
+  background: linear-gradient(135deg, #0284c7, #0369a1);
+  border-color: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
+}
+
+html[data-theme="kids"] .sim-tab-btn {
+  background: #ffffff;
+  border: 1.5px solid #bae6fd;
+  color: #0369a1;
+}
+
+html[data-theme="kids"] .sim-tab-btn.tab-active {
+  background: #e0f2fe;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+html[data-theme="kids"] .scenario-card {
+  background: #ffffff;
+  border: 2px solid #e0f2fe;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.06);
+}
+
+html[data-theme="kids"] .scenario-card:hover {
+  border-color: #0284c7;
+  box-shadow: 0 8px 24px rgba(2, 132, 199, 0.15);
+  background: #f0f9ff;
+}
+
+html[data-theme="kids"] .scenario-title {
+  color: #0c4a6e;
+}
+
+html[data-theme="kids"] .scenario-title-vi {
+  color: #0284c7;
+}
+
+html[data-theme="kids"] .scenario-roles {
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+}
+
+html[data-theme="kids"] .role-item {
+  color: #0369a1;
+}
+
+html[data-theme="kids"] .card-emoji-box {
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+}
+
+html[data-theme="kids"] .card-action-bar {
+  border-top: 1px solid #e0f2fe;
+}
+
+html[data-theme="kids"] .active-sim-arena {
+  background: #ffffff;
+  border: 2px solid #bae6fd;
+  box-shadow: 0 10px 30px rgba(2, 132, 199, 0.12);
+}
+
+html[data-theme="kids"] .arena-top-bar {
+  background: #f0f9ff;
+  border-bottom: 2px solid #bae6fd;
+}
+
+html[data-theme="kids"] .arena-exit-btn {
+  background: #ffffff;
+  border: 1.5px solid #bae6fd;
+  color: #0284c7;
+}
+
+html[data-theme="kids"] .arena-scenario-title {
+  color: #0c4a6e;
+}
+
+html[data-theme="kids"] .arena-npc-sub {
+  color: #0369a1;
+}
+
+html[data-theme="kids"] .turn-counter-box {
+  background: #ffffff;
+  border: 1.5px solid #bae6fd;
+  color: #0284c7;
+}
+
+html[data-theme="kids"] .arena-chat-scroll {
+  background: #ffffff;
+}
+
+html[data-theme="kids"] .bubble-assistant .bubble-body {
+  background: #f0f9ff;
+  border: 1.5px solid #bae6fd;
+  color: #0c4a6e;
+}
+
+html[data-theme="kids"] .bubble-user .bubble-body {
+  background: #e0f2fe;
+  border: 1.5px solid #7dd3fc;
+  color: #0369a1;
+}
+
+html[data-theme="kids"] .bubble-name {
+  color: #0369a1;
+}
+
+html[data-theme="kids"] .bubble-action-btn {
+  background: #ffffff;
+  border: 1px solid #bae6fd;
+  color: #0284c7;
+}
+
+html[data-theme="kids"] .arena-input-dock {
+  background: #f0f9ff;
+  border-top: 2px solid #bae6fd;
+}
+
+html[data-theme="kids"] .dock-text-input {
+  background: #ffffff;
+  border: 1.5px solid #bae6fd;
+  color: #0c4a6e;
+}
+
+html[data-theme="kids"] .modal-card,
+html[data-theme="kids"] .report-card {
+  background: #ffffff;
+  border: 2px solid #bae6fd;
+  box-shadow: 0 10px 30px rgba(2, 132, 199, 0.15);
+}
+
+html[data-theme="kids"] .modal-title,
+html[data-theme="kids"] .report-title {
+  color: #0c4a6e;
+}
+
+html[data-theme="kids"] .modal-subtitle,
+html[data-theme="kids"] .report-subtitle {
+  color: #0369a1;
+}
+
+html[data-theme="kids"] .btn-cancel-modal {
+  background: #f0f9ff;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+
+/* --------------------------------------------------------------------------
+   2. SIMLIFE GLOBAL (Adults)
+   -------------------------------------------------------------------------- */
+html[data-theme="adults"] .sim-header {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .sim-title {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+html[data-theme="adults"] .sim-subtitle {
+  color: #475569;
+}
+
+html[data-theme="adults"] .quota-pill {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .filter-bar {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .cat-pill {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .cat-pill:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .cat-pill.cat-active {
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+  border-color: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+}
+
+html[data-theme="adults"] .sim-tab-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .sim-tab-btn.tab-active {
+  background: #f1f5f9;
+  border-color: #0f172a;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .scenario-card {
+  background: #ffffff;
+  border: 1.5px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .scenario-card:hover {
+  border-color: #0f172a;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  background: #f8fafc;
+}
+
+html[data-theme="adults"] .scenario-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .scenario-title-vi {
+  color: #0369a1;
+}
+
+html[data-theme="adults"] .scenario-roles {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .role-item {
+  color: #334155;
+}
+
+html[data-theme="adults"] .card-emoji-box {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .card-action-bar {
+  border-top: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .active-sim-arena {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .arena-top-bar {
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .arena-exit-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .arena-scenario-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .arena-npc-sub {
+  color: #475569;
+}
+
+html[data-theme="adults"] .turn-counter-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .arena-chat-scroll {
+  background: #ffffff;
+}
+
+html[data-theme="adults"] .bubble-assistant .bubble-body {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .bubble-user .bubble-body {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e3a8a;
+}
+
+html[data-theme="adults"] .bubble-name {
+  color: #475569;
+}
+
+html[data-theme="adults"] .bubble-action-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .arena-input-dock {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .dock-text-input {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .modal-card,
+html[data-theme="adults"] .report-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+}
+
+html[data-theme="adults"] .modal-title,
+html[data-theme="adults"] .report-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .modal-subtitle,
+html[data-theme="adults"] .report-subtitle {
+  color: #475569;
+}
+
+html[data-theme="adults"] .btn-cancel-modal {
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
 }
 </style>

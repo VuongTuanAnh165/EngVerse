@@ -1,15 +1,17 @@
 <script setup lang="ts">
 /**
  * EngVerse - AI Free Simulator (/play/free-simulator)
- * Lifelong conversational simulator with preset/custom scenarios and CEFR evaluation.
+ * Lifelong conversational simulator with preset/custom scenarios, adaptive difficulty,
+ * voice input/output integration, and CEFR evaluation.
  * Strictly typed (0 any), Vue 3.5 script setup, 1-Doc-Per-User architecture.
- * Reference: docs/roadmap_stage_depth_and_endgame.md - Section 6.4 & Task 4.1
+ * Reference: docs/roadmap_stage_depth_and_endgame.md - Section 6.4, Tasks 4.1 & 4.2
  */
 
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick, watch, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '~/stores/user';
 import { useSoundEffects } from '~/composables/useSoundEffects';
+import { useSpeechEngine } from '~/composables/useSpeechEngine';
 import {
   type SimulatorCategory,
   type CEFRLevel,
@@ -18,6 +20,9 @@ import {
   type FreeSimSessionRecord,
   type SimulationTurnsOption,
   type NpcPersonaType,
+  type FreeSimChatMessage,
+  type FreeSimChatPayload,
+  type FreeSimChatResponse,
   CATEGORY_METAS,
   PRESET_SCENARIOS,
   CUSTOM_PROMPT_SUGGESTIONS,
@@ -26,13 +31,26 @@ import {
 
 const router = useRouter();
 const userStore = useUserStore();
-const { playSound, playClick } = useSoundEffects();
+const { playSound, playClick, playCorrect, playVictoryFanfare } = useSoundEffects();
+const {
+  speak,
+  stopSpeaking,
+  startListening,
+  stopListening,
+  isListening,
+  currentTranscript,
+  isSttSupported,
+  isTtsSupported,
+} = useSpeechEngine();
 
 // ---------------------------------------------------------------------------
-// Tabs & Navigation State
+// Tabs & Screen View State
 // ---------------------------------------------------------------------------
 type ActiveTab = 'presets' | 'custom' | 'history';
 const activeTab = ref<ActiveTab>('presets');
+
+// Simulation Arena Active Mode
+const isSimulating = ref<boolean>(false);
 
 function setTab(tab: ActiveTab): void {
   playClick();
@@ -59,15 +77,12 @@ const searchQuery = ref<string>('');
 
 const filteredScenarios = computed<PresetScenario[]>(() => {
   return PRESET_SCENARIOS.filter((scenario) => {
-    // Category filter
     if (selectedCategory.value !== 'all' && scenario.category !== selectedCategory.value) {
       return false;
     }
-    // CEFR filter
     if (selectedCefrFilter.value !== 'all' && scenario.targetCefr !== selectedCefrFilter.value) {
       return false;
     }
-    // Search query
     if (searchQuery.value.trim()) {
       const q = searchQuery.value.toLowerCase().trim();
       const matchTitle = scenario.title.toLowerCase().includes(q);
@@ -128,15 +143,11 @@ function applyQuickPrompt(item: typeof CUSTOM_PROMPT_SUGGESTIONS[0]): void {
 const isBriefingOpen = ref<boolean>(false);
 const activeScenarioBrief = ref<PresetScenario | null>(null);
 const activeCustomBrief = ref<CustomScenarioConfig | null>(null);
-const isReadyToStart = ref<boolean>(false);
-const readyMessage = ref<string>('');
 
 function openPresetBriefing(scenario: PresetScenario): void {
   playClick();
   activeScenarioBrief.value = scenario;
   activeCustomBrief.value = null;
-  isReadyToStart.value = false;
-  readyMessage.value = '';
   isBriefingOpen.value = true;
 }
 
@@ -153,8 +164,6 @@ function openCustomBriefing(): void {
     npcPersona: customPersona.value,
   };
   activeScenarioBrief.value = null;
-  isReadyToStart.value = false;
-  readyMessage.value = '';
   isBriefingOpen.value = true;
 }
 
@@ -163,19 +172,272 @@ function closeBriefing(): void {
   isBriefingOpen.value = false;
   activeScenarioBrief.value = null;
   activeCustomBrief.value = null;
-  isReadyToStart.value = false;
+}
+
+// ---------------------------------------------------------------------------
+// Active Live Simulation Conversation Engine (Task 4.2)
+// ---------------------------------------------------------------------------
+const currentSimTurn = ref<number>(1);
+const maxSimTurns = ref<number>(12);
+const activeMessages = ref<FreeSimChatMessage[]>([]);
+const isAiThinking = ref<boolean>(false);
+const userSpeechInput = ref<string>('');
+const currentStarterChips = ref<string[]>([]);
+const isSimulationCompleted = ref<boolean>(false);
+const simErrorMessage = ref<string>('');
+const translatedTurns = ref<Record<number, boolean>>({});
+const chatContainerRef = ref<HTMLElement | null>(null);
+
+// Session active metadata
+const simTitle = ref<string>('');
+const simCategory = ref<SimulatorCategory | 'custom'>('custom');
+const simNpcName = ref<string>('Alex');
+const simNpcRole = ref<string>('Đối tác đàm thoại');
+const simNpcAvatar = ref<string>('🤖');
+const simUserRole = ref<string>('Người giao tiếp');
+const simTargetCefr = ref<CEFRLevel | 'auto'>('auto');
+const simPersona = ref<NpcPersonaType>('friendly');
+const simObjectives = ref<string[]>([]);
+const simRecommendedVocab = ref<PresetScenario['recommendedVocab']>([]);
+
+// Sync speech recognition transcript
+watch(currentTranscript, (transcript) => {
+  if (transcript && isListening.value) {
+    userSpeechInput.value = transcript;
+  }
+});
+
+function toggleMic(): void {
+  if (isListening.value) {
+    stopListening();
+    playClick();
+  } else {
+    userSpeechInput.value = '';
+    startListening('en-US');
+    playClick();
+  }
+}
+
+function scrollToBottom(): void {
+  nextTick(() => {
+    if (chatContainerRef.value) {
+      chatContainerRef.value.scrollTop = chatContainerRef.value.scrollHeight;
+    }
+  });
+}
+
+function toggleTranslation(idx: number): void {
+  playClick();
+  translatedTurns.value[idx] = !translatedTurns.value[idx];
+}
+
+function playSpeechAudio(text: string): void {
+  if (!text) return;
+  stopSpeaking();
+  speak(text);
+}
+
+function selectStarterChip(chip: string): void {
+  playClick();
+  userSpeechInput.value = chip;
 }
 
 function startSimulationSession(): void {
   if (isQuotaExhausted.value) {
     playSound('wrong');
-    readyMessage.value = 'Bạn đã dùng hết 5 lượt giả lập miễn phí hôm nay. Vui lòng quay lại vào ngày mai (reset 00:00 GMT+7)!';
+    alert('Bạn đã dùng hết 5 lượt giả lập miễn phí hôm nay. Vui lòng quay lại vào ngày mai (00:00 GMT+7)!');
     return;
   }
 
-  playSound('click');
-  isReadyToStart.value = true;
-  readyMessage.value = 'Đang thiết lập phòng hội thoại AI... Tính năng đàm thoại trực tiếp thời gian thực (Task 4.2) đang kết nối Gemini Engine!';
+  playClick();
+  isBriefingOpen.value = false;
+  simErrorMessage.value = '';
+  isSimulationCompleted.value = false;
+  currentSimTurn.value = 1;
+  activeMessages.value = [];
+  translatedTurns.value = {};
+
+  if (activeScenarioBrief.value) {
+    const s = activeScenarioBrief.value;
+    simTitle.value = s.title;
+    simCategory.value = s.category;
+    simNpcName.value = s.npcName;
+    simNpcRole.value = s.npcRole;
+    simNpcAvatar.value = s.npcAvatar;
+    simUserRole.value = s.userRole;
+    simTargetCefr.value = s.targetCefr;
+    simPersona.value = 'friendly';
+    maxSimTurns.value = s.suggestedTurns;
+    simObjectives.value = s.objectives;
+    simRecommendedVocab.value = s.recommendedVocab;
+
+    // Initial opening message from NPC
+    activeMessages.value.push({
+      role: 'assistant',
+      content: s.sampleOpening,
+      vietnameseTranslation: 'Xin chào! Rất vui được gặp bạn hôm nay. Chúng ta bắt đầu nhé?',
+      turnIndex: 0,
+      createdAt: Date.now(),
+    });
+
+    currentStarterChips.value = [
+      `Hello ${s.npcName}, thank you for meeting with me.`,
+      `Good day! I am here regarding our appointment.`,
+      `Hi there, could you help me with this matter?`,
+    ];
+
+    if (isTtsSupported.value) {
+      playSpeechAudio(s.sampleOpening);
+    }
+  } else if (activeCustomBrief.value) {
+    const c = activeCustomBrief.value;
+    simTitle.value = c.userPrompt.slice(0, 45) + (c.userPrompt.length > 45 ? '...' : '');
+    simCategory.value = 'custom';
+    simNpcName.value = c.npcName;
+    simNpcRole.value = c.npcRole;
+    simNpcAvatar.value = '✨';
+    simUserRole.value = c.userRole;
+    simTargetCefr.value = c.targetCefr;
+    simPersona.value = c.npcPersona;
+    maxSimTurns.value = c.turnsCount;
+    simObjectives.value = ['Giao tiếp trôi chảy và đạt mục tiêu theo tình huống.'];
+    simRecommendedVocab.value = [];
+
+    const opening = `Hello! I am ${c.npcName}, your ${c.npcRole}. I am ready to practice this scenario with you. How can I help you today?`;
+    activeMessages.value.push({
+      role: 'assistant',
+      content: opening,
+      vietnameseTranslation: `Xin chào! Tôi là ${c.npcName}. Tôi đã sẵn sàng giả lập tình huống cùng bạn!`,
+      turnIndex: 0,
+      createdAt: Date.now(),
+    });
+
+    currentStarterChips.value = [
+      `Hello ${c.npcName}, I would like to discuss this with you.`,
+      `Hi, thanks for taking the time to speak with me.`,
+      `Good morning, I have a few questions for you.`,
+    ];
+
+    if (isTtsSupported.value) {
+      playSpeechAudio(opening);
+    }
+  }
+
+  isSimulating.value = true;
+  scrollToBottom();
+}
+
+async function sendUserTurn(): Promise<void> {
+  const text = userSpeechInput.value.trim();
+  if (!text || isAiThinking.value) return;
+
+  if (isListening.value) {
+    stopListening();
+  }
+
+  playClick();
+  simErrorMessage.value = '';
+
+  // 1. Append user message to active conversation
+  const userTurnIndex = currentSimTurn.value;
+  activeMessages.value.push({
+    role: 'user',
+    content: text,
+    turnIndex: userTurnIndex,
+    createdAt: Date.now(),
+  });
+
+  userSpeechInput.value = '';
+  isAiThinking.value = true;
+  scrollToBottom();
+
+  try {
+    const payload: FreeSimChatPayload = {
+      scenarioId: activeScenarioBrief.value?.id,
+      scenarioTitle: simTitle.value,
+      category: simCategory.value,
+      userRole: simUserRole.value,
+      npcRole: simNpcRole.value,
+      npcName: simNpcName.value,
+      npcPersona: simPersona.value,
+      targetCefr: simTargetCefr.value,
+      turnsCount: maxSimTurns.value as SimulationTurnsOption,
+      currentTurn: userTurnIndex,
+      playerInput: text,
+      conversationHistory: activeMessages.value.map((m) => ({
+        role: m.role,
+        content: m.content,
+        vietnameseTranslation: m.vietnameseTranslation,
+        turnIndex: m.turnIndex,
+      })),
+      recommendedVocab: simRecommendedVocab.value,
+      objectives: simObjectives.value,
+      idToken: userStore.user.isGuest ? undefined : undefined,
+      guestId: userStore.user.uid,
+    };
+
+    const res = await $fetch<FreeSimChatResponse>('/api/game/free-simulator/chat', {
+      method: 'POST',
+      body: payload,
+    });
+
+    if (res && res.success) {
+      playCorrect();
+
+      // Update the user's turn with detected CEFR
+      const lastUserMsg = activeMessages.value[activeMessages.value.length - 1];
+      if (lastUserMsg && lastUserMsg.role === 'user') {
+        lastUserMsg.detectedCefrTurn = res.detectedCefrTurn;
+      }
+
+      // Append assistant's response
+      activeMessages.value.push({
+        role: 'assistant',
+        content: res.npcReply,
+        vietnameseTranslation: res.vietnameseTranslation,
+        grammarCorrection: res.grammarCorrection,
+        detectedCefrTurn: res.detectedCefrTurn,
+        quickStarterChips: res.quickStarterChips,
+        turnIndex: userTurnIndex,
+        createdAt: Date.now(),
+      });
+
+      // Update starter chips for next turn
+      currentStarterChips.value = res.quickStarterChips || [];
+
+      // Automatically speak NPC reply if TTS is supported
+      if (isTtsSupported.value) {
+        playSpeechAudio(res.npcReply);
+      }
+
+      // Check if conversation completed
+      if (res.isConversationCompleted || currentSimTurn.value >= maxSimTurns.value) {
+        isSimulationCompleted.value = true;
+        playVictoryFanfare();
+      } else {
+        currentSimTurn.value++;
+      }
+    } else {
+      simErrorMessage.value = 'Không thể kết nối đến máy chủ AI. Đang sử dụng phản hồi dự phòng!';
+    }
+  } catch (err: unknown) {
+    console.error('[FreeSimulator] Chat error:', err);
+    simErrorMessage.value = 'Lỗi kết nối AI. Vui lòng kiểm tra mạng hoặc thử lại!';
+    playSound('wrong');
+  } finally {
+    isAiThinking.value = false;
+    scrollToBottom();
+  }
+}
+
+function exitSimulationArena(): void {
+  playClick();
+  stopSpeaking();
+  if (isListening.value) {
+    stopListening();
+  }
+  isSimulating.value = false;
+  activeMessages.value = [];
 }
 
 // ---------------------------------------------------------------------------
@@ -210,7 +472,6 @@ function replayFromRecord(record: FreeSimSessionRecord): void {
       return;
     }
   }
-  // Fallback to custom
   customPrompt.value = `Luyện tập lại tình huống: ${record.scenarioTitle}`;
   activeTab.value = 'custom';
 }
@@ -250,576 +511,802 @@ function goBackHome(): void {
 onMounted(() => {
   userStore.initUserSession();
 });
+
+onUnmounted(() => {
+  stopSpeaking();
+  if (isListening.value) {
+    stopListening();
+  }
+});
 </script>
 
 <template>
   <div class="free-sim-page">
-    <!-- Background Ambient Glows -->
+    <!-- Ambient Glows -->
     <div class="ambient-glow glow-cyan" aria-hidden="true" />
     <div class="ambient-glow glow-purple" aria-hidden="true" />
 
     <div class="sim-container">
-      <!-- 1. Top Navigation & Status Bar -->
-      <header class="sim-header theme-card">
-        <div class="sim-header-left">
-          <button
-            type="button"
-            class="back-btn"
-            aria-label="Quay lại trang chủ"
-            @click="goBackHome"
-          >
-            <span class="back-arrow">←</span> Trang Chủ
-          </button>
-          <div class="title-cluster">
-            <div class="title-row">
-              <span class="sim-hero-emoji">🎙️</span>
-              <h1 class="sim-title">AI Free Simulator</h1>
-              <span class="sim-tag-beta">ENDGAME • LIFELONG</span>
-            </div>
-            <p class="sim-subtitle">
-              Phòng Giả Lập Giao Tiếp Tự Do Trước Mọi Tình Huống Đời Thực & Đánh Giá CEFR Toàn Diện
-            </p>
-          </div>
-        </div>
-
-        <div class="sim-header-right">
-          <!-- Daily Quota Counter Pill -->
-          <div
-            class="quota-pill"
-            :class="{ 'quota-empty': isQuotaExhausted }"
-            title="Giới hạn 5 phiên giả lập mỗi ngày (Reset 00:00 GMT+7)"
-          >
-            <div class="quota-icon">⚡</div>
-            <div class="quota-text">
-              <div class="quota-label">LƯỢT MIỄN PHÍ HÔM NAY</div>
-              <div class="quota-val">
-                <strong>{{ dailyQuotaRemaining }}</strong> / {{ MAX_DAILY_FREE_SIM_SESSIONS }} phiên
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <!-- 2. Main Navigation Tabs -->
-      <nav class="sim-tab-nav" aria-label="Bộ chọn chế độ giả lập">
-        <button
-          type="button"
-          class="sim-tab-btn"
-          :class="{ 'tab-active': activeTab === 'presets' }"
-          @click="setTab('presets')"
-        >
-          <span class="tab-emoji">🎯</span>
-          <span class="tab-label">Kịch Bản Có Sẵn (Presets)</span>
-          <span class="tab-badge">{{ PRESET_SCENARIOS.length }}</span>
-        </button>
-
-        <button
-          type="button"
-          class="sim-tab-btn"
-          :class="{ 'tab-active': activeTab === 'custom' }"
-          @click="setTab('custom')"
-        >
-          <span class="tab-emoji">✍️</span>
-          <span class="tab-label">Tự Nhập Tình Huống</span>
-          <span class="tab-badge-new">TÙY BIẾN</span>
-        </button>
-
-        <button
-          type="button"
-          class="sim-tab-btn"
-          :class="{ 'tab-active': activeTab === 'history' }"
-          @click="setTab('history')"
-        >
-          <span class="tab-emoji">📜</span>
-          <span class="tab-label">Lịch Sử & Báo Cáo CEFR</span>
-          <span v-if="historyRecords.length > 0" class="tab-badge">{{ historyRecords.length }}</span>
-        </button>
-      </nav>
-
-      <!-- 3. TAB CONTENT -->
-
-      <!-- TAB 1: PRESET SCENARIOS -->
-      <section v-if="activeTab === 'presets'" class="presets-section">
-        <!-- Search & Filter Bar -->
-        <div class="filter-bar theme-card">
-          <!-- Category Filter Pills -->
-          <div class="category-pills-row">
+      <!-- =================================================================== -->
+      <!-- VIEW 1: ACTIVE LIVE SIMULATION ARENA -->
+      <!-- =================================================================== -->
+      <main v-if="isSimulating" class="active-sim-arena theme-card">
+        <!-- Top Arena Bar -->
+        <header class="arena-top-bar">
+          <div class="arena-bar-left">
             <button
               type="button"
-              class="cat-pill"
-              :class="{ 'cat-active': selectedCategory === 'all' }"
-              @click="selectedCategory = 'all'; playClick()"
+              class="arena-exit-btn"
+              aria-label="Thoát phòng giả lập"
+              @click="exitSimulationArena"
             >
-              🌐 Tất Cả
+              ← Thoát
             </button>
-            <button
-              v-for="cat in CATEGORY_METAS"
-              :key="cat.id"
-              type="button"
-              class="cat-pill"
-              :class="{ 'cat-active': selectedCategory === cat.id }"
-              @click="selectedCategory = cat.id; playClick()"
-            >
-              <span>{{ cat.emoji }}</span>
-              <span>{{ cat.name }}</span>
-            </button>
-          </div>
-
-          <!-- Secondary Filters Row (CEFR & Keyword Search) -->
-          <div class="secondary-filter-row">
-            <div class="cefr-filter-group">
-              <span class="filter-label">Chuẩn CEFR:</span>
-              <button
-                type="button"
-                class="cefr-filter-chip"
-                :class="{ 'chip-active': selectedCefrFilter === 'all' }"
-                @click="selectedCefrFilter = 'all'; playClick()"
-              >
-                Tất cả
-              </button>
-              <button
-                v-for="lvl in (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as CEFRLevel[])"
-                :key="lvl"
-                type="button"
-                class="cefr-filter-chip"
-                :class="{ 'chip-active': selectedCefrFilter === lvl }"
-                @click="selectedCefrFilter = lvl; playClick()"
-              >
-                {{ lvl }}
-              </button>
-            </div>
-
-            <div class="search-box">
-              <span class="search-icon">🔍</span>
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Tìm kịch bản (ví dụ: hotel, phỏng vấn, visa, taxi...)"
-                class="search-input"
-              />
-              <button
-                v-if="searchQuery"
-                type="button"
-                class="clear-search-btn"
-                aria-label="Xóa tìm kiếm"
-                @click="searchQuery = ''; playClick()"
-              >
-                ✕
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Scenarios Grid -->
-        <div v-if="filteredScenarios.length > 0" class="scenarios-grid">
-          <article
-            v-for="scenario in filteredScenarios"
-            :key="scenario.id"
-            class="scenario-card theme-card"
-            @click="openPresetBriefing(scenario)"
-          >
-            <div class="card-header">
-              <div class="card-emoji-box">
-                <span class="card-emoji">{{ scenario.emoji }}</span>
-              </div>
-              <div class="card-badges">
+            <div class="arena-title-pod">
+              <div class="arena-title-row">
+                <span class="arena-icon">{{ simNpcAvatar }}</span>
+                <h2 class="arena-scenario-title">{{ simTitle }}</h2>
                 <span
                   class="cefr-level-badge"
-                  :class="getCefrBadgeClass(scenario.targetCefr)"
+                  :class="getCefrBadgeClass(simTargetCefr === 'auto' ? 'B1' : simTargetCefr)"
                 >
-                  {{ scenario.targetCefr }}
+                  {{ simTargetCefr }}
                 </span>
-                <span class="turns-badge">
-                  ⏱️ {{ scenario.suggestedTurns }} lượt
+              </div>
+              <div class="arena-npc-sub">
+                Đang trò chuyện với: <strong>{{ simNpcName }}</strong> ({{ simNpcRole }})
+              </div>
+            </div>
+          </div>
+
+          <!-- Turn Progress & Quota -->
+          <div class="arena-bar-right">
+            <div class="turn-counter-box">
+              <span class="turn-label">LƯỢT ĐỐI THOẠI</span>
+              <span class="turn-val">
+                <strong>{{ currentSimTurn }}</strong> / {{ maxSimTurns }}
+              </span>
+              <div class="turn-mini-bar">
+                <div
+                  class="turn-mini-fill"
+                  :style="{ width: `${Math.min(100, (currentSimTurn / maxSimTurns) * 100)}%` }"
+                />
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Error Alert Banner -->
+        <div v-if="simErrorMessage" class="sim-error-banner">
+          ⚠️ {{ simErrorMessage }}
+        </div>
+
+        <!-- Chat Stream Window -->
+        <div ref="chatContainerRef" class="chat-stream-window">
+          <div
+            v-for="(msg, idx) in activeMessages"
+            :key="idx"
+            class="chat-bubble-row"
+            :class="msg.role === 'user' ? 'row-user' : 'row-npc'"
+          >
+            <!-- NPC Avatar -->
+            <div v-if="msg.role === 'assistant'" class="bubble-avatar npc-avatar">
+              {{ simNpcAvatar }}
+            </div>
+
+            <!-- Bubble Content -->
+            <div class="bubble-pod" :class="msg.role === 'user' ? 'bubble-user' : 'bubble-npc'">
+              <div class="bubble-header">
+                <span class="sender-name">
+                  {{ msg.role === 'user' ? simUserRole : simNpcName }}
                 </span>
+                <span v-if="msg.detectedCefrTurn" class="instant-cefr-chip">
+                  CEFR: {{ msg.detectedCefrTurn }}
+                </span>
+              </div>
+
+              <!-- Message Text -->
+              <p class="bubble-text">{{ msg.content }}</p>
+
+              <!-- Optional Grammar Correction -->
+              <div v-if="msg.grammarCorrection" class="bubble-grammar-tip">
+                <span class="grammar-icon">💡</span>
+                <span class="grammar-text"><strong>Gợi ý ngữ pháp:</strong> {{ msg.grammarCorrection }}</span>
+              </div>
+
+              <!-- Translated Text (Collapsible) -->
+              <div v-if="msg.vietnameseTranslation && translatedTurns[idx]" class="bubble-translation">
+                🇻🇳 {{ msg.vietnameseTranslation }}
+              </div>
+
+              <!-- Action Bar for Bubble -->
+              <div v-if="msg.role === 'assistant'" class="bubble-action-bar">
+                <button
+                  type="button"
+                  class="bubble-action-btn"
+                  title="Nghe phát âm tiếng Anh"
+                  @click="playSpeechAudio(msg.content)"
+                >
+                  🔊 Nghe
+                </button>
+                <button
+                  v-if="msg.vietnameseTranslation"
+                  type="button"
+                  class="bubble-action-btn"
+                  title="Dịch sang tiếng Việt"
+                  @click="toggleTranslation(idx)"
+                >
+                  🌐 {{ translatedTurns[idx] ? 'Ẩn bản dịch' : 'Xem bản dịch' }}
+                </button>
               </div>
             </div>
 
-            <div class="card-body">
-              <h3 class="scenario-title">{{ scenario.title }}</h3>
-              <div class="scenario-title-vi">{{ scenario.titleVi }}</div>
+            <!-- User Avatar -->
+            <div v-if="msg.role === 'user'" class="bubble-avatar user-avatar">
+              👤
+            </div>
+          </div>
 
-              <div class="scenario-roles">
-                <div class="role-item">
-                  <span class="role-icon">👤</span>
-                  <span class="role-text"><strong>Bạn:</strong> {{ scenario.userRole }}</span>
-                </div>
-                <div class="role-item">
-                  <span class="role-icon">{{ scenario.npcAvatar }}</span>
-                  <span class="role-text"><strong>AI:</strong> {{ scenario.npcName }} ({{ scenario.npcRole }})</span>
-                </div>
-              </div>
-
-              <p class="scenario-desc">{{ scenario.description }}</p>
-
-              <!-- Vocab Tags Preview -->
-              <div class="vocab-preview-row">
-                <span
-                  v-for="vocab in scenario.recommendedVocab.slice(0, 3)"
-                  :key="vocab.word"
-                  class="vocab-tag"
-                  :title="vocab.meaningVi"
-                >
-                  ✨ {{ vocab.word }}
-                </span>
-                <span v-if="scenario.recommendedVocab.length > 3" class="vocab-more">
-                  +{{ scenario.recommendedVocab.length - 3 }}
-                </span>
+          <!-- AI Thinking Indicator -->
+          <div v-if="isAiThinking" class="chat-bubble-row row-npc thinking-row">
+            <div class="bubble-avatar npc-avatar">{{ simNpcAvatar }}</div>
+            <div class="bubble-pod bubble-npc thinking-pod">
+              <span class="thinking-text">{{ simNpcName }} đang suy nghĩ & phân tích CEFR...</span>
+              <div class="typing-dots">
+                <span class="dot" />
+                <span class="dot" />
+                <span class="dot" />
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="card-footer">
-              <div class="stars-rating" :title="`Độ khó: ${scenario.difficultyRating}/5 sao`">
-                <span v-for="n in 5" :key="n" class="star" :class="{ 'star-filled': n <= scenario.difficultyRating }">
-                  ★
-                </span>
-              </div>
+        <!-- Simulation Completed Celebration Card -->
+        <div v-if="isSimulationCompleted" class="session-completed-card">
+          <div class="completed-hero">
+            <span class="completed-emoji">🏆</span>
+            <div>
+              <h3 class="completed-title">Phiên Giả Lập Hoàn Tất!</h3>
+              <p class="completed-desc">
+                Bạn đã hoàn thành trọn vẹn {{ maxSimTurns }} lượt hội thoại tình huống "{{ simTitle }}".
+              </p>
+            </div>
+          </div>
+          <div class="completed-actions">
+            <button
+              type="button"
+              class="theme-btn-primary completed-btn"
+              @click="exitSimulationArena"
+            >
+              ← Về Danh Sách Kịch Bản
+            </button>
+          </div>
+        </div>
+
+        <!-- Input & Starter Chips Bar (Only shown when not completed) -->
+        <footer v-if="!isSimulationCompleted" class="arena-input-footer">
+          <!-- Starter Chips Row -->
+          <div v-if="currentStarterChips.length > 0 && !isAiThinking" class="starter-chips-row">
+            <span class="chips-label">💡 Gợi ý câu nói tiếp:</span>
+            <div class="chips-list">
               <button
+                v-for="(chip, cIdx) in currentStarterChips"
+                :key="cIdx"
                 type="button"
-                class="start-card-btn"
-                aria-label="Chọn kịch bản này"
+                class="starter-chip-btn"
+                @click="selectStarterChip(chip)"
               >
-                Vào Giả Lập →
+                {{ chip }}
               </button>
             </div>
-          </article>
-        </div>
+          </div>
 
-        <!-- Empty State for Search -->
-        <div v-else class="empty-state theme-card">
-          <div class="empty-emoji">🔍</div>
-          <h3 class="empty-title">Không tìm thấy kịch bản phù hợp</h3>
-          <p class="empty-desc">
-            Hãy thử tìm bằng từ khóa khác hoặc chuyển sang tab "Tự Nhập Tình Huống" để tạo kịch bản theo ý muốn của bạn!
-          </p>
-          <button
-            type="button"
-            class="theme-btn-primary empty-action-btn"
-            @click="selectedCategory = 'all'; selectedCefrFilter = 'all'; searchQuery = ''; playClick()"
-          >
-            Đặt lại bộ lọc
-          </button>
-        </div>
-      </section>
+          <!-- Controls Input Bar -->
+          <div class="input-controls-row">
+            <!-- Voice Input Mic Button -->
+            <button
+              v-if="isSttSupported"
+              type="button"
+              class="mic-toggle-btn"
+              :class="{ 'mic-active': isListening }"
+              :title="isListening ? 'Bấm để dừng thu âm' : 'Bấm để nói bằng Microphone'"
+              @click="toggleMic"
+            >
+              <span class="mic-icon">{{ isListening ? '⏹️' : '🎙️' }}</span>
+              <span class="mic-pulse" aria-hidden="true" />
+            </button>
 
-      <!-- TAB 2: CUSTOM SCENARIO BUILDER -->
-      <section v-else-if="activeTab === 'custom'" class="custom-section">
-        <div class="custom-builder-card theme-card">
-          <div class="builder-header">
-            <span class="builder-icon">✨</span>
-            <div>
-              <h2 class="builder-title">Thiết Kế Tình Huống Giả Lập Tùy Biến</h2>
-              <p class="builder-desc">
-                Nhập bất kỳ tình huống thực tế nào bạn sắp phải đối mặt (bằng tiếng Việt hoặc tiếng Anh). Gemini AI sẽ nhập vai tự nhiên và phân tích năng lực giao tiếp của bạn.
+            <!-- Text Input -->
+            <input
+              v-model="userSpeechInput"
+              type="text"
+              maxlength="150"
+              class="speech-text-input"
+              :placeholder="isListening ? 'Đang nghe giọng nói của bạn... Hãy nói to rõ...' : 'Gõ tiếng Anh hoặc bấm Mic để nói... (Enter để gửi)'"
+              :disabled="isAiThinking"
+              @keydown.enter.prevent="sendUserTurn"
+            />
+
+            <!-- Send Button -->
+            <button
+              type="button"
+              class="send-turn-btn"
+              :disabled="!userSpeechInput.trim() || isAiThinking"
+              aria-label="Gửi lượt nói"
+              @click="sendUserTurn"
+            >
+              Gửi ↵
+            </button>
+          </div>
+        </footer>
+      </main>
+
+      <!-- =================================================================== -->
+      <!-- VIEW 2: SCENARIO PICKER & HISTORY DASHBOARD -->
+      <!-- =================================================================== -->
+      <template v-else>
+        <!-- 1. Top Navigation & Status Bar -->
+        <header class="sim-header theme-card">
+          <div class="sim-header-left">
+            <button
+              type="button"
+              class="back-btn"
+              aria-label="Quay lại trang chủ"
+              @click="goBackHome"
+            >
+              <span class="back-arrow">←</span> Trang Chủ
+            </button>
+            <div class="title-cluster">
+              <div class="title-row">
+                <span class="sim-hero-emoji">🎙️</span>
+                <h1 class="sim-title">AI Free Simulator</h1>
+                <span class="sim-tag-beta">ENDGAME • LIFELONG</span>
+              </div>
+              <p class="sim-subtitle">
+                Phòng Giả Lập Giao Tiếp Tự Do Trước Mọi Tình Huống Đời Thực & Đánh Giá CEFR Toàn Diện
               </p>
             </div>
           </div>
 
-          <!-- Quick Suggestion Prompts -->
-          <div class="quick-prompts-container">
-            <span class="quick-prompt-label">💡 Gợi ý tình huống thịnh hành:</span>
-            <div class="quick-prompts-grid">
+          <div class="sim-header-right">
+            <!-- Daily Quota Counter Pill -->
+            <div
+              class="quota-pill"
+              :class="{ 'quota-empty': isQuotaExhausted }"
+              title="Giới hạn 5 phiên giả lập mỗi ngày (Reset 00:00 GMT+7)"
+            >
+              <div class="quota-icon">⚡</div>
+              <div class="quota-text">
+                <div class="quota-label">LƯỢT MIỄN PHÍ HÔM NAY</div>
+                <div class="quota-val">
+                  <strong>{{ dailyQuotaRemaining }}</strong> / {{ MAX_DAILY_FREE_SIM_SESSIONS }} phiên
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- 2. Main Navigation Tabs -->
+        <nav class="sim-tab-nav" aria-label="Bộ chọn chế độ giả lập">
+          <button
+            type="button"
+            class="sim-tab-btn"
+            :class="{ 'tab-active': activeTab === 'presets' }"
+            @click="setTab('presets')"
+          >
+            <span class="tab-emoji">🎯</span>
+            <span class="tab-label">Kịch Bản Có Sẵn (Presets)</span>
+            <span class="tab-badge">{{ PRESET_SCENARIOS.length }}</span>
+          </button>
+
+          <button
+            type="button"
+            class="sim-tab-btn"
+            :class="{ 'tab-active': activeTab === 'custom' }"
+            @click="setTab('custom')"
+          >
+            <span class="tab-emoji">✍️</span>
+            <span class="tab-label">Tự Nhập Tình Huống</span>
+            <span class="tab-badge-new">TÙY BIẾN</span>
+          </button>
+
+          <button
+            type="button"
+            class="sim-tab-btn"
+            :class="{ 'tab-active': activeTab === 'history' }"
+            @click="setTab('history')"
+          >
+            <span class="tab-emoji">📜</span>
+            <span class="tab-label">Lịch Sử & Báo Cáo CEFR</span>
+            <span v-if="historyRecords.length > 0" class="tab-badge">{{ historyRecords.length }}</span>
+          </button>
+        </nav>
+
+        <!-- 3. TAB CONTENT -->
+
+        <!-- TAB 1: PRESET SCENARIOS -->
+        <section v-if="activeTab === 'presets'" class="presets-section">
+          <!-- Search & Filter Bar -->
+          <div class="filter-bar theme-card">
+            <!-- Category Filter Pills -->
+            <div class="category-pills-row">
               <button
-                v-for="(item, idx) in CUSTOM_PROMPT_SUGGESTIONS"
-                :key="idx"
                 type="button"
-                class="quick-prompt-btn"
-                @click="applyQuickPrompt(item)"
+                class="cat-pill"
+                :class="{ 'cat-active': selectedCategory === 'all' }"
+                @click="selectedCategory = 'all'; playClick()"
               >
-                {{ item.label }}
+                🌐 Tất Cả
+              </button>
+              <button
+                v-for="cat in CATEGORY_METAS"
+                :key="cat.id"
+                type="button"
+                class="cat-pill"
+                :class="{ 'cat-active': selectedCategory === cat.id }"
+                @click="selectedCategory = cat.id; playClick()"
+              >
+                <span>{{ cat.emoji }}</span>
+                <span>{{ cat.name }}</span>
               </button>
             </div>
-          </div>
 
-          <!-- Prompt Input -->
-          <div class="form-group">
-            <div class="form-label-row">
-              <label for="customPromptInput" class="form-label">
-                Mô tả tình huống bạn muốn luyện tập:
-              </label>
-              <span class="char-count">{{ customPrompt.length }}/300</span>
-            </div>
-            <textarea
-              id="customPromptInput"
-              v-model="customPrompt"
-              maxlength="300"
-              rows="4"
-              class="custom-textarea"
-              placeholder="Ví dụ: Tôi sắp đi phỏng vấn xin Visa du lịch Mỹ tại Đại sứ quán. Hãy đóng vai viên chức lãnh sự quán kiểm tra lý do và ràng buộc tài chính của tôi..."
-            />
-          </div>
-
-          <!-- Granular Configuration Grid -->
-          <div class="config-grid">
-            <!-- 1. Target CEFR -->
-            <div class="config-item">
-              <label class="config-label">Mục tiêu cấp độ CEFR:</label>
-              <div class="cefr-select-row">
+            <!-- Secondary Filters Row (CEFR & Keyword Search) -->
+            <div class="secondary-filter-row">
+              <div class="cefr-filter-group">
+                <span class="filter-label">Chuẩn CEFR:</span>
                 <button
                   type="button"
-                  class="select-pill"
-                  :class="{ 'pill-selected': customTargetCefr === 'auto' }"
-                  @click="customTargetCefr = 'auto'; playClick()"
+                  class="cefr-filter-chip"
+                  :class="{ 'chip-active': selectedCefrFilter === 'all' }"
+                  @click="selectedCefrFilter = 'all'; playClick()"
                 >
-                  ⚡ Tự động (Theo cấp độ bạn)
+                  Tất cả
                 </button>
                 <button
                   v-for="lvl in (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as CEFRLevel[])"
                   :key="lvl"
                   type="button"
-                  class="select-pill"
-                  :class="{ 'pill-selected': customTargetCefr === lvl }"
-                  @click="customTargetCefr = lvl; playClick()"
+                  class="cefr-filter-chip"
+                  :class="{ 'chip-active': selectedCefrFilter === lvl }"
+                  @click="selectedCefrFilter = lvl; playClick()"
                 >
                   {{ lvl }}
                 </button>
               </div>
-            </div>
 
-            <!-- 2. Simulation Turns -->
-            <div class="config-item">
-              <label class="config-label">Số lượt đối thoại:</label>
-              <div class="turns-select-row">
+              <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="Tìm kịch bản (ví dụ: hotel, phỏng vấn, visa, taxi...)"
+                  class="search-input"
+                />
                 <button
+                  v-if="searchQuery"
                   type="button"
-                  class="select-pill"
-                  :class="{ 'pill-selected': customTurnsCount === 8 }"
-                  @click="customTurnsCount = 8; playClick()"
+                  class="clear-search-btn"
+                  aria-label="Xóa tìm kiếm"
+                  @click="searchQuery = ''; playClick()"
                 >
-                  ⚡ 8 lượt (Nhanh - 5 phút)
-                </button>
-                <button
-                  type="button"
-                  class="select-pill"
-                  :class="{ 'pill-selected': customTurnsCount === 12 }"
-                  @click="customTurnsCount = 12; playClick()"
-                >
-                  🎯 12 lượt (Tiêu chuẩn - 8 phút)
-                </button>
-                <button
-                  type="button"
-                  class="select-pill"
-                  :class="{ 'pill-selected': customTurnsCount === 15 }"
-                  @click="customTurnsCount = 15; playClick()"
-                >
-                  🏆 15 lượt (Chuyên sâu - 12 phút)
+                  ✕
                 </button>
               </div>
             </div>
-
-            <!-- 3. Persona / Tone of AI -->
-            <div class="config-item full-width">
-              <label class="config-label">Phong thái & Thái độ của AI:</label>
-              <div class="persona-cards-row">
-                <button
-                  type="button"
-                  class="persona-card"
-                  :class="{ 'persona-selected': customPersona === 'friendly' }"
-                  @click="customPersona = 'friendly'; playClick()"
-                >
-                  <span class="persona-icon">🤝</span>
-                  <div class="persona-info">
-                    <span class="persona-title">Thân Thiện & Khích Lệ</span>
-                    <span class="persona-desc">Nói chậm rãi, động viên và khéo léo gợi mở từ vựng.</span>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  class="persona-card"
-                  :class="{ 'persona-selected': customPersona === 'professional' }"
-                  @click="customPersona = 'professional'; playClick()"
-                >
-                  <span class="persona-icon">👔</span>
-                  <div class="persona-info">
-                    <span class="persona-title">Chuyên Nghiệp & Điềm Đạm</span>
-                    <span class="persona-desc">Phong thái công sở chuẩn mực, phản hồi rõ ràng, thực tế.</span>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  class="persona-card"
-                  :class="{ 'persona-selected': customPersona === 'challenging' }"
-                  @click="customPersona = 'challenging'; playClick()"
-                >
-                  <span class="persona-icon">⚡</span>
-                  <div class="persona-info">
-                    <span class="persona-title">Thử Thách & Khắt Khe</span>
-                    <span class="persona-desc">Truy vấn dồn dập, thử phản xạ tự nhiên và phản biện sắc bén.</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <!-- 4. Roles input -->
-            <div class="config-item">
-              <label for="customUserRoleInput" class="config-label">Vai trò của bạn (User Role):</label>
-              <input
-                id="customUserRoleInput"
-                v-model="customUserRole"
-                type="text"
-                class="form-input"
-                placeholder="Ví dụ: Ứng viên xin việc, Du khách, Người mua hàng..."
-              />
-            </div>
-
-            <div class="config-item">
-              <label for="customNpcRoleInput" class="config-label">Vai trò của AI (NPC Role):</label>
-              <input
-                id="customNpcRoleInput"
-                v-model="customNpcRole"
-                type="text"
-                class="form-input"
-                placeholder="Ví dụ: Giám đốc Nhân sự, Viên chức Lãnh sự, Lễ tân..."
-              />
-            </div>
           </div>
 
-          <!-- Submit Button -->
-          <div class="builder-actions">
-            <button
-              type="button"
-              class="theme-btn-primary create-sim-btn"
-              :disabled="!customPrompt.trim()"
-              @click="openCustomBriefing"
-            >
-              🚀 Xem Bản Tóm Tắt & Bắt Đầu Giả Lập
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 3: HISTORY & PROGRESS -->
-      <section v-else-if="activeTab === 'history'" class="history-section">
-        <div v-if="historyRecords.length > 0" class="history-container">
-          <div class="history-stats-banner theme-card">
-            <div class="history-stat-box">
-              <span class="stat-big-val">{{ historyRecords.length }}</span>
-              <span class="stat-label">Phiên Giả Lập Gần Nhất</span>
-            </div>
-            <div class="history-stat-box">
-              <span class="stat-big-val text-accent">
-                {{ historyRecords[0]?.achievedCefr || 'B1' }}
-              </span>
-              <span class="stat-label">Cấp Độ CEFR Gần Nhất</span>
-            </div>
-            <div class="history-stat-box">
-              <span class="stat-big-val text-gold">
-                {{ userStore.user.freeSimulator?.totalSessionsCompleted || historyRecords.length }}
-              </span>
-              <span class="stat-label">Tổng Số Buổi Luyện Tập</span>
-            </div>
-          </div>
-
-          <!-- Recent Sessions List -->
-          <div class="sessions-list">
+          <!-- Scenarios Grid -->
+          <div v-if="filteredScenarios.length > 0" class="scenarios-grid">
             <article
-              v-for="record in historyRecords"
-              :key="record.sessionId"
-              class="history-card theme-card"
+              v-for="scenario in filteredScenarios"
+              :key="scenario.id"
+              class="scenario-card theme-card"
+              @click="openPresetBriefing(scenario)"
             >
-              <div class="history-card-header">
-                <div>
-                  <div class="history-date">{{ formatSessionDate(record.completedAt) }}</div>
-                  <h3 class="history-title">{{ record.scenarioTitle }}</h3>
+              <div class="card-header">
+                <div class="card-emoji-box">
+                  <span class="card-emoji">{{ scenario.emoji }}</span>
                 </div>
-                <div class="history-cefr-badge" :class="getCefrBadgeClass(record.achievedCefr)">
-                  {{ record.achievedCefr }}
-                </div>
-              </div>
-
-              <!-- Score Bars -->
-              <div class="history-scores-grid">
-                <div class="score-bar-item">
-                  <div class="score-label-row">
-                    <span>📚 Vốn từ (Lexical)</span>
-                    <strong>{{ record.scorecard.lexicalResource.score }}%</strong>
-                  </div>
-                  <div class="progress-track">
-                    <div
-                      class="progress-fill fill-cyan"
-                      :style="{ width: `${record.scorecard.lexicalResource.score}%` }"
-                    />
-                  </div>
-                </div>
-
-                <div class="score-bar-item">
-                  <div class="score-label-row">
-                    <span>📝 Ngữ pháp (Grammar)</span>
-                    <strong>{{ record.scorecard.grammaticalAccuracy.score }}%</strong>
-                  </div>
-                  <div class="progress-track">
-                    <div
-                      class="progress-fill fill-purple"
-                      :style="{ width: `${record.scorecard.grammaticalAccuracy.score}%` }"
-                    />
-                  </div>
-                </div>
-
-                <div class="score-bar-item">
-                  <div class="score-label-row">
-                    <span>🗣️ Phát âm (Pronunciation)</span>
-                    <strong>{{ record.scorecard.pronunciation.score }}%</strong>
-                  </div>
-                  <div class="progress-track">
-                    <div
-                      class="progress-fill fill-emerald"
-                      :style="{ width: `${record.scorecard.pronunciation.score}%` }"
-                    />
-                  </div>
-                </div>
-
-                <div class="score-bar-item">
-                  <div class="score-label-row">
-                    <span>🎯 Năng lực giao tiếp</span>
-                    <strong>{{ record.scorecard.communicativeCompetence.score }}%</strong>
-                  </div>
-                  <div class="progress-track">
-                    <div
-                      class="progress-fill fill-amber"
-                      :style="{ width: `${record.scorecard.communicativeCompetence.score}%` }"
-                    />
-                  </div>
+                <div class="card-badges">
+                  <span
+                    class="cefr-level-badge"
+                    :class="getCefrBadgeClass(scenario.targetCefr)"
+                  >
+                    {{ scenario.targetCefr }}
+                  </span>
+                  <span class="turns-badge">
+                    ⏱️ {{ scenario.suggestedTurns }} lượt
+                  </span>
                 </div>
               </div>
 
-              <div class="history-card-actions">
+              <div class="card-body">
+                <h3 class="scenario-title">{{ scenario.title }}</h3>
+                <div class="scenario-title-vi">{{ scenario.titleVi }}</div>
+
+                <div class="scenario-roles">
+                  <div class="role-item">
+                    <span class="role-icon">👤</span>
+                    <span class="role-text"><strong>Bạn:</strong> {{ scenario.userRole }}</span>
+                  </div>
+                  <div class="role-item">
+                    <span class="role-icon">{{ scenario.npcAvatar }}</span>
+                    <span class="role-text"><strong>AI:</strong> {{ scenario.npcName }} ({{ scenario.npcRole }})</span>
+                  </div>
+                </div>
+
+                <p class="scenario-desc">{{ scenario.description }}</p>
+
+                <!-- Vocab Tags Preview -->
+                <div class="vocab-preview-row">
+                  <span
+                    v-for="vocab in scenario.recommendedVocab.slice(0, 3)"
+                    :key="vocab.word"
+                    class="vocab-tag"
+                    :title="vocab.meaningVi"
+                  >
+                    ✨ {{ vocab.word }}
+                  </span>
+                  <span v-if="scenario.recommendedVocab.length > 3" class="vocab-more">
+                    +{{ scenario.recommendedVocab.length - 3 }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <div class="stars-rating" :title="`Độ khó: ${scenario.difficultyRating}/5 sao`">
+                  <span v-for="n in 5" :key="n" class="star" :class="{ 'star-filled': n <= scenario.difficultyRating }">
+                    ★
+                  </span>
+                </div>
                 <button
                   type="button"
-                  class="btn-secondary-sm"
-                  @click="viewRecordDetails(record)"
+                  class="start-card-btn"
+                  aria-label="Chọn kịch bản này"
                 >
-                  🔍 Xem Báo Cáo CEFR Chi Tiết
-                </button>
-                <button
-                  type="button"
-                  class="btn-primary-sm"
-                  @click="replayFromRecord(record)"
-                >
-                  🔄 Luyện Tập Lại
+                  Vào Giả Lập →
                 </button>
               </div>
             </article>
           </div>
-        </div>
 
-        <!-- Empty State for History -->
-        <div v-else class="empty-state theme-card">
-          <div class="empty-emoji">🎓</div>
-          <h3 class="empty-title">Chưa Có Phiên Giả Lập Nào</h3>
-          <p class="empty-desc">
-            Bạn chưa thực hiện phiên giả lập nào. Hãy chọn một kịch bản hoặc nhập tình huống thực tế để nhận bảng phân tích chuẩn CEFR đầu tiên của bạn!
-          </p>
-          <button
-            type="button"
-            class="theme-btn-primary empty-action-btn"
-            @click="setTab('presets')"
-          >
-            Khám Phá Kịch Bản Ngay 🚀
-          </button>
-        </div>
-      </section>
+          <!-- Empty State for Search -->
+          <div v-else class="empty-state theme-card">
+            <div class="empty-emoji">🔍</div>
+            <h3 class="empty-title">Không tìm thấy kịch bản phù hợp</h3>
+            <p class="empty-desc">
+              Hãy thử tìm bằng từ khóa khác hoặc chuyển sang tab "Tự Nhập Tình Huống" để tạo kịch bản theo ý muốn của bạn!
+            </p>
+            <button
+              type="button"
+              class="theme-btn-primary empty-action-btn"
+              @click="selectedCategory = 'all'; selectedCefrFilter = 'all'; searchQuery = ''; playClick()"
+            >
+              Đặt lại bộ lọc
+            </button>
+          </div>
+        </section>
+
+        <!-- TAB 2: CUSTOM SCENARIO BUILDER -->
+        <section v-else-if="activeTab === 'custom'" class="custom-section">
+          <div class="custom-builder-card theme-card">
+            <div class="builder-header">
+              <span class="builder-icon">✨</span>
+              <div>
+                <h2 class="builder-title">Thiết Kế Tình Huống Giả Lập Tùy Biến</h2>
+                <p class="builder-desc">
+                  Nhập bất kỳ tình huống thực tế nào bạn sắp phải đối mặt (bằng tiếng Việt hoặc tiếng Anh). Gemini AI sẽ nhập vai tự nhiên và phân tích năng lực giao tiếp của bạn.
+                </p>
+              </div>
+            </div>
+
+            <!-- Quick Suggestion Prompts -->
+            <div class="quick-prompts-container">
+              <span class="quick-prompt-label">💡 Gợi ý tình huống thịnh hành:</span>
+              <div class="quick-prompts-grid">
+                <button
+                  v-for="(item, idx) in CUSTOM_PROMPT_SUGGESTIONS"
+                  :key="idx"
+                  type="button"
+                  class="quick-prompt-btn"
+                  @click="applyQuickPrompt(item)"
+                >
+                  {{ item.label }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Prompt Input -->
+            <div class="form-group">
+              <div class="form-label-row">
+                <label for="customPromptInput" class="form-label">
+                  Mô tả tình huống bạn muốn luyện tập:
+                </label>
+                <span class="char-count">{{ customPrompt.length }}/300</span>
+              </div>
+              <textarea
+                id="customPromptInput"
+                v-model="customPrompt"
+                maxlength="300"
+                rows="4"
+                class="custom-textarea"
+                placeholder="Ví dụ: Tôi sắp đi phỏng vấn xin Visa du lịch Mỹ tại Đại sứ quán. Hãy đóng vai viên chức lãnh sự quán kiểm tra lý do và ràng buộc tài chính của tôi..."
+              />
+            </div>
+
+            <!-- Granular Configuration Grid -->
+            <div class="config-grid">
+              <!-- 1. Target CEFR -->
+              <div class="config-item">
+                <label class="config-label">Mục tiêu cấp độ CEFR:</label>
+                <div class="cefr-select-row">
+                  <button
+                    type="button"
+                    class="select-pill"
+                    :class="{ 'pill-selected': customTargetCefr === 'auto' }"
+                    @click="customTargetCefr = 'auto'; playClick()"
+                  >
+                    ⚡ Tự động (Theo cấp độ bạn)
+                  </button>
+                  <button
+                    v-for="lvl in (['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as CEFRLevel[])"
+                    :key="lvl"
+                    type="button"
+                    class="select-pill"
+                    :class="{ 'pill-selected': customTargetCefr === lvl }"
+                    @click="customTargetCefr = lvl; playClick()"
+                  >
+                    {{ lvl }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- 2. Simulation Turns -->
+              <div class="config-item">
+                <label class="config-label">Số lượt đối thoại:</label>
+                <div class="turns-select-row">
+                  <button
+                    type="button"
+                    class="select-pill"
+                    :class="{ 'pill-selected': customTurnsCount === 8 }"
+                    @click="customTurnsCount = 8; playClick()"
+                  >
+                    ⚡ 8 lượt (Nhanh - 5 phút)
+                  </button>
+                  <button
+                    type="button"
+                    class="select-pill"
+                    :class="{ 'pill-selected': customTurnsCount === 12 }"
+                    @click="customTurnsCount = 12; playClick()"
+                  >
+                    🎯 12 lượt (Tiêu chuẩn - 8 phút)
+                  </button>
+                  <button
+                    type="button"
+                    class="select-pill"
+                    :class="{ 'pill-selected': customTurnsCount === 15 }"
+                    @click="customTurnsCount = 15; playClick()"
+                  >
+                    🏆 15 lượt (Chuyên sâu - 12 phút)
+                  </button>
+                </div>
+              </div>
+
+              <!-- 3. Persona / Tone of AI -->
+              <div class="config-item full-width">
+                <label class="config-label">Phong thái & Thái độ của AI:</label>
+                <div class="persona-cards-row">
+                  <button
+                    type="button"
+                    class="persona-card"
+                    :class="{ 'persona-selected': customPersona === 'friendly' }"
+                    @click="customPersona = 'friendly'; playClick()"
+                  >
+                    <span class="persona-icon">🤝</span>
+                    <div class="persona-info">
+                      <span class="persona-title">Thân Thiện & Khích Lệ</span>
+                      <span class="persona-desc">Nói chậm rãi, động viên và khéo léo gợi mở từ vựng.</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="persona-card"
+                    :class="{ 'persona-selected': customPersona === 'professional' }"
+                    @click="customPersona = 'professional'; playClick()"
+                  >
+                    <span class="persona-icon">👔</span>
+                    <div class="persona-info">
+                      <span class="persona-title">Chuyên Nghiệp & Điềm Đạm</span>
+                      <span class="persona-desc">Phong thái công sở chuẩn mực, phản hồi rõ ràng, thực tế.</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    class="persona-card"
+                    :class="{ 'persona-selected': customPersona === 'challenging' }"
+                    @click="customPersona = 'challenging'; playClick()"
+                  >
+                    <span class="persona-icon">⚡</span>
+                    <div class="persona-info">
+                      <span class="persona-title">Thử Thách & Khắt Khe</span>
+                      <span class="persona-desc">Truy vấn dồn dập, thử phản xạ tự nhiên và phản biện sắc bén.</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 4. Roles input -->
+              <div class="config-item">
+                <label for="customUserRoleInput" class="config-label">Vai trò của bạn (User Role):</label>
+                <input
+                  id="customUserRoleInput"
+                  v-model="customUserRole"
+                  type="text"
+                  class="form-input"
+                  placeholder="Ví dụ: Ứng viên xin việc, Du khách, Người mua hàng..."
+                />
+              </div>
+
+              <div class="config-item">
+                <label for="customNpcRoleInput" class="config-label">Vai trò của AI (NPC Role):</label>
+                <input
+                  id="customNpcRoleInput"
+                  v-model="customNpcRole"
+                  type="text"
+                  class="form-input"
+                  placeholder="Ví dụ: Giám đốc Nhân sự, Viên chức Lãnh sự, Lễ tân..."
+                />
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="builder-actions">
+              <button
+                type="button"
+                class="theme-btn-primary create-sim-btn"
+                :disabled="!customPrompt.trim()"
+                @click="openCustomBriefing"
+              >
+                🚀 Xem Bản Tóm Tắt & Bắt Đầu Giả Lập
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 3: HISTORY & PROGRESS -->
+        <section v-else-if="activeTab === 'history'" class="history-section">
+          <div v-if="historyRecords.length > 0" class="history-container">
+            <div class="history-stats-banner theme-card">
+              <div class="history-stat-box">
+                <span class="stat-big-val">{{ historyRecords.length }}</span>
+                <span class="stat-label">Phiên Giả Lập Gần Nhất</span>
+              </div>
+              <div class="history-stat-box">
+                <span class="stat-big-val text-accent">
+                  {{ historyRecords[0]?.achievedCefr || 'B1' }}
+                </span>
+                <span class="stat-label">Cấp Độ CEFR Gần Nhất</span>
+              </div>
+              <div class="history-stat-box">
+                <span class="stat-big-val text-gold">
+                  {{ userStore.user.freeSimulator?.totalSessionsCompleted || historyRecords.length }}
+                </span>
+                <span class="stat-label">Tổng Số Buổi Luyện Tập</span>
+              </div>
+            </div>
+
+            <!-- Recent Sessions List -->
+            <div class="sessions-list">
+              <article
+                v-for="record in historyRecords"
+                :key="record.sessionId"
+                class="history-card theme-card"
+              >
+                <div class="history-card-header">
+                  <div>
+                    <div class="history-date">{{ formatSessionDate(record.completedAt) }}</div>
+                    <h3 class="history-title">{{ record.scenarioTitle }}</h3>
+                  </div>
+                  <div class="history-cefr-badge" :class="getCefrBadgeClass(record.achievedCefr)">
+                    {{ record.achievedCefr }}
+                  </div>
+                </div>
+
+                <!-- Score Bars -->
+                <div class="history-scores-grid">
+                  <div class="score-bar-item">
+                    <div class="score-label-row">
+                      <span>📚 Vốn từ (Lexical)</span>
+                      <strong>{{ record.scorecard.lexicalResource.score }}%</strong>
+                    </div>
+                    <div class="progress-track">
+                      <div
+                        class="progress-fill fill-cyan"
+                        :style="{ width: `${record.scorecard.lexicalResource.score}%` }"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="score-bar-item">
+                    <div class="score-label-row">
+                      <span>📝 Ngữ pháp (Grammar)</span>
+                      <strong>{{ record.scorecard.grammaticalAccuracy.score }}%</strong>
+                    </div>
+                    <div class="progress-track">
+                      <div
+                        class="progress-fill fill-purple"
+                        :style="{ width: `${record.scorecard.grammaticalAccuracy.score}%` }"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="score-bar-item">
+                    <div class="score-label-row">
+                      <span>🗣️ Phát âm (Pronunciation)</span>
+                      <strong>{{ record.scorecard.pronunciation.score }}%</strong>
+                    </div>
+                    <div class="progress-track">
+                      <div
+                        class="progress-fill fill-emerald"
+                        :style="{ width: `${record.scorecard.pronunciation.score}%` }"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="score-bar-item">
+                    <div class="score-label-row">
+                      <span>🎯 Năng lực giao tiếp</span>
+                      <strong>{{ record.scorecard.communicativeCompetence.score }}%</strong>
+                    </div>
+                    <div class="progress-track">
+                      <div
+                        class="progress-fill fill-amber"
+                        :style="{ width: `${record.scorecard.communicativeCompetence.score}%` }"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="history-card-actions">
+                  <button
+                    type="button"
+                    class="btn-secondary-sm"
+                    @click="viewRecordDetails(record)"
+                  >
+                    🔍 Xem Báo Cáo CEFR Chi Tiết
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-primary-sm"
+                    @click="replayFromRecord(record)"
+                  >
+                    🔄 Luyện Tập Lại
+                  </button>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- Empty State for History -->
+          <div v-else class="empty-state theme-card">
+            <div class="empty-emoji">🎓</div>
+            <h3 class="empty-title">Chưa Có Phiên Giả Lập Nào</h3>
+            <p class="empty-desc">
+              Bạn chưa thực hiện phiên giả lập nào. Hãy chọn một kịch bản hoặc nhập tình huống thực tế để nhận bảng phân tích chuẩn CEFR đầu tiên của bạn!
+            </p>
+            <button
+              type="button"
+              class="theme-btn-primary empty-action-btn"
+              @click="setTab('presets')"
+            >
+              Khám Phá Kịch Bản Ngay 🚀
+            </button>
+          </div>
+        </section>
+      </template>
     </div>
 
     <!-- ======================================================================= -->
@@ -938,11 +1425,6 @@ onMounted(() => {
               <p class="opening-text">
                 "{{ activeScenarioBrief.sampleOpening }}"
               </p>
-            </div>
-
-            <!-- Ready / Info Message -->
-            <div v-if="readyMessage" class="ready-message-banner">
-              {{ readyMessage }}
             </div>
           </div>
 
@@ -1149,7 +1631,462 @@ onMounted(() => {
   margin: 0 auto;
 }
 
-/* 1. Header */
+/* =========================================================================== */
+/* ACTIVE LIVE SIMULATION ARENA STYLES */
+/* =========================================================================== */
+.active-sim-arena {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 110px);
+  max-height: 850px;
+  background: #0f172a;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  border-radius: var(--radius-lg, 16px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(6, 182, 212, 0.2);
+  overflow: hidden;
+}
+
+.arena-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  background: rgba(17, 24, 39, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.arena-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.arena-exit-btn {
+  padding: 0.45rem 0.85rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md, 8px);
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.arena-exit-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: #ef4444;
+  color: #f87171;
+}
+
+.arena-title-pod {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.arena-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.arena-icon {
+  font-size: 1.4rem;
+}
+.arena-scenario-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-primary, #ffffff);
+}
+.arena-npc-sub {
+  font-size: 0.78rem;
+  color: var(--text-secondary, #94a3b8);
+}
+.arena-npc-sub strong {
+  color: #38bdf8;
+}
+
+.turn-counter-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  min-width: 140px;
+}
+.turn-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #64748b);
+}
+.turn-val {
+  font-size: 1.05rem;
+  color: var(--text-secondary, #94a3b8);
+}
+.turn-val strong {
+  color: #38bdf8;
+  font-size: 1.2rem;
+}
+.turn-mini-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-pill, 9999px);
+  overflow: hidden;
+}
+.turn-mini-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #06b6d4, #38bdf8);
+  border-radius: var(--radius-pill, 9999px);
+  transition: width 0.4s ease;
+}
+
+.sim-error-banner {
+  padding: 0.6rem 1.25rem;
+  background: rgba(239, 68, 68, 0.2);
+  border-bottom: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Chat Stream Window */
+.chat-stream-window {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.chat-bubble-row {
+  display: flex;
+  gap: 0.85rem;
+  max-width: 80%;
+}
+.row-npc {
+  align-self: flex-start;
+}
+.row-user {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.bubble-avatar {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 1.35rem;
+  flex-shrink: 0;
+}
+.npc-avatar {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+.user-avatar {
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+.bubble-pod {
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-md, 14px);
+  position: relative;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+.bubble-npc {
+  background: #1e293b;
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  border-top-left-radius: 4px;
+}
+.bubble-user {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-top-right-radius: 4px;
+}
+
+.bubble-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+.sender-name {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #94a3b8;
+}
+.instant-cefr-chip {
+  padding: 0.15rem 0.45rem;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.bubble-text {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #ffffff;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+.bubble-grammar-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.85rem;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md, 8px);
+  font-size: 0.82rem;
+  color: #fde68a;
+  line-height: 1.4;
+}
+.grammar-icon {
+  font-size: 1rem;
+}
+
+.bubble-translation {
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.85rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 2px solid #06b6d4;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  font-style: italic;
+  line-height: 1.45;
+}
+
+.bubble-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+.bubble-action-btn {
+  padding: 0.25rem 0.6rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm, 6px);
+  color: var(--text-secondary, #94a3b8);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.bubble-action-btn:hover {
+  background: rgba(6, 182, 212, 0.2);
+  color: #38bdf8;
+  border-color: #06b6d4;
+}
+
+/* Thinking Bubble */
+.thinking-row {
+  align-self: flex-start;
+}
+.thinking-pod {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.15rem;
+}
+.thinking-text {
+  font-size: 0.82rem;
+  color: #38bdf8;
+  font-weight: 600;
+}
+.typing-dots {
+  display: flex;
+  gap: 4px;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  animation: pulse-dot 1.2s infinite ease-in-out;
+}
+.dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(0.6); opacity: 0.4; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+/* Session Completed Card */
+.session-completed-card {
+  padding: 1.5rem 2rem;
+  margin: 1rem 1.5rem;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  border-radius: var(--radius-lg, 14px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+.completed-hero {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+.completed-emoji {
+  font-size: 2.5rem;
+}
+.completed-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #34d399;
+}
+.completed-desc {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+}
+.completed-btn {
+  padding: 0.75rem 1.5rem;
+  font-weight: 700;
+}
+
+/* Arena Input Footer */
+.arena-input-footer {
+  padding: 1rem 1.5rem;
+  background: rgba(17, 24, 39, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.starter-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+.chips-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #38bdf8;
+  white-space: nowrap;
+}
+.chips-list {
+  display: flex;
+  gap: 0.5rem;
+}
+.starter-chip-btn {
+  padding: 0.35rem 0.75rem;
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: var(--radius-pill, 9999px);
+  color: #e0f2fe;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.18s ease;
+}
+.starter-chip-btn:hover {
+  background: #06b6d4;
+  color: #04101c;
+}
+
+.input-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mic-toggle-btn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+.mic-toggle-btn:hover {
+  background: rgba(6, 182, 212, 0.2);
+  border-color: #06b6d4;
+}
+.mic-toggle-btn.mic-active {
+  background: #ef4444;
+  border-color: #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+}
+.mic-icon {
+  font-size: 1.35rem;
+}
+
+.speech-text-input {
+  flex: 1;
+  padding: 0.85rem 1.25rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md, 12px);
+  color: #ffffff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.speech-text-input:focus {
+  border-color: #06b6d4;
+  box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+}
+
+.send-turn-btn {
+  padding: 0.85rem 1.4rem;
+  background: #06b6d4;
+  border: none;
+  border-radius: var(--radius-md, 12px);
+  color: #04101c;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.send-turn-btn:hover:not(:disabled) {
+  background: #22d3ee;
+  transform: translateY(-1px);
+}
+.send-turn-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* =========================================================================== */
+/* DASHBOARD & SCENARIO PICKER STYLES */
+/* =========================================================================== */
 .sim-header {
   display: flex;
   align-items: center;
@@ -2276,17 +3213,6 @@ onMounted(() => {
   color: #f8fafc;
 }
 
-.ready-message-banner {
-  padding: 0.85rem 1.25rem;
-  background: rgba(14, 165, 233, 0.15);
-  border: 1px solid rgba(14, 165, 233, 0.4);
-  border-radius: var(--radius-md, 8px);
-  color: #38bdf8;
-  font-size: 0.88rem;
-  font-weight: 600;
-  text-align: center;
-}
-
 .modal-footer {
   display: flex;
   align-items: center;
@@ -2436,6 +3362,15 @@ onMounted(() => {
   .sim-header {
     padding: 1.25rem;
   }
+  .active-sim-arena {
+    height: calc(100vh - 80px);
+  }
+  .arena-top-bar {
+    padding: 0.75rem 1rem;
+  }
+  .chat-bubble-row {
+    max-width: 92%;
+  }
   .config-grid {
     grid-template-columns: 1fr;
   }
@@ -2458,4 +3393,3 @@ onMounted(() => {
   }
 }
 </style>
-

@@ -139,8 +139,79 @@ export interface UserFreeSimulatorProgress {
   history: FreeSimSessionRecord[]; // Max 5 recent records
 }
 
+/**
+ * Single turn message in simulator conversation history
+ */
+export interface FreeSimChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  vietnameseTranslation?: string;
+  grammarCorrection?: string;
+  detectedCefrTurn?: CEFRLevel;
+  quickStarterChips?: string[];
+  turnIndex?: number;
+  createdAt?: number;
+}
+
+/**
+ * Payload sent to POST /api/game/free-simulator/chat
+ */
+export interface FreeSimChatPayload {
+  scenarioId?: string;
+  scenarioTitle: string;
+  category: SimulatorCategory | 'custom';
+  userRole: string;
+  npcRole: string;
+  npcName: string;
+  npcPersona: NpcPersonaType;
+  targetCefr: CEFRLevel | 'auto';
+  turnsCount: SimulationTurnsOption;
+  currentTurn: number;
+  playerInput: string;
+  conversationHistory: FreeSimChatMessage[];
+  recommendedVocab?: ScenarioVocabHint[];
+  objectives?: string[];
+  idToken?: string;
+  guestId?: string;
+}
+
+/**
+ * Raw JSON output parsed from LLM
+ */
+export interface FreeSimRawLlmResponse {
+  npcReply: string;
+  vietnameseTranslation: string;
+  grammarCorrection: string;
+  detectedCefrTurn: CEFRLevel;
+  quickStarterChips: string[];
+  suggestedVocabUsed: string[];
+  turnScore: number;
+  isConversationCompleted: boolean;
+}
+
+/**
+ * Server response from POST /api/game/free-simulator/chat
+ */
+export interface FreeSimChatResponse {
+  success: boolean;
+  currentTurn: number;
+  maxTurns: number;
+  isConversationCompleted: boolean;
+  npcReply: string;
+  vietnameseTranslation: string;
+  grammarCorrection?: string;
+  detectedCefrTurn: CEFRLevel;
+  quickStarterChips: string[];
+  suggestedVocabUsed: string[];
+  turnScore: number;
+  remainingSessionsToday: number;
+  usedFallback: boolean;
+  providerUsed: string;
+  latencyMs: number;
+  message?: string;
+}
+
 // ---------------------------------------------------------------------------
-// Constants & Static Metadata
 // ---------------------------------------------------------------------------
 
 export const MAX_DAILY_FREE_SIM_SESSIONS = 5;

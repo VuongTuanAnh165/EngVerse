@@ -139,7 +139,7 @@ html[data-theme="adults"] {
   --accent-text: #ffffff;
 
   /* Borders & Radius */
-  --border-color: #e2e8f0;
+  --border-color: #cbd5e1;
   --border-focus: #0f172a;
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -156,7 +156,7 @@ html[data-theme="adults"] {
 
   /* Header */
   --header-bg: rgba(248, 250, 252, 0.92);
-  --header-border: #e2e8f0;
+  --header-border: #cbd5e1;
 }
 
 /* ==========================================================================
@@ -264,6 +264,115 @@ textarea {
 .theme-btn-secondary:active {
   transform: translateY(1px);
   box-shadow: none;
+}
+
+/* ==========================================================================
+   Universe-Specific Overrides for Form Controls & Cards
+   Cyber City (Teens) retains 100% of its original cyberpunk dark aesthetics
+   ========================================================================== */
+
+/* 1. ĐẢO THẦN THOẠI (Kids) Form Controls & Cards */
+html[data-theme="kids"] .theme-card {
+  background-color: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.08);
+}
+
+html[data-theme="kids"] .theme-card:hover {
+  border-color: #f59e0b;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.16);
+}
+
+html[data-theme="kids"] input[type="text"],
+html[data-theme="kids"] input[type="search"],
+html[data-theme="kids"] input[type="email"],
+html[data-theme="kids"] input[type="password"],
+html[data-theme="kids"] input[type="number"],
+html[data-theme="kids"] textarea,
+html[data-theme="kids"] select {
+  background-color: #ffffff;
+  border: 1.5px solid #fde68a;
+  border-radius: var(--radius-md);
+  color: #3b1d07;
+  box-shadow: inset 0 1px 3px rgba(245, 158, 11, 0.06);
+  font-family: inherit;
+}
+
+html[data-theme="kids"] input[type="text"]:focus,
+html[data-theme="kids"] input[type="search"]:focus,
+html[data-theme="kids"] input[type="email"]:focus,
+html[data-theme="kids"] input[type="password"]:focus,
+html[data-theme="kids"] input[type="number"]:focus,
+html[data-theme="kids"] textarea:focus,
+html[data-theme="kids"] select:focus {
+  border-color: #f59e0b;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+  background-color: #ffffff;
+}
+
+html[data-theme="kids"] input::placeholder,
+html[data-theme="kids"] textarea::placeholder {
+  color: #b45309;
+  opacity: 0.65;
+}
+
+html[data-theme="kids"] input[type="checkbox"],
+html[data-theme="kids"] input[type="radio"] {
+  accent-color: #f59e0b;
+  cursor: pointer;
+}
+
+/* 2. SIMLIFE GLOBAL (Adults) Form Controls & Cards */
+html[data-theme="adults"] .theme-card {
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme="adults"] .theme-card:hover {
+  border-color: #94a3b8;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.1);
+}
+
+html[data-theme="adults"] input[type="text"],
+html[data-theme="adults"] input[type="search"],
+html[data-theme="adults"] input[type="email"],
+html[data-theme="adults"] input[type="password"],
+html[data-theme="adults"] input[type="number"],
+html[data-theme="adults"] textarea,
+html[data-theme="adults"] select {
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  color: #0f172a;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+  font-family: inherit;
+}
+
+html[data-theme="adults"] input[type="text"]:focus,
+html[data-theme="adults"] input[type="search"]:focus,
+html[data-theme="adults"] input[type="email"]:focus,
+html[data-theme="adults"] input[type="password"]:focus,
+html[data-theme="adults"] input[type="number"]:focus,
+html[data-theme="adults"] textarea:focus,
+html[data-theme="adults"] select:focus {
+  border-color: #0f172a;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+  background-color: #ffffff;
+}
+
+html[data-theme="adults"] input::placeholder,
+html[data-theme="adults"] textarea::placeholder {
+  color: #64748b;
+  opacity: 0.75;
+}
+
+html[data-theme="adults"] input[type="checkbox"],
+html[data-theme="adults"] input[type="radio"] {
+  accent-color: #0f172a;
+  cursor: pointer;
 }
 
 /* Smooth custom scrollbars */

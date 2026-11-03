@@ -507,5 +507,60 @@ function getRarityLabel(rarity: string): string {
   0% { transform: translateY(0); }
   100% { transform: translateY(-5px); }
 }
+
+/* ==========================================================================
+   Universe-specific Theme Customizations for Kids & Adults ONLY
+   Cyber City (Teens) retains 100% of its original cyberpunk dark aesthetics
+   ========================================================================== */
+
+/* 1. ĐẢO THẦN THOẠI (Kids) */
+html[data-theme="kids"] .card-face {
+  background-color: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.08);
+}
+
+html[data-theme="kids"] .card-back {
+  background-color: #fffdf5;
+}
+
+html[data-theme="kids"] .card-3d-wrapper.is-locked .card-face {
+  background-color: #fffdf5;
+  border: 2px solid #fde68a;
+  opacity: 0.85;
+}
+
+html[data-theme="kids"] .word-text {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .meaning-text {
+  color: #854d0e;
+}
+
+/* 2. SIMLIFE GLOBAL (Adults) */
+html[data-theme="adults"] .card-face {
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme="adults"] .card-back {
+  background-color: #f8fafc;
+}
+
+html[data-theme="adults"] .card-3d-wrapper.is-locked .card-face {
+  background-color: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  opacity: 0.85;
+}
+
+html[data-theme="adults"] .word-text {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .meaning-text {
+  color: #475569;
+}
 </style>
 

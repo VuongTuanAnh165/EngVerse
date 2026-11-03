@@ -2126,9 +2126,16 @@ html[data-theme="kids"] .boss-rush-page {
 
 html[data-theme="kids"] .back-link-btn {
   background: #ffffff;
-  border: 1.5px solid #fde68a;
+  border: 2px solid #fde68a;
   color: #854d0e;
-  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.08);
+  font-weight: 800;
+  border-radius: var(--radius-md);
+  padding: 0.55rem 1.15rem;
+  box-shadow: 0 3px 0 #b45309, 0 3px 8px rgba(245, 158, 11, 0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
 }
 
 html[data-theme="kids"] .back-link-btn:hover {
@@ -2410,7 +2417,14 @@ html[data-theme="adults"] .back-link-btn {
   background: #ffffff;
   border: 1.5px solid #cbd5e1;
   color: #0f172a;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+  font-weight: 700;
+  border-radius: var(--radius-md);
+  padding: 0.55rem 1.15rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
 }
 
 html[data-theme="adults"] .back-link-btn:hover {
@@ -2447,7 +2461,7 @@ html[data-theme="adults"] .track-nav-pill.active {
 
 html[data-theme="adults"] .portal-hero-card {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
 }
 
@@ -2488,7 +2502,7 @@ html[data-theme="adults"] .unlocked-status-alert {
 
 html[data-theme="adults"] .best-record-bar {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
 }
 
@@ -2506,7 +2520,7 @@ html[data-theme="adults"] .section-title {
 
 html[data-theme="adults"] .modifier-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
 }
 
@@ -2520,14 +2534,14 @@ html[data-theme="adults"] .mod-text span {
 
 html[data-theme="adults"] .boss-card-preview {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }
 
 html[data-theme="adults"] .boss-preview-badge {
   background: #f1f5f9;
   color: #334155;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .boss-preview-name {
@@ -2542,7 +2556,7 @@ html[data-theme="adults"] .modal-card,
 html[data-theme="adults"] .leaderboard-card,
 html[data-theme="adults"] .leaderboard-modal-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
 }
 
@@ -2578,7 +2592,7 @@ html[data-theme="adults"] .intro-boss-title {
 
 html[data-theme="adults"] .intro-quote-box {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .intro-quote {
@@ -2587,7 +2601,7 @@ html[data-theme="adults"] .intro-quote {
 
 html[data-theme="adults"] .arena-hud-bar {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
 }
 
@@ -2603,7 +2617,7 @@ html[data-theme="adults"] .exit-btn {
 
 html[data-theme="adults"] .intermission-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
 }
 
@@ -2623,12 +2637,12 @@ html[data-theme="adults"] .victory-subtext {
 
 html[data-theme="adults"] .rewards-showcase {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .reward-item {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   color: #0f172a;
 }
 
@@ -2667,7 +2681,7 @@ html[data-theme="adults"] .stat-row strong {
 
 html[data-theme="adults"] .rank-item {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .player-name {

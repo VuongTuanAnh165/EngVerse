@@ -5383,15 +5383,17 @@ html[data-theme="kids"] .btn-start-sim {
   box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
 }
 
-/* Custom Builder Tab */
+/* Custom Builder Tab - KIDS MODE */
 html[data-theme="kids"] .custom-builder-card {
   background: #ffffff;
   border: 2px solid #fde68a;
   box-shadow: 0 6px 20px rgba(245, 158, 11, 0.1);
+  border-radius: 20px;
 }
 
 html[data-theme="kids"] .builder-title {
   color: #3b1d07;
+  font-weight: 800;
 }
 
 html[data-theme="kids"] .builder-desc {
@@ -5401,17 +5403,19 @@ html[data-theme="kids"] .builder-desc {
 html[data-theme="kids"] .quick-prompts-container {
   background: #fffdf5;
   border: 1.5px dashed #fde68a;
+  border-radius: 14px;
 }
 
 html[data-theme="kids"] .quick-prompt-label {
   color: #b45309;
+  font-weight: 800;
 }
 
 html[data-theme="kids"] .quick-prompt-btn {
   background: #ffffff;
   border: 1.5px solid #fde68a;
   color: #63330f;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 html[data-theme="kids"] .quick-prompt-btn:hover {
@@ -5422,26 +5426,107 @@ html[data-theme="kids"] .quick-prompt-btn:hover {
 
 html[data-theme="kids"] .form-label {
   color: #3b1d07;
+  font-weight: 800;
 }
 
 html[data-theme="kids"] .char-count {
   color: #854d0e;
+  font-weight: 700;
 }
 
 html[data-theme="kids"] .custom-textarea {
-  background: #fffdf5;
-  border: 1.5px solid #fde68a;
-  color: #3b1d07;
+  background: #ffffff !important;
+  border: 2px solid #fde68a !important;
+  color: #3b1d07 !important;
+  border-radius: 14px;
+  box-shadow: inset 0 1px 3px rgba(245, 158, 11, 0.06);
+}
+
+html[data-theme="kids"] .custom-textarea::placeholder {
+  color: #b45309;
+  opacity: 0.65;
 }
 
 html[data-theme="kids"] .custom-textarea:focus {
-  border-color: #f59e0b;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
-  background: #ffffff;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25) !important;
+  background: #ffffff !important;
 }
 
 html[data-theme="kids"] .config-label {
   color: #3b1d07;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .select-pill {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #854d0e;
+  font-weight: 700;
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(245, 158, 11, 0.05);
+}
+
+html[data-theme="kids"] .select-pill:hover {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .select-pill.pill-selected {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%) !important;
+  border-color: #d97706 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.35) !important;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .persona-card {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  border-radius: 14px;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.06);
+}
+
+html[data-theme="kids"] .persona-card:hover {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  transform: translateY(-1px);
+}
+
+html[data-theme="kids"] .persona-card.persona-selected {
+  background: #fef3c7 !important;
+  border: 2px solid #f59e0b !important;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.25) !important;
+}
+
+html[data-theme="kids"] .persona-title {
+  color: #3b1d07;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .persona-desc {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .form-input {
+  background: #ffffff !important;
+  border: 1.5px solid #fde68a !important;
+  color: #3b1d07 !important;
+  font-weight: 600;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 2px rgba(245, 158, 11, 0.06);
+}
+
+html[data-theme="kids"] .form-input::placeholder {
+  color: #b45309;
+  opacity: 0.65;
+}
+
+html[data-theme="kids"] .form-input:focus {
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25) !important;
+  background: #ffffff !important;
 }
 
 html[data-theme="kids"] .create-sim-btn {
@@ -5450,6 +5535,103 @@ html[data-theme="kids"] .create-sim-btn {
   border: none;
   font-weight: 800;
   box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  border-radius: 10px;
+}
+
+/* Scorecard & CEFR Report Modal - KIDS MODE */
+html[data-theme="kids"] .cefr-hero-card {
+  background: #fffdf5;
+  border: 2px solid #fde68a;
+  border-radius: 14px;
+}
+
+html[data-theme="kids"] .cefr-hero-title {
+  color: #3b1d07;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .cefr-hero-summary {
+  color: #63330f;
+}
+
+html[data-theme="kids"] .modal-scores-grid {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+  border-radius: 12px;
+}
+
+html[data-theme="kids"] .m-score-title {
+  color: #854d0e;
+  font-weight: 700;
+}
+
+html[data-theme="kids"] .scorecard-subhead {
+  color: #b45309;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .insight-box {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+  border-radius: 10px;
+}
+
+html[data-theme="kids"] .insight-heading {
+  color: #3b1d07;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .insight-list li {
+  color: #63330f;
+}
+
+html[data-theme="kids"] .error-item,
+html[data-theme="kids"] .upgrade-item,
+html[data-theme="kids"] .fluency-card {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+  border-radius: 10px;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .error-said .err-text {
+  color: #991b1b;
+}
+
+html[data-theme="kids"] .error-corrected .err-text {
+  color: #065f46;
+}
+
+html[data-theme="kids"] .error-explanation {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .orig-word {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .target-word {
+  color: #b45309;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .upgrade-context {
+  color: #63330f;
+}
+
+html[data-theme="kids"] .eval-reward-banner {
+  background: linear-gradient(135deg, #fef3c7 0%, #dcfce7 100%);
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .reward-title {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .reward-pill {
+  background: #ffffff;
+  border: 1px solid #fde68a;
+  color: #b45309;
 }
 
 /* History Tab & Progress */
@@ -5508,7 +5690,7 @@ html[data-theme="kids"] .h-scenario-title {
   color: #3b1d07;
 }
 
-/* Active Simulation Arena */
+/* Active Simulation Arena - KIDS MODE */
 html[data-theme="kids"] .active-sim-arena {
   background: #ffffff;
   border: 2px solid #fde68a;
@@ -5545,21 +5727,46 @@ html[data-theme="kids"] .arena-chat-scroll {
   background: #fffdf5;
 }
 
-html[data-theme="kids"] .bubble-assistant .bubble-body {
+html[data-theme="kids"] .bubble-npc {
   background: #ffffff;
   border: 2px solid #fde68a;
   color: #3b1d07;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.08);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.1);
 }
 
-html[data-theme="kids"] .bubble-user .bubble-body {
-  background: #fef3c7;
-  border: 2px solid #f59e0b;
+html[data-theme="kids"] .bubble-npc .sender-name {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .bubble-npc .bubble-text {
   color: #3b1d07;
 }
 
-html[data-theme="kids"] .bubble-name {
-  color: #854d0e;
+html[data-theme="kids"] .bubble-user {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  border: 2px solid #d97706;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.25);
+}
+
+html[data-theme="kids"] .bubble-user .sender-name {
+  color: #fffdf5;
+}
+
+html[data-theme="kids"] .bubble-user .bubble-text {
+  color: #ffffff;
+}
+
+html[data-theme="kids"] .bubble-translation {
+  background: #fffdf5;
+  border-left: 3px solid #f59e0b;
+  color: #63330f;
+}
+
+html[data-theme="kids"] .bubble-grammar-tip {
+  background: #ecfdf5;
+  border: 1.5px solid #a7f3d0;
+  color: #065f46;
 }
 
 html[data-theme="kids"] .bubble-action-btn {
@@ -5569,36 +5776,59 @@ html[data-theme="kids"] .bubble-action-btn {
   font-weight: 700;
 }
 
-html[data-theme="kids"] .bubble-translation {
-  background: #fffdf5;
-  border-top: 1px dashed #fde68a;
-  color: #63330f;
+html[data-theme="kids"] .starter-chip-btn {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #854d0e;
+  font-weight: 700;
 }
 
-html[data-theme="kids"] .grammar-feedback-tip {
-  background: #ecfdf5;
-  border: 1.5px solid #a7f3d0;
-  color: #065f46;
-}
-
-html[data-theme="kids"] .arena-input-dock {
-  background: #fffdf5;
+html[data-theme="kids"] .arena-input-footer {
+  background: #ffffff;
   border-top: 2px solid #fde68a;
 }
 
-html[data-theme="kids"] .dock-text-input {
-  background: #ffffff;
-  border: 1.5px solid #fde68a;
-  color: #3b1d07;
+html[data-theme="kids"] .speech-text-input {
+  background: #ffffff !important;
+  border: 2px solid #fde68a !important;
+  color: #3b1d07 !important;
 }
 
-html[data-theme="kids"] .mic-pill-btn,
-html[data-theme="kids"] .send-message-btn {
-  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+html[data-theme="kids"] .speech-text-input::placeholder {
+  color: #b45309;
+  opacity: 0.65;
+}
+
+html[data-theme="kids"] .speech-text-input:focus {
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25) !important;
+}
+
+html[data-theme="kids"] .send-turn-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
   color: #ffffff;
-  border: none;
+  font-weight: 800;
 }
 
+html[data-theme="kids"] .mic-toggle-btn {
+  background: #fef3c7;
+  border: 2px solid #fde68a;
+  color: #b45309;
+}
+
+html[data-theme="kids"] .session-completed-card {
+  background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
+  border: 2px solid #f59e0b;
+  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.2);
+}
+
+html[data-theme="kids"] .completed-title {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .completed-desc {
+  color: #63330f;
+}
 
 /* --------------------------------------------------------------------------
    2. SIMLIFE GLOBAL (Adults) - Modern Crisp White, Sophisticated Navy & Slate
@@ -6018,15 +6248,17 @@ html[data-theme="adults"] .btn-start-sim {
   box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
 }
 
-/* Custom Builder Tab */
+/* Custom Builder Tab - ADULTS MODE */
 html[data-theme="adults"] .custom-builder-card {
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 4px 18px rgba(15, 23, 42, 0.06);
+  border-radius: 14px;
 }
 
 html[data-theme="adults"] .builder-title {
   color: #0f172a;
+  font-weight: 700;
 }
 
 html[data-theme="adults"] .builder-desc {
@@ -6036,10 +6268,12 @@ html[data-theme="adults"] .builder-desc {
 html[data-theme="adults"] .quick-prompts-container {
   background: #f8fafc;
   border: 1.5px dashed #cbd5e1;
+  border-radius: 10px;
 }
 
 html[data-theme="adults"] .quick-prompt-label {
   color: #0f172a;
+  font-weight: 700;
 }
 
 html[data-theme="adults"] .quick-prompt-btn {
@@ -6057,6 +6291,7 @@ html[data-theme="adults"] .quick-prompt-btn:hover {
 
 html[data-theme="adults"] .form-label {
   color: #0f172a;
+  font-weight: 700;
 }
 
 html[data-theme="adults"] .char-count {
@@ -6064,18 +6299,98 @@ html[data-theme="adults"] .char-count {
 }
 
 html[data-theme="adults"] .custom-textarea {
-  background: #ffffff;
-  border: 1.5px solid #cbd5e1;
-  color: #0f172a;
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  border-radius: 10px;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .custom-textarea::placeholder {
+  color: #64748b;
+  opacity: 0.75;
 }
 
 html[data-theme="adults"] .custom-textarea:focus {
-  border-color: #0f172a;
-  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+  border-color: #0f172a !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
+  background: #ffffff !important;
 }
 
 html[data-theme="adults"] .config-label {
   color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .select-pill {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #475569;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+html[data-theme="adults"] .select-pill:hover {
+  background: #f8fafc;
+  border-color: #0f172a;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .select-pill.pill-selected {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%) !important;
+  border-color: #0f172a !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25) !important;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .persona-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .persona-card:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+html[data-theme="adults"] .persona-card.persona-selected {
+  background: #f1f5f9 !important;
+  border: 1.5px solid #0f172a !important;
+  box-shadow: 0 0 12px rgba(15, 23, 42, 0.15) !important;
+}
+
+html[data-theme="adults"] .persona-title {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .persona-desc {
+  color: #475569;
+}
+
+html[data-theme="adults"] .form-input {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 500;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .form-input::placeholder {
+  color: #64748b;
+  opacity: 0.75;
+}
+
+html[data-theme="adults"] .form-input:focus {
+  border-color: #0f172a !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
+  background: #ffffff !important;
 }
 
 html[data-theme="adults"] .create-sim-btn {
@@ -6083,13 +6398,110 @@ html[data-theme="adults"] .create-sim-btn {
   color: #ffffff;
   border: none;
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+  border-radius: 8px;
+}
+
+/* Scorecard & CEFR Report Modal - ADULTS MODE */
+html[data-theme="adults"] .cefr-hero-card {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+}
+
+html[data-theme="adults"] .cefr-hero-title {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .cefr-hero-summary {
+  color: #334155;
+}
+
+html[data-theme="adults"] .modal-scores-grid {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+html[data-theme="adults"] .m-score-title {
+  color: #475569;
+  font-weight: 600;
+}
+
+html[data-theme="adults"] .scorecard-subhead {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .insight-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+}
+
+html[data-theme="adults"] .insight-heading {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .insight-list li {
+  color: #334155;
+}
+
+html[data-theme="adults"] .error-item,
+html[data-theme="adults"] .upgrade-item,
+html[data-theme="adults"] .fluency-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .error-said .err-text {
+  color: #9f1239;
+}
+
+html[data-theme="adults"] .error-corrected .err-text {
+  color: #065f46;
+}
+
+html[data-theme="adults"] .error-explanation {
+  color: #475569;
+}
+
+html[data-theme="adults"] .orig-word {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .target-word {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .upgrade-context {
+  color: #475569;
+}
+
+html[data-theme="adults"] .eval-reward-banner {
+  background: linear-gradient(135deg, #f0fdf4 0%, #eff6ff 100%);
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .reward-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .reward-pill {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
 }
 
 /* History Tab & Progress */
 html[data-theme="adults"] .history-stats-banner {
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }
 
@@ -6099,7 +6511,7 @@ html[data-theme="adults"] .stat-label {
 
 html[data-theme="adults"] .cefr-ladder-pod {
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }
 
@@ -6113,12 +6525,12 @@ html[data-theme="adults"] .ladder-sub {
 
 html[data-theme="adults"] .ladder-step-card {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .history-filter-bar {
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .filter-pill-btn {
@@ -6135,14 +6547,14 @@ html[data-theme="adults"] .filter-pill-btn.filter-pill-active {
 
 html[data-theme="adults"] .history-row-card {
   background: #ffffff;
-  border: 1.5px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .h-scenario-title {
   color: #0f172a;
 }
 
-/* Active Simulation Arena */
+/* Active Simulation Arena - ADULTS MODE */
 html[data-theme="adults"] .active-sim-arena {
   background: #ffffff;
   border: 1.5px solid #cbd5e1;
@@ -6158,6 +6570,7 @@ html[data-theme="adults"] .arena-exit-btn {
   background: #ffffff;
   border: 1px solid #cbd5e1;
   color: #0f172a;
+  font-weight: 600;
 }
 
 html[data-theme="adults"] .arena-scenario-title {
@@ -6178,56 +6591,107 @@ html[data-theme="adults"] .arena-chat-scroll {
   background: #f8fafc;
 }
 
-html[data-theme="adults"] .bubble-assistant .bubble-body {
+html[data-theme="adults"] .bubble-npc {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
+  border: 1.5px solid #cbd5e1;
   color: #0f172a;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 
-html[data-theme="adults"] .bubble-user .bubble-body {
-  background: #eff6ff;
-  border: 1.5px solid #bfdbfe;
-  color: #1e3a8a;
-}
-
-html[data-theme="adults"] .bubble-name {
+html[data-theme="adults"] .bubble-npc .sender-name {
   color: #475569;
+}
+
+html[data-theme="adults"] .bubble-npc .bubble-text {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .bubble-user {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  border: 1.5px solid #0f172a;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+}
+
+html[data-theme="adults"] .bubble-user .sender-name {
+  color: #cbd5e1;
+}
+
+html[data-theme="adults"] .bubble-user .bubble-text {
+  color: #ffffff;
+}
+
+html[data-theme="adults"] .bubble-translation {
+  background: #f8fafc;
+  border-left: 3px solid #0f172a;
+  color: #334155;
+}
+
+html[data-theme="adults"] .bubble-grammar-tip {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
 }
 
 html[data-theme="adults"] .bubble-action-btn {
   background: #ffffff;
   border: 1px solid #cbd5e1;
   color: #334155;
+  font-weight: 600;
 }
 
-html[data-theme="adults"] .bubble-translation {
-  background: #f8fafc;
-  border-top: 1px dashed #cbd5e1;
-  color: #475569;
+html[data-theme="adults"] .starter-chip-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-weight: 600;
 }
 
-html[data-theme="adults"] .grammar-feedback-tip {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #166534;
-}
-
-html[data-theme="adults"] .arena-input-dock {
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
-}
-
-html[data-theme="adults"] .dock-text-input {
+html[data-theme="adults"] .arena-input-footer {
   background: #ffffff;
+  border-top: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .speech-text-input {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html[data-theme="adults"] .speech-text-input::placeholder {
+  color: #64748b;
+  opacity: 0.75;
+}
+
+html[data-theme="adults"] .speech-text-input:focus {
+  border-color: #0f172a !important;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08) !important;
+}
+
+html[data-theme="adults"] .send-turn-btn {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .mic-toggle-btn {
+  background: #f1f5f9;
   border: 1.5px solid #cbd5e1;
   color: #0f172a;
 }
 
-html[data-theme="adults"] .mic-pill-btn,
-html[data-theme="adults"] .send-message-btn {
-  background: linear-gradient(135deg, #0f172a, #1e3a8a);
-  color: #ffffff;
+html[data-theme="adults"] .session-completed-card {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .completed-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .completed-desc {
+  color: #334155;
 }
 
 </style>

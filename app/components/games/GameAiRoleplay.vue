@@ -1143,4 +1143,265 @@ function handleContinue(): void {
 .celebrate-fade-leave-to {
   opacity: 0;
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .ai-roleplay-container {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .roleplay-header {
+  background: #fffbeb;
+  border-bottom: 2px solid #fde68a;
+}
+
+html[data-theme="kids"] .npc-name {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .scenario-desc {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .goal-label {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .goal-text {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .turn-progress-badge {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .plot-twist-banner {
+  background: linear-gradient(90deg, #fef3c7 0%, #fee2e2 100%);
+  border-bottom: 2px solid #fde68a;
+}
+
+html[data-theme="kids"] .twist-badge-title {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .twist-badge-desc {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .recommended-chips-bar {
+  background: #fffdf5;
+  border-bottom: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .chips-title {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .word-chip-btn {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .word-chip-btn:hover {
+  border-color: #f59e0b;
+  color: #b45309;
+  background: #fef3c7;
+}
+
+html[data-theme="kids"] .chat-thread-container {
+  background: #fffdf7;
+}
+
+html[data-theme="kids"] .msg-avatar-badge {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .row-npc .chat-bubble {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #3b1d07;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .vietnamese-hint-box {
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .chat-input-toolbar {
+  background: #fffbeb;
+  border-top: 2px solid #fde68a;
+}
+
+html[data-theme="kids"] .chat-input-field {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .chat-input-field:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.25);
+}
+
+html[data-theme="kids"] .mic-action-btn {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+}
+
+html[data-theme="kids"] .mission-cleared-overlay {
+  background: rgba(45, 27, 10, 0.65);
+}
+
+html[data-theme="kids"] .mission-cleared-card {
+  background: #ffffff;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 20px 50px rgba(217, 119, 6, 0.25);
+}
+
+html[data-theme="kids"] .cleared-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .cleared-desc {
+  color: #78350f;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .ai-roleplay-container {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .roleplay-header {
+  background: #f8fafc;
+  border-bottom: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .npc-name {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .scenario-desc {
+  color: #475569;
+}
+
+html[data-theme="adults"] .goal-label {
+  color: #475569;
+}
+
+html[data-theme="adults"] .goal-text {
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .turn-progress-badge {
+  background: #f1f5f9;
+  color: #0284c7;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .plot-twist-banner {
+  background: linear-gradient(90deg, #f1f5f9 0%, #e0e7ff 100%);
+  border-bottom: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .twist-badge-title {
+  color: #4338ca;
+}
+
+html[data-theme="adults"] .twist-badge-desc {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .recommended-chips-bar {
+  background: #f8fafc;
+  border-bottom: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .chips-title {
+  color: #475569;
+}
+
+html[data-theme="adults"] .word-chip-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .word-chip-btn:hover {
+  border-color: #0284c7;
+  color: #0284c7;
+  background: #f0f9ff;
+}
+
+html[data-theme="adults"] .chat-thread-container {
+  background: #ffffff;
+}
+
+html[data-theme="adults"] .msg-avatar-badge {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .row-npc .chat-bubble {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .vietnamese-hint-box {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .chat-input-toolbar {
+  background: #f8fafc;
+  border-top: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .chat-input-field {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .chat-input-field:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+}
+
+html[data-theme="adults"] .mic-action-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .mission-cleared-overlay {
+  background: rgba(15, 23, 42, 0.65);
+}
+
+html[data-theme="adults"] .mission-cleared-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+}
+
+html[data-theme="adults"] .cleared-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .cleared-desc {
+  color: #475569;
+}
 </style>

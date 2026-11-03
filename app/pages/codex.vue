@@ -460,5 +460,107 @@ useHead({
     font-size: 1.6rem;
   }
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .back-link {
+  background: #fef3c7;
+  border: 2px solid #fde68a;
+  color: #92400e;
+  box-shadow: 0 3px 0 #fde68a;
+  font-weight: 800;
+  border-radius: var(--radius-pill);
+}
+
+html[data-theme="kids"] .back-link:hover {
+  background: #fde68a;
+  color: #78350f;
+  transform: translateY(-1px);
+}
+
+html[data-theme="kids"] .collection-progress-card,
+html[data-theme="kids"] .filter-controls-card {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .search-input {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .search-input:focus {
+  border-color: #f59e0b;
+}
+
+html[data-theme="kids"] .filter-pill {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .filter-pill:hover {
+  background: #fef3c7;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .pill-active {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24) !important;
+  color: #ffffff !important;
+  border-color: #d97706 !important;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .back-link {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+}
+
+html[data-theme="adults"] .back-link:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .collection-progress-card,
+html[data-theme="adults"] .filter-controls-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .search-input {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .search-input:focus {
+  border-color: #0284c7;
+}
+
+html[data-theme="adults"] .filter-pill {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .filter-pill:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .pill-active {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+}
 </style>
 

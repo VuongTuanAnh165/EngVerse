@@ -999,5 +999,308 @@ onScopeDispose(() => {
   opacity: 0;
 }
 
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .alchemy-card {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .alchemy-card:hover:not(.card-matched):not(.card-selected) {
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(217, 119, 6, 0.15);
+}
+
+html[data-theme="kids"] .card-selected {
+  background: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.4) !important;
+}
+
+html[data-theme="kids"] .card-colloc-indicator {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+/* Collocation Hint Banner - Kids */
+html[data-theme="kids"] .collocation-hint-banner {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.1);
+}
+
+html[data-theme="kids"] .hint-word {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .hint-ipa {
+  color: #92400e;
+}
+
+html[data-theme="kids"] .hint-pos {
+  color: #d97706;
+}
+
+html[data-theme="kids"] .hint-meaning {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .colloc-badge-label {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .colloc-chip-btn {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #92400e;
+}
+
+html[data-theme="kids"] .colloc-chip-btn:hover {
+  background: #fde68a;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .hint-phrase-row {
+  background: #f0fdf4;
+  border-left: 3px solid #16a34a;
+  color: #166534;
+}
+
+/* Summary Modal - Kids */
+html[data-theme="kids"] .summary-overlay {
+  background: rgba(45, 27, 10, 0.65);
+}
+
+html[data-theme="kids"] .summary-card {
+  background: #ffffff;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 20px 50px rgba(217, 119, 6, 0.25);
+}
+
+html[data-theme="kids"] .summary-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .summary-subtitle {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .unlocked-vocab-item {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.06);
+}
+
+html[data-theme="kids"] .vocab-word {
+  color: #3b1d07;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .vocab-ipa {
+  color: #92400e;
+}
+
+html[data-theme="kids"] .vocab-meaning {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .collocs-intro {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .unlocked-colloc-tag {
+  background: #ffffff;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+
+html[data-theme="kids"] .unlocked-colloc-tag:hover {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .vocab-phrase-line {
+  background: #f0fdf4;
+  border-left: 2px solid #16a34a;
+  color: #166534;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+html[data-theme="kids"] .speak-btn-mini {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+html[data-theme="kids"] .speak-btn-mini:hover {
+  background: #f59e0b;
+  color: #ffffff;
+}
+
+html[data-theme="kids"] .advance-phase-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  border: 2px solid #b45309;
+  box-shadow: 0 4px 0 #b45309, 0 8px 18px rgba(217, 119, 6, 0.35);
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .alchemy-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .alchemy-card:hover:not(.card-matched):not(.card-selected) {
+  border-color: #0284c7;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .card-selected {
+  background: #f0f9ff !important;
+  border-color: #0284c7 !important;
+  box-shadow: 0 0 16px rgba(2, 132, 199, 0.3) !important;
+}
+
+html[data-theme="adults"] .card-colloc-indicator {
+  background: #f1f5f9;
+  color: #0284c7;
+  border: 1px solid #cbd5e1;
+}
+
+/* Collocation Hint Banner - Adults */
+html[data-theme="adults"] .collocation-hint-banner {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .hint-word {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .hint-ipa {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .hint-pos {
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .hint-meaning {
+  color: #334155;
+}
+
+html[data-theme="adults"] .colloc-badge-label {
+  color: #475569;
+}
+
+html[data-theme="adults"] .colloc-chip-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+}
+
+html[data-theme="adults"] .colloc-chip-btn:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .hint-phrase-row {
+  background: #f8fafc;
+  border-left: 3px solid #0284c7;
+  color: #0f172a;
+}
+
+/* Summary Modal - Adults */
+html[data-theme="adults"] .summary-overlay {
+  background: rgba(15, 23, 42, 0.65);
+}
+
+html[data-theme="adults"] .summary-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+}
+
+html[data-theme="adults"] .summary-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .summary-subtitle {
+  color: #475569;
+}
+
+html[data-theme="adults"] .unlocked-vocab-item {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .vocab-word {
+  color: #0f172a;
+  font-weight: 800;
+}
+
+html[data-theme="adults"] .vocab-ipa {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .vocab-meaning {
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .collocs-intro {
+  color: #475569;
+}
+
+html[data-theme="adults"] .unlocked-colloc-tag {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+}
+
+html[data-theme="adults"] .unlocked-colloc-tag:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .vocab-phrase-line {
+  background: #f1f5f9;
+  border-left: 2px solid #0284c7;
+  color: #0f172a;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+html[data-theme="adults"] .speak-btn-mini {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+html[data-theme="adults"] .speak-btn-mini:hover {
+  background: #0284c7;
+  color: #ffffff;
+}
+
+html[data-theme="adults"] .advance-phase-btn {
+  background: #0284c7;
+  color: #ffffff;
+  border: 1.5px solid #0369a1;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+}
 </style>
 

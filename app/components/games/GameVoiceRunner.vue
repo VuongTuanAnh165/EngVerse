@@ -886,5 +886,236 @@ onScopeDispose(() => {
     font-size: 1.625rem;
   }
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .runner-hud {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .hud-label {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .hud-val {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .mode-badge.voice-mode {
+  background: #fef3c7;
+  color: #b45309;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .mode-badge.rhythm-mode {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1.5px solid #fca5a5;
+}
+
+html[data-theme="kids"] .runner-arena {
+  background: linear-gradient(180deg, #ecfdf5 0%, #fef3c7 100%);
+  border: 2px solid #fde68a;
+}
+
+html[data-theme="kids"] .scenery-ground {
+  background: #fde68a;
+  border-top: 3px solid #f59e0b;
+}
+
+html[data-theme="kids"] .obstacle-name {
+  background: #ffffff;
+  color: #3b1d07;
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.1);
+}
+
+html[data-theme="kids"] .target-keyword-card {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .target-label {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .target-word {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .target-ipa {
+  color: #92400e;
+}
+
+html[data-theme="kids"] .sample-audio-btn {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #92400e;
+}
+
+html[data-theme="kids"] .sample-audio-btn:hover {
+  background: #fde68a;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .speech-feedback-box {
+  background: #fffdf5;
+  border: 1px solid #fde68a;
+  border-left: 3px solid #f59e0b;
+}
+
+html[data-theme="kids"] .transcript-text {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .feedback-text {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .switch-fallback-btn {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .switch-fallback-btn:hover {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .syllable-chip-btn {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  color: #3b1d07;
+  box-shadow: 0 3px 0 #fde68a;
+}
+
+html[data-theme="kids"] .syllable-chip-btn:hover:not(:disabled) {
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+}
+
+html[data-theme="kids"] .syl-target {
+  border-color: #f59e0b !important;
+  background: #fef3c7 !important;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.4) !important;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .runner-hud {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .hud-label {
+  color: #475569;
+}
+
+html[data-theme="adults"] .hud-val {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .mode-badge.voice-mode {
+  background: #f1f5f9;
+  color: #0284c7;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .mode-badge.rhythm-mode {
+  background: #f8fafc;
+  color: #ea580c;
+  border: 1.5px solid #fed7aa;
+}
+
+html[data-theme="adults"] .runner-arena {
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .scenery-ground {
+  background: #cbd5e1;
+  border-top: 3px solid #0284c7;
+}
+
+html[data-theme="adults"] .obstacle-name {
+  background: #ffffff;
+  color: #0f172a;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .target-keyword-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .target-label {
+  color: #475569;
+}
+
+html[data-theme="adults"] .target-word {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .target-ipa {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .sample-audio-btn {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .sample-audio-btn:hover {
+  background: #f1f5f9;
+  border-color: #0284c7;
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .speech-feedback-box {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-left: 3px solid #0284c7;
+}
+
+html[data-theme="adults"] .transcript-text {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .feedback-text {
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .switch-fallback-btn {
+  color: #475569;
+}
+
+html[data-theme="adults"] .switch-fallback-btn:hover {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .syllable-chip-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 2px 0 #cbd5e1;
+}
+
+html[data-theme="adults"] .syllable-chip-btn:hover:not(:disabled) {
+  border-color: #0284c7;
+  transform: translateY(-2px);
+}
+
+html[data-theme="adults"] .syl-target {
+  border-color: #0284c7 !important;
+  background: #f0f9ff !important;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.3) !important;
+}
 </style>
 

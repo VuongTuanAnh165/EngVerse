@@ -475,5 +475,136 @@ onUnmounted(() => {
 .modal-fade-leave-to {
   opacity: 0;
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .streak-reward-overlay {
+  background-color: rgba(45, 27, 10, 0.65);
+}
+
+html[data-theme="kids"] .streak-reward-card {
+  background: #ffffff;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 20px 50px rgba(217, 119, 6, 0.25);
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .reward-close-btn {
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .reward-close-btn:hover {
+  background: #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .reward-header-pill {
+  background: #fef3c7;
+  border-color: #fde68a;
+  color: #b45309;
+}
+
+html[data-theme="kids"] .reward-icon-box {
+  background: #fef3c7;
+  border: 2px solid #fde68a;
+  box-shadow: 0 10px 20px rgba(217, 119, 6, 0.2);
+}
+
+html[data-theme="kids"] .streak-days-badge {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+html[data-theme="kids"] .reward-title {
+  background: none;
+  -webkit-text-fill-color: initial;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .reward-desc {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .perks-container {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .perk-item {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .perk-bullet {
+  color: #f59e0b;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .streak-reward-overlay {
+  background-color: rgba(15, 23, 42, 0.65);
+}
+
+html[data-theme="adults"] .streak-reward-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .reward-close-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .reward-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .reward-header-pill {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .reward-icon-box {
+  background: #f8fafc;
+  border: 2px solid #cbd5e1;
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .streak-days-badge {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+html[data-theme="adults"] .reward-title {
+  background: none;
+  -webkit-text-fill-color: initial;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .reward-desc {
+  color: #475569;
+}
+
+html[data-theme="adults"] .perks-container {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .perk-item {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .perk-bullet {
+  color: #0284c7;
+}
 </style>
 

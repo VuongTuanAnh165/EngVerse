@@ -2380,5 +2380,188 @@ function handleReturnHome(): void {
   font-size: 0.95rem;
   font-weight: 700;
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .challenge-hud {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .hud-theme-title {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .phase-workspace {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .vocab-option-btn {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .vocab-option-btn:hover:not(:disabled) {
+  border-color: #f59e0b;
+  background: #fffdf5;
+}
+
+html[data-theme="kids"] .vietnamese-prompt-box {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .vietnamese-text {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .sentence-assembly-area {
+  background: #fffbeb;
+  border: 2px dashed #fde68a;
+}
+
+html[data-theme="kids"] .placed-token-chip {
+  background: #f59e0b;
+  color: #ffffff;
+  border: 1px solid #d97706;
+}
+
+html[data-theme="kids"] .bank-token-btn {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  color: #3b1d07;
+  box-shadow: 0 3px 0 #fde68a;
+}
+
+html[data-theme="kids"] .bank-token-btn:hover:not(:disabled) {
+  border-color: #f59e0b;
+}
+
+html[data-theme="kids"] .starter-chip-btn {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .starter-chip-btn:hover {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .chat-input-field {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .breakdown-box {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .victory-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .victory-subtitle {
+  color: #78350f;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .challenge-hud {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .hud-theme-title {
+  color: #475569;
+}
+
+html[data-theme="adults"] .phase-workspace {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .vocab-option-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .vocab-option-btn:hover:not(:disabled) {
+  border-color: #0284c7;
+  background: #f8fafc;
+}
+
+html[data-theme="adults"] .vietnamese-prompt-box {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .vietnamese-text {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .sentence-assembly-area {
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+}
+
+html[data-theme="adults"] .placed-token-chip {
+  background: #0284c7;
+  color: #ffffff;
+  border: 1px solid #0369a1;
+}
+
+html[data-theme="adults"] .bank-token-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 2px 0 #cbd5e1;
+}
+
+html[data-theme="adults"] .bank-token-btn:hover:not(:disabled) {
+  border-color: #0284c7;
+}
+
+html[data-theme="adults"] .starter-chip-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .starter-chip-btn:hover {
+  background: #f1f5f9;
+  border-color: #0284c7;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .chat-input-field {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .breakdown-box {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .victory-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .victory-subtitle {
+  color: #475569;
+}
 </style>
 

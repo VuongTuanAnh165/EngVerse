@@ -679,5 +679,197 @@ onMounted(() => {
   cursor: pointer;
   font-family: inherit;
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .session-header-bar {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+  border-radius: var(--radius-lg);
+}
+
+html[data-theme="kids"] .back-link-btn {
+  background: #fef3c7;
+  border: 2px solid #fde68a;
+  color: #92400e;
+  box-shadow: 0 3px 0 #fde68a;
+  font-weight: 800;
+  border-radius: var(--radius-pill);
+}
+
+html[data-theme="kids"] .back-link-btn:hover {
+  background: #fde68a;
+  color: #78350f;
+  transform: translateY(-1px);
+}
+
+html[data-theme="kids"] .step-pill {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .step-pill.step-active {
+  background: #f59e0b;
+  color: #ffffff;
+  border-color: #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+html[data-theme="kids"] .step-pill.step-done {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+html[data-theme="kids"] .victory-screen {
+  background: #ffffff;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 20px 50px rgba(217, 119, 6, 0.2);
+}
+
+html[data-theme="kids"] .victory-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .victory-subtitle {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .reward-card {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .reward-card.highlight-card {
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+
+html[data-theme="kids"] .reward-amount {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .reward-title {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .gameover-screen {
+  background: #ffffff;
+  border: 3px solid #fca5a5;
+  box-shadow: 0 20px 50px rgba(239, 68, 68, 0.15);
+}
+
+html[data-theme="kids"] .gameover-subtitle {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .return-btn {
+  background: #fffbeb;
+  border: 2px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .return-btn:hover {
+  background: #fef3c7;
+  color: #3b1d07;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .session-header-bar {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+  border-radius: var(--radius-lg);
+}
+
+html[data-theme="adults"] .back-link-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+  font-weight: 700;
+  border-radius: var(--radius-md);
+}
+
+html[data-theme="adults"] .back-link-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .step-pill {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .step-pill.step-active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 0 8px rgba(2, 132, 199, 0.35);
+}
+
+html[data-theme="adults"] .step-pill.step-done {
+  background: #f0fdf4;
+  border-color: #86efac;
+  color: #166534;
+}
+
+html[data-theme="adults"] .victory-screen {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+}
+
+html[data-theme="adults"] .victory-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .victory-subtitle {
+  color: #475569;
+}
+
+html[data-theme="adults"] .reward-card {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .reward-card.highlight-card {
+  background: #f0fdf4;
+  border-color: #10b981;
+}
+
+html[data-theme="adults"] .reward-amount {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .reward-title {
+  color: #475569;
+}
+
+html[data-theme="adults"] .gameover-screen {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .gameover-subtitle {
+  color: #475569;
+}
+
+html[data-theme="adults"] .return-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .return-btn:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
 </style>
 

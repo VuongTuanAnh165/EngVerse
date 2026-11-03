@@ -437,5 +437,144 @@ function handleOpenCustomizer(): void {
 .btn-close-modal:hover {
   color: #ffffff;
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .reward-celebration-backdrop {
+  background: rgba(45, 27, 10, 0.65);
+}
+
+html[data-theme="kids"] .reward-celebration-card {
+  background: #ffffff;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 20px 50px rgba(217, 119, 6, 0.25);
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .celebration-headline {
+  background: none;
+  -webkit-text-fill-color: initial;
+  color: #b45309;
+}
+
+html[data-theme="kids"] .celebration-subtext {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .reward-badge-card {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .reward-badge-card.highlight-gold {
+  background: #fef3c7;
+  border-color: #f59e0b;
+}
+
+html[data-theme="kids"] .badge-icon-box {
+  background: #fef3c7;
+}
+
+html[data-theme="kids"] .badge-tier {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .badge-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .badge-lore {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .btn-secondary-customizer {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .btn-secondary-customizer:hover {
+  background: #fef3c7;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .btn-close-modal {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .btn-close-modal:hover {
+  color: #3b1d07;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .reward-celebration-backdrop {
+  background: rgba(15, 23, 42, 0.65);
+}
+
+html[data-theme="adults"] .reward-celebration-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .celebration-headline {
+  background: none;
+  -webkit-text-fill-color: initial;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .celebration-subtext {
+  color: #475569;
+}
+
+html[data-theme="adults"] .reward-badge-card {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .reward-badge-card.highlight-gold {
+  background: #f0fdf4;
+  border-color: #10b981;
+}
+
+html[data-theme="adults"] .badge-icon-box {
+  background: #f1f5f9;
+}
+
+html[data-theme="adults"] .badge-tier {
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .badge-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .badge-lore {
+  color: #475569;
+}
+
+html[data-theme="adults"] .btn-secondary-customizer {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .btn-secondary-customizer:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .btn-close-modal {
+  color: #475569;
+}
+
+html[data-theme="adults"] .btn-close-modal:hover {
+  color: #0f172a;
+}
 </style>
 

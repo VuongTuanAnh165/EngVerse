@@ -573,5 +573,164 @@ function getTrackBadge(track: WorldTrack): { name: string; emoji: string } {
 .modal-fade-leave-to {
   opacity: 0;
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .leaderboard-modal-overlay {
+  background-color: rgba(45, 27, 10, 0.65);
+}
+
+html[data-theme="kids"] .leaderboard-card {
+  background-color: #ffffff;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 20px 50px rgba(217, 119, 6, 0.25);
+}
+
+html[data-theme="kids"] .modal-header {
+  border-bottom: 2px solid #fde68a;
+}
+
+html[data-theme="kids"] .modal-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .modal-subtitle {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .close-modal-btn {
+  background: #fef3c7;
+  border: 1px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .close-modal-btn:hover {
+  background: #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .track-filter-tabs {
+  border-bottom: 2px solid #fde68a;
+}
+
+html[data-theme="kids"] .filter-tab-btn {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .filter-tab-btn:hover {
+  background: #fef3c7;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .filter-active {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24) !important;
+  color: #ffffff !important;
+  border-color: #d97706 !important;
+}
+
+html[data-theme="kids"] .leaderboard-row {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .player-display-name {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .player-avatar-badge {
+  background: #fef3c7;
+  border-color: #fde68a;
+}
+
+html[data-theme="kids"] .score-val {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .modal-footer {
+  background: #fffbeb;
+  border-top: 2px solid #fde68a;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .leaderboard-modal-overlay {
+  background-color: rgba(15, 23, 42, 0.65);
+}
+
+html[data-theme="adults"] .leaderboard-card {
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15);
+}
+
+html[data-theme="adults"] .modal-header {
+  border-bottom: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .modal-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .modal-subtitle {
+  color: #475569;
+}
+
+html[data-theme="adults"] .close-modal-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .close-modal-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .track-filter-tabs {
+  border-bottom: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .filter-tab-btn {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .filter-tab-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .filter-active {
+  background: #0284c7 !important;
+  color: #ffffff !important;
+  border-color: #0284c7 !important;
+}
+
+html[data-theme="adults"] .leaderboard-row {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .player-display-name {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .player-avatar-badge {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+html[data-theme="adults"] .score-val {
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .modal-footer {
+  background: #f8fafc;
+  border-top: 1.5px solid #cbd5e1;
+}
 </style>
 

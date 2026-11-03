@@ -779,5 +779,192 @@ onScopeDispose(() => {
     padding: 0.5rem 0.85rem;
   }
 }
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .lock-hud {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .hud-label {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .hud-val {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .pattern-val {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #b45309;
+}
+
+html[data-theme="kids"] .lock-stage {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 4px 16px rgba(217, 119, 6, 0.08);
+}
+
+html[data-theme="kids"] .chest-title {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .vietnamese-prompt-box {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .prompt-text {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .functional-intent-pill {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #b45309;
+}
+
+html[data-theme="kids"] .sentence-drop-slot {
+  background: #fffbeb;
+  border: 2px dashed #fde68a;
+}
+
+html[data-theme="kids"] .slot-placeholder {
+  color: #92400e;
+}
+
+html[data-theme="kids"] .placed-rune-btn {
+  background: #ffffff;
+  border: 2px solid #f59e0b;
+  color: #3b1d07;
+  box-shadow: 0 3px 0 #fde68a;
+}
+
+html[data-theme="kids"] .placed-rune-btn:hover {
+  background: #fee2e2;
+  border-color: #ef4444;
+  color: #991b1b;
+}
+
+html[data-theme="kids"] .rune-pool-label {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .rune-stone-btn {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  color: #3b1d07;
+  box-shadow: 0 4px 0 #fde68a;
+}
+
+html[data-theme="kids"] .rune-stone-btn:hover:not(:disabled) {
+  border-color: #f59e0b;
+  transform: translateY(-2px);
+}
+
+html[data-theme="kids"] .clear-all-btn {
+  background: #fffbeb;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .clear-all-btn:hover:not(:disabled) {
+  border-color: #f59e0b;
+  color: #3b1d07;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .lock-hud {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .hud-label {
+  color: #475569;
+}
+
+html[data-theme="adults"] .hud-val {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .pattern-val {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .lock-stage {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+html[data-theme="adults"] .chest-title {
+  color: #475569;
+}
+
+html[data-theme="adults"] .vietnamese-prompt-box {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .prompt-text {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .functional-intent-pill {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #0284c7;
+}
+
+html[data-theme="adults"] .sentence-drop-slot {
+  background: #f8fafc;
+  border: 2px dashed #cbd5e1;
+}
+
+html[data-theme="adults"] .slot-placeholder {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .placed-rune-btn {
+  background: #ffffff;
+  border: 1.5px solid #0284c7;
+  color: #0f172a;
+  box-shadow: 0 2px 0 #cbd5e1;
+}
+
+html[data-theme="adults"] .rune-pool-label {
+  color: #475569;
+}
+
+html[data-theme="adults"] .rune-stone-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 3px 0 #cbd5e1;
+}
+
+html[data-theme="adults"] .rune-stone-btn:hover:not(:disabled) {
+  border-color: #0284c7;
+  transform: translateY(-2px);
+}
+
+html[data-theme="adults"] .clear-all-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .clear-all-btn:hover:not(:disabled) {
+  border-color: #0284c7;
+  color: #0f172a;
+}
 </style>
 

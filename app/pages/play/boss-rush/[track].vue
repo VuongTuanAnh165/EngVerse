@@ -2119,6 +2119,50 @@ onUnmounted(() => {
 /* --------------------------------------------------------------------------
    1. ĐẢO THẦN THOẠI (Kids)
    -------------------------------------------------------------------------- */
+html[data-theme="kids"] .boss-rush-page {
+  background-color: #fffdf5;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .back-link-btn {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #854d0e;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.08);
+}
+
+html[data-theme="kids"] .back-link-btn:hover {
+  background: #fffbeb;
+  border-color: #f59e0b;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .btn-view-leaderboard-pill {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #b45309;
+  font-weight: 700;
+}
+
+html[data-theme="kids"] .btn-view-leaderboard-pill:hover {
+  background: #fde68a;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .track-nav-pill {
+  background: #ffffff;
+  color: #854d0e;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .track-nav-pill.active {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #ffffff;
+  border-color: #d97706;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+}
+
 html[data-theme="kids"] .portal-hero-card {
   background: linear-gradient(180deg, #ffffff 0%, #fffbeb 100%);
   border: 2px solid #fde68a;
@@ -2133,6 +2177,31 @@ html[data-theme="kids"] .colosseum-title {
 
 html[data-theme="kids"] .colosseum-lore {
   color: #854d0e;
+}
+
+/* Lock & Unlock Alerts */
+html[data-theme="kids"] .lock-status-alert {
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+}
+
+html[data-theme="kids"] .lock-title {
+  color: #991b1b;
+}
+
+html[data-theme="kids"] .lock-desc,
+html[data-theme="kids"] .progress-label {
+  color: #7f1d1d;
+}
+
+html[data-theme="kids"] .progress-bar-wrap {
+  background: #fecaca;
+}
+
+html[data-theme="kids"] .unlocked-status-alert {
+  background: #ecfdf5;
+  border: 1.5px solid #a7f3d0;
+  color: #065f46;
 }
 
 html[data-theme="kids"] .best-record-bar {
@@ -2185,19 +2254,6 @@ html[data-theme="kids"] .boss-preview-name {
 
 html[data-theme="kids"] .boss-preview-stage {
   color: #854d0e;
-}
-
-html[data-theme="kids"] .track-nav-pill {
-  background: #ffffff;
-  color: #854d0e;
-  border: 1.5px solid #fde68a;
-}
-
-html[data-theme="kids"] .track-nav-pill.active {
-  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-  color: #ffffff;
-  border-color: #d97706;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
 }
 
 html[data-theme="kids"] .modal-card,
@@ -2292,6 +2348,12 @@ html[data-theme="kids"] .reward-item {
   color: #3b1d07;
 }
 
+html[data-theme="kids"] .btn-return-portal {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #854d0e;
+}
+
 html[data-theme="kids"] .defeat-card {
   background: #ffffff;
   border: 2px solid #fecaca;
@@ -2333,9 +2395,54 @@ html[data-theme="kids"] .stat-cell {
   color: #854d0e;
 }
 
+
 /* --------------------------------------------------------------------------
    2. SIMLIFE GLOBAL (Adults)
    -------------------------------------------------------------------------- */
+html[data-theme="adults"] .boss-rush-page {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .back-link-btn {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme="adults"] .back-link-btn:hover {
+  background: #f8fafc;
+  border-color: #0f172a;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .btn-view-leaderboard-pill {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+html[data-theme="adults"] .btn-view-leaderboard-pill:hover {
+  background: #e2e8f0;
+  border-color: #0f172a;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .track-nav-pill {
+  background: #ffffff;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .track-nav-pill.active {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  border-color: #0f172a;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+}
+
 html[data-theme="adults"] .portal-hero-card {
   background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   border: 1.5px solid #e2e8f0;
@@ -2350,6 +2457,31 @@ html[data-theme="adults"] .colosseum-title {
 
 html[data-theme="adults"] .colosseum-lore {
   color: #475569;
+}
+
+/* Lock & Unlock Alerts */
+html[data-theme="adults"] .lock-status-alert {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+}
+
+html[data-theme="adults"] .lock-title {
+  color: #9f1239;
+}
+
+html[data-theme="adults"] .lock-desc,
+html[data-theme="adults"] .progress-label {
+  color: #475569;
+}
+
+html[data-theme="adults"] .progress-bar-wrap {
+  background: #fecdd3;
+}
+
+html[data-theme="adults"] .unlocked-status-alert {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
 }
 
 html[data-theme="adults"] .best-record-bar {
@@ -2402,19 +2534,6 @@ html[data-theme="adults"] .boss-preview-name {
 
 html[data-theme="adults"] .boss-preview-stage {
   color: #64748b;
-}
-
-html[data-theme="adults"] .track-nav-pill {
-  background: #ffffff;
-  color: #475569;
-  border: 1px solid #cbd5e1;
-}
-
-html[data-theme="adults"] .track-nav-pill.active {
-  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-  color: #ffffff;
-  border-color: #0f172a;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
 }
 
 html[data-theme="adults"] .modal-card,
@@ -2509,6 +2628,12 @@ html[data-theme="adults"] .reward-item {
   color: #0f172a;
 }
 
+html[data-theme="adults"] .btn-return-portal {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+
 html[data-theme="adults"] .defeat-card {
   background: #ffffff;
   border: 1.5px solid #fecdd3;
@@ -2549,4 +2674,5 @@ html[data-theme="adults"] .stat-cell {
   background: #f1f5f9;
   color: #334155;
 }
+
 </style>

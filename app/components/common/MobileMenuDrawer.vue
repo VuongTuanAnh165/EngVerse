@@ -585,5 +585,49 @@ async function onLogout(): Promise<void> {
 .drawer-fade-leave-to {
   opacity: 0;
 }
+
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .drawer-customizer-btn {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
+  color: #b45309;
+}
+
+html[data-theme="kids"] .drawer-customizer-btn:hover {
+  background: #fde68a;
+}
+
+html[data-theme="kids"] .customizer-label strong {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .user-quick-stats {
+  background: #fffdf5;
+  border: 1.5px solid #fde68a;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .drawer-customizer-btn {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .drawer-customizer-btn:hover {
+  background: #f1f5f9;
+}
+
+html[data-theme="adults"] .customizer-label strong {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .user-quick-stats {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+}
 </style>
 

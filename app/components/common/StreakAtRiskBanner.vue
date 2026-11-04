@@ -438,5 +438,115 @@ const isVisible = computed<boolean>(() => {
     justify-content: center;
   }
 }
+
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .streak-banner-card {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.15);
+}
+
+html[data-theme="kids"] .banner-warning {
+  border-color: #f59e0b;
+  background: linear-gradient(90deg, #fffbeb 0%, #ffffff 45%);
+}
+
+html[data-theme="kids"] .banner-rescue {
+  border-color: #38bdf8;
+  background: linear-gradient(90deg, #f0f9ff 0%, #ffffff 45%);
+}
+
+html[data-theme="kids"] .banner-success {
+  border-color: #10b981;
+  background: linear-gradient(90deg, #ecfdf5 0%, #ffffff 45%);
+}
+
+html[data-theme="kids"] .banner-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .banner-desc {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .banner-close-btn {
+  background: #fef3c7;
+  color: #854d0e;
+  border: 1px solid #fde68a;
+}
+
+html[data-theme="kids"] .banner-close-btn:hover {
+  background: #fde68a;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .keep-streak-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
+
+html[data-theme="kids"] .rescue-btn {
+  background: linear-gradient(135deg, #0284c7 0%, #38bdf8 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.35);
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .streak-banner-card {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+html[data-theme="adults"] .banner-warning {
+  border-color: #ea580c;
+  background: linear-gradient(90deg, #fff7ed 0%, #ffffff 45%);
+}
+
+html[data-theme="adults"] .banner-rescue {
+  border-color: #0284c7;
+  background: linear-gradient(90deg, #f0f9ff 0%, #ffffff 45%);
+}
+
+html[data-theme="adults"] .banner-success {
+  border-color: #059669;
+  background: linear-gradient(90deg, #f0fdf4 0%, #ffffff 45%);
+}
+
+html[data-theme="adults"] .banner-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .banner-desc {
+  color: #475569;
+}
+
+html[data-theme="adults"] .banner-close-btn {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .banner-close-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .keep-streak-btn {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25);
+}
+
+html[data-theme="adults"] .rescue-btn {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+}
 </style>
 

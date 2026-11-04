@@ -211,6 +211,17 @@ const universeEmoji = computed(() => {
   font-weight: 800;
 }
 
+:root[data-theme="kids"] .tab-selected .tab-title,
+html[data-theme="kids"] .tab-selected .tab-title {
+  color: #b45309;
+}
+
+:root[data-theme="kids"] .tab-selected .tab-icon-box,
+html[data-theme="kids"] .tab-selected .tab-icon-box {
+  background: #fef3c7;
+  border-bottom: 2px solid #f59e0b;
+}
+
 :root[data-theme="adults"] .tab-selected .tab-title,
 html[data-theme="adults"] .tab-selected .tab-title {
   color: #059669;

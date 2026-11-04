@@ -2416,7 +2416,8 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
+  padding: 0.85rem 1.5rem;
+  gap: 1.25rem;
   background: rgba(17, 24, 39, 0.95);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
@@ -2473,22 +2474,38 @@ onUnmounted(() => {
   color: #38bdf8;
 }
 
+.arena-bar-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-shrink: 0;
+}
+
 .turn-counter-box {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.25rem;
-  min-width: 140px;
+  justify-content: center;
+  gap: 0.3rem;
+  min-width: 150px;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-md, 12px);
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
 }
 .turn-label {
   font-size: 0.68rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--text-muted, #64748b);
+  letter-spacing: 0.06em;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1;
 }
 .turn-val {
   font-size: 1.05rem;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-secondary, #cbd5e1);
+  line-height: 1.2;
 }
 .turn-val strong {
   color: #38bdf8;
@@ -2497,9 +2514,10 @@ onUnmounted(() => {
 .turn-mini-bar {
   width: 100%;
   height: 6px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-pill, 9999px);
   overflow: hidden;
+  margin-top: 0.15rem;
 }
 .turn-mini-fill {
   height: 100%;
@@ -5718,9 +5736,132 @@ html[data-theme="kids"] .arena-npc-sub {
 }
 
 html[data-theme="kids"] .turn-counter-box {
+  background: #ffffff;
+  border: 2px solid #fde68a;
+  border-radius: 12px;
+  padding: 0.55rem 1rem;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.12);
+  color: #b45309;
+}
+
+html[data-theme="kids"] .turn-label {
+  color: #854d0e;
+  font-weight: 800;
+}
+
+html[data-theme="kids"] .turn-val {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .turn-val strong {
+  color: #b45309;
+}
+
+html[data-theme="kids"] .turn-mini-bar {
+  background: #fef3c7;
+}
+
+html[data-theme="kids"] .turn-mini-fill {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+html[data-theme="kids"] .sim-error-banner {
+  background: #fee2e2;
+  border-bottom: 1.5px solid #fca5a5;
+  color: #991b1b;
+}
+
+html[data-theme="kids"] .arena-voice-toolbar {
+  background: #fffdf5;
+  border-bottom: 2px solid #fde68a;
+}
+
+html[data-theme="kids"] .voice-tool-btn {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .voice-tool-btn:hover {
+  background: #fffbeb;
+  color: #3b1d07;
+  border-color: #f59e0b;
+}
+
+html[data-theme="kids"] .voice-tool-btn.tool-btn-active {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #b45309;
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.25);
+}
+
+html[data-theme="kids"] .speed-label {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .speed-chips-group {
   background: #fef3c7;
   border: 1.5px solid #fde68a;
-  color: #b45309;
+}
+
+html[data-theme="kids"] .speed-chip-btn {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .speed-chip-btn:hover {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .speed-chip-btn.speed-chip-active {
+  background: #f59e0b;
+  color: #ffffff;
+  box-shadow: 0 0 6px rgba(245, 158, 11, 0.35);
+}
+
+html[data-theme="kids"] .sim-guard-banner.webview-guard {
+  background: #fffbeb;
+  border-bottom: 1.5px solid #fde68a;
+  color: #92400e;
+}
+
+html[data-theme="kids"] .sim-guard-banner.mic-guard {
+  background: #fef3c7;
+  border-bottom: 1.5px solid #fde68a;
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .guard-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .guard-desc {
+  color: #63330f;
+}
+
+html[data-theme="kids"] .guard-copy-btn {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .guard-copy-btn:hover {
+  background: #f59e0b;
+  color: #ffffff;
+}
+
+html[data-theme="kids"] .live-waveform-dock {
+  background: linear-gradient(90deg, #fee2e2 0%, #fffdf5 100%);
+  border: 1.5px solid #fca5a5;
+}
+
+html[data-theme="kids"] .waveform-title {
+  color: #991b1b;
+}
+
+html[data-theme="kids"] .npc-avatar,
+html[data-theme="kids"] .user-avatar {
+  background: #fef3c7;
+  border: 1.5px solid #fde68a;
 }
 
 html[data-theme="kids"] .arena-chat-scroll {
@@ -5769,6 +5910,10 @@ html[data-theme="kids"] .bubble-grammar-tip {
   color: #065f46;
 }
 
+html[data-theme="kids"] .bubble-action-bar {
+  border-top: 1px solid #fde68a;
+}
+
 html[data-theme="kids"] .bubble-action-btn {
   background: #ffffff;
   border: 1.5px solid #fde68a;
@@ -5776,11 +5921,27 @@ html[data-theme="kids"] .bubble-action-btn {
   font-weight: 700;
 }
 
+html[data-theme="kids"] .bubble-action-btn:hover {
+  background: #fef3c7;
+  border-color: #f59e0b;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .chips-label {
+  color: #b45309;
+}
+
 html[data-theme="kids"] .starter-chip-btn {
   background: #fef3c7;
   border: 1.5px solid #fde68a;
   color: #854d0e;
   font-weight: 700;
+}
+
+html[data-theme="kids"] .starter-chip-btn:hover {
+  background: #fde68a;
+  border-color: #f59e0b;
+  color: #78350f;
 }
 
 html[data-theme="kids"] .arena-input-footer {
@@ -5810,10 +5971,21 @@ html[data-theme="kids"] .send-turn-btn {
   font-weight: 800;
 }
 
+html[data-theme="kids"] .send-turn-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+  transform: translateY(-1px);
+}
+
 html[data-theme="kids"] .mic-toggle-btn {
   background: #fef3c7;
   border: 2px solid #fde68a;
   color: #b45309;
+}
+
+html[data-theme="kids"] .mic-toggle-btn:hover {
+  background: #fde68a;
+  border-color: #f59e0b;
+  color: #78350f;
 }
 
 html[data-theme="kids"] .session-completed-card {
@@ -6582,9 +6754,132 @@ html[data-theme="adults"] .arena-npc-sub {
 }
 
 html[data-theme="adults"] .turn-counter-box {
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 0.55rem 1rem;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
   color: #0f172a;
+}
+
+html[data-theme="adults"] .turn-label {
+  color: #64748b;
+  font-weight: 700;
+}
+
+html[data-theme="adults"] .turn-val {
+  color: #334155;
+}
+
+html[data-theme="adults"] .turn-val strong {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .turn-mini-bar {
+  background: #e2e8f0;
+}
+
+html[data-theme="adults"] .turn-mini-fill {
+  background: linear-gradient(90deg, #059669, #10b981);
+}
+
+html[data-theme="adults"] .sim-error-banner {
+  background: #fee2e2;
+  border-bottom: 1px solid #fca5a5;
+  color: #991b1b;
+}
+
+html[data-theme="adults"] .arena-voice-toolbar {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+html[data-theme="adults"] .voice-tool-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+}
+
+html[data-theme="adults"] .voice-tool-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+html[data-theme="adults"] .voice-tool-btn.tool-btn-active {
+  background: #ecfdf5;
+  border-color: #059669;
+  color: #065f46;
+  box-shadow: 0 0 8px rgba(5, 150, 105, 0.2);
+}
+
+html[data-theme="adults"] .speed-label {
+  color: #475569;
+}
+
+html[data-theme="adults"] .speed-chips-group {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .speed-chip-btn {
+  color: #475569;
+}
+
+html[data-theme="adults"] .speed-chip-btn:hover {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .speed-chip-btn.speed-chip-active {
+  background: #0f172a;
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.2);
+}
+
+html[data-theme="adults"] .sim-guard-banner.webview-guard {
+  background: #fffbeb;
+  border-bottom: 1px solid #fde68a;
+  color: #92400e;
+}
+
+html[data-theme="adults"] .sim-guard-banner.mic-guard {
+  background: #eff6ff;
+  border-bottom: 1px solid #bfdbfe;
+  color: #1e40af;
+}
+
+html[data-theme="adults"] .guard-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .guard-desc {
+  color: #334155;
+}
+
+html[data-theme="adults"] .guard-copy-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .guard-copy-btn:hover {
+  background: #f1f5f9;
+  border-color: #0f172a;
+}
+
+html[data-theme="adults"] .live-waveform-dock {
+  background: linear-gradient(90deg, #fee2e2 0%, #ffffff 100%);
+  border: 1px solid #fca5a5;
+}
+
+html[data-theme="adults"] .waveform-title {
+  color: #991b1b;
+}
+
+html[data-theme="adults"] .npc-avatar,
+html[data-theme="adults"] .user-avatar {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .arena-chat-scroll {
@@ -6633,6 +6928,10 @@ html[data-theme="adults"] .bubble-grammar-tip {
   color: #166534;
 }
 
+html[data-theme="adults"] .bubble-action-bar {
+  border-top: 1px solid #e2e8f0;
+}
+
 html[data-theme="adults"] .bubble-action-btn {
   background: #ffffff;
   border: 1px solid #cbd5e1;
@@ -6640,11 +6939,27 @@ html[data-theme="adults"] .bubble-action-btn {
   font-weight: 600;
 }
 
+html[data-theme="adults"] .bubble-action-btn:hover {
+  background: #f1f5f9;
+  border-color: #0f172a;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .chips-label {
+  color: #475569;
+}
+
 html[data-theme="adults"] .starter-chip-btn {
   background: #f1f5f9;
   border: 1px solid #cbd5e1;
   color: #334155;
   font-weight: 600;
+}
+
+html[data-theme="adults"] .starter-chip-btn:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
 }
 
 html[data-theme="adults"] .arena-input-footer {
@@ -6674,9 +6989,20 @@ html[data-theme="adults"] .send-turn-btn {
   font-weight: 700;
 }
 
+html[data-theme="adults"] .send-turn-btn:hover:not(:disabled) {
+  background: #1e293b;
+  transform: translateY(-1px);
+}
+
 html[data-theme="adults"] .mic-toggle-btn {
   background: #f1f5f9;
   border: 1.5px solid #cbd5e1;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .mic-toggle-btn:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
   color: #0f172a;
 }
 

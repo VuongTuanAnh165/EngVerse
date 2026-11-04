@@ -1166,10 +1166,15 @@ onUnmounted(() => {
 }
 
 .boss-preview-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill, 9999px);
   font-size: 0.7rem;
   font-weight: 700;
   color: #f59e0b;
   text-transform: uppercase;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .boss-preview-avatar {
@@ -2253,6 +2258,8 @@ html[data-theme="kids"] .boss-preview-badge {
   background: #fef3c7;
   color: #b45309;
   border: 1px solid #fde68a;
+  border-radius: 9999px;
+  padding: 0.2rem 0.6rem;
 }
 
 html[data-theme="kids"] .boss-preview-name {
@@ -2390,8 +2397,35 @@ html[data-theme="kids"] .stat-row strong {
   color: #991b1b;
 }
 
+html[data-theme="kids"] .leaderboard-item,
 html[data-theme="kids"] .rank-item {
   background: #ffffff;
+  border: 1.5px solid #fde68a;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.08);
+}
+
+html[data-theme="kids"] .leaderboard-item:hover {
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
+html[data-theme="kids"] .leaderboard-item.rank-top-1 {
+  background: linear-gradient(90deg, #fef3c7 0%, #ffffff 100%);
+  border-color: #f59e0b;
+}
+
+html[data-theme="kids"] .leaderboard-item.rank-top-2 {
+  background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%);
+  border-color: #cbd5e1;
+}
+
+html[data-theme="kids"] .leaderboard-item.rank-top-3 {
+  background: linear-gradient(90deg, #fffbeb 0%, #ffffff 100%);
+  border-color: #fde68a;
+}
+
+html[data-theme="kids"] .player-avatar-circle {
+  background: #fef3c7;
   border: 1px solid #fde68a;
 }
 
@@ -2541,7 +2575,9 @@ html[data-theme="adults"] .boss-card-preview {
 html[data-theme="adults"] .boss-preview-badge {
   background: #f1f5f9;
   color: #334155;
-  border: 1.5px solid #cbd5e1;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 0.2rem 0.6rem;
 }
 
 html[data-theme="adults"] .boss-preview-name {
@@ -2679,9 +2715,36 @@ html[data-theme="adults"] .stat-row strong {
   color: #0f172a;
 }
 
+html[data-theme="adults"] .leaderboard-item,
 html[data-theme="adults"] .rank-item {
   background: #ffffff;
   border: 1.5px solid #cbd5e1;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+html[data-theme="adults"] .leaderboard-item:hover {
+  background: #f8fafc;
+  border-color: #0f172a;
+}
+
+html[data-theme="adults"] .leaderboard-item.rank-top-1 {
+  background: linear-gradient(90deg, #fef3c7 0%, #ffffff 100%);
+  border-color: #f59e0b;
+}
+
+html[data-theme="adults"] .leaderboard-item.rank-top-2 {
+  background: linear-gradient(90deg, #f1f5f9 0%, #ffffff 100%);
+  border-color: #94a3b8;
+}
+
+html[data-theme="adults"] .leaderboard-item.rank-top-3 {
+  background: linear-gradient(90deg, #f8fafc 0%, #ffffff 100%);
+  border-color: #cbd5e1;
+}
+
+html[data-theme="adults"] .player-avatar-circle {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
 }
 
 html[data-theme="adults"] .player-name {

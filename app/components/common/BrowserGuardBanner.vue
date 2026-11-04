@@ -372,5 +372,145 @@ const {
   transform: translateY(-100%);
   opacity: 0;
 }
+
+/* ==========================================================================
+   THEME OVERRIDES: ĐẢO THẦN THOẠI (KIDS MODE)
+   ========================================================================== */
+html[data-theme="kids"] .browser-guard-banner {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border-bottom: 2px solid #f59e0b;
+  color: #3b1d07;
+  box-shadow: 0 4px 16px rgba(245, 158, 11, 0.15);
+}
+
+html[data-theme="kids"] .guard-title {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .guard-description {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .guard-instructions {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+}
+
+html[data-theme="kids"] .instruction-step {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .step-num {
+  background: #f59e0b;
+  color: #ffffff;
+}
+
+html[data-theme="kids"] .btn-primary {
+  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+}
+
+html[data-theme="kids"] .btn-primary:hover {
+  background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+}
+
+html[data-theme="kids"] .btn-secondary {
+  background: #ffffff;
+  border: 1.5px solid #fde68a;
+  color: #78350f;
+}
+
+html[data-theme="kids"] .btn-secondary:hover {
+  background: #fef3c7;
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .btn-text {
+  color: #78350f;
+}
+
+html[data-theme="kids"] .btn-text:hover {
+  color: #3b1d07;
+}
+
+html[data-theme="kids"] .guard-close-btn {
+  color: #854d0e;
+}
+
+html[data-theme="kids"] .guard-close-btn:hover {
+  background: #fde68a;
+  color: #3b1d07;
+}
+
+/* ==========================================================================
+   THEME OVERRIDES: SIMLIFE GLOBAL (ADULTS MODE)
+   ========================================================================== */
+html[data-theme="adults"] .browser-guard-banner {
+  background: #ffffff;
+  border-bottom: 1.5px solid #cbd5e1;
+  color: #0f172a;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+}
+
+html[data-theme="adults"] .guard-title {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .guard-description {
+  color: #475569;
+}
+
+html[data-theme="adults"] .guard-instructions {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+}
+
+html[data-theme="adults"] .instruction-step {
+  color: #334155;
+}
+
+html[data-theme="adults"] .step-num {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+html[data-theme="adults"] .btn-primary {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+}
+
+html[data-theme="adults"] .btn-primary:hover {
+  background: #1e293b;
+}
+
+html[data-theme="adults"] .btn-secondary {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: #334155;
+}
+
+html[data-theme="adults"] .btn-secondary:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .btn-text {
+  color: #475569;
+}
+
+html[data-theme="adults"] .btn-text:hover {
+  color: #0f172a;
+}
+
+html[data-theme="adults"] .guard-close-btn {
+  color: #64748b;
+}
+
+html[data-theme="adults"] .guard-close-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
 </style>
 
